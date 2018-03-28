@@ -1,0 +1,77 @@
+<!doctype html>
+<html>
+<head>
+	<title>Socket.IO chat</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+	<script src="http://blockly.webduino.io/lib/jquery-1.9.1.min.js"></script>
+	<script src="http://blockly.webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
+	<script src="http://blockly.webduino.io/lib/webduino-blockly.js"></script>
+	<script src="http://blockly.webduino.io/lib/firebase.js"></script>
+	<script src="http://blockly.webduino.io/lib/runtime.min.js"></script>
+</head>
+<body>
+	<div><span id="demo-area-01-show">123</span></div>
+	<ul id="messages"></ul>
+	<form action="">
+		<input id="m" autocomplete="off" /><button>Send</button>
+	</form>
+	<script src="/socket.io/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+	<script>
+		$(function () {
+			var photocell;
+			var socket = io();
+      // Send message
+      $('form').submit(function(){
+      	socket.emit('chat message', $('#m').val());
+      	$('#m').val('');
+      	return false;
+      });
+      socket.on('chat message', function(msg){
+      	$('#messages').append($('<li>').text(msg));
+      });
+
+      // Message notifys Online
+      socket.on('online', function(txt){
+      	$('#messages').append($('<p>').text(txt + " is online now!"));
+      });
+      
+      // Message notifys offline
+      socket.on('offline', function(txt){
+      	$('#messages').append($('<p>').text(txt + " is offline now!"));
+      });
+
+      // If content updates, get all the content again
+      socket.on('update content', function(data){
+      	var buffer = new Uint8Array(data);
+      	var fileString= String.fromCharCode.apply(null, buffer);
+      	var obj = JSON.parse(fileString)
+      	console.log(obj);
+      	for (i = 0; i < obj.length; i++) {
+      		$('#messages').append($('<li>').text(obj[i].ID));   
+      	}    
+      });
+      
+      // Get the intial content when connected for the first time
+      socket.on('initial content', function(data){
+      	var buffer = new Uint8Array(data);
+      	var fileString= String.fromCharCode.apply(null, buffer);
+      	var obj = JSON.parse(fileString)
+      	for (i = 0; i < obj.length; i++) {
+      		$('#messages').append($('<li>').text(obj[i].ID));   
+      	}  
+      });
+
+      boardReady({board: 'Smart', url: '172.20.10.10'}, function (board) {
+      	board.systemReset();
+      	board.samplingInterval = 50;
+      	photocell = getPhotocell(board, 0);
+      	photocell.on(function(val){
+      		photocell.detectedVal = val;
+      		$('#demo-area-01-show').text((Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100);
+      	});
+      });
+  });
+</script>
+</body>
+</html>
