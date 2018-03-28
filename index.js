@@ -24,6 +24,15 @@ io.on('connection', function(socket){
 		// socket.broadcast.emit('chat message', msg);
 	});
 
+	// Send sensor data
+	socket.on('sensor data', function(sensorData){
+		console.log('sensor data: ' + sensorData);
+		// send to all
+		io.emit('sensor data',  sensorData);
+		// send to others except the sender
+		// socket.broadcast.emit('chat message', msg);
+	});
+
 	// Online event
 	io.emit('online', socket.id);
 	// Read initial file data when connected for the first time
