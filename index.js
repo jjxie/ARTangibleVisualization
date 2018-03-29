@@ -26,7 +26,7 @@ io.on('connection', function(socket){
 
 	// Send sensor data
 	socket.on('sensor data', function(sensorData){
-		console.log('sensor data: ' + sensorData);
+		//console.log('sensor data: ' + sensorData);
 		// send to all
 		io.emit('sensor data',  sensorData);
 		// send to others except the sender
@@ -35,9 +35,18 @@ io.on('connection', function(socket){
 
 	// Send sensor data 2
 	socket.on('sensor data2', function(sensorData){
-		console.log('sensor data2: ' + sensorData);
+		//console.log('sensor data2: ' + sensorData);
 		// send to all
 		io.emit('sensor data2',  sensorData);
+		// send to others except the sender
+		// socket.broadcast.emit('chat message', msg);
+	});
+
+	// Send sensor data 3
+	socket.on('sensor data3', function(sensorData){
+		//console.log('sensor data2: ' + sensorData);
+		// send to all
+		io.emit('sensor data3',  sensorData);
 		// send to others except the sender
 		// socket.broadcast.emit('chat message', msg);
 	});

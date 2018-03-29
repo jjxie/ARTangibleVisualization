@@ -12,27 +12,32 @@
   <script src="http://blockly.webduino.io/lib/firebase.js"></script>
   <script src="http://blockly.webduino.io/lib/runtime.min.js"></script>
   <style>
-    body { margin: 5px; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
-    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #messages { list-style-type: none; margin: 0; padding: 0; }
-    #messages li { padding: 5px 10px; }
-    #messages li:nth-child(odd) { background: #eee; }
-    #messages p { padding: 5px 10px; background: #5DAC81; color:#0B1013; font-size:20px; }
-    #sensor-data { font-size: 60px; pointer-events: auto!important;}
-    #sensor-data2 { font-size: 60px; pointer-events: auto!important;}
-  </style>
+  body { margin: 5px; padding: 0; box-sizing: border-box; }
+  body { font: 13px Helvetica, Arial; }
+  form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+  form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+  form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+  #messages { list-style-type: none; margin: 0; padding: 0; }
+  #messages li { padding: 5px 10px; }
+  #messages li:nth-child(odd) { background: #eee; }
+  #messages p { padding: 5px 10px; background: #5DAC81; color:#0B1013; font-size:20px; }
+  #sensor-data { font-size: 60px; pointer-events: auto!important;}
+  #sensor-data2 { font-size: 60px; pointer-events: auto!important;}
+  #sensor-data3 { font-size: 60px; pointer-events: auto!important;}
+</style>
 </head>
 <body>
-	<div><span id="sensor-data">10 sensor</span></div>
+	<div><span id="sensor-data">3 sensor</span></div>
 	<div class="progress">
-    <div id="theprogressbar" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="theprogressbar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
   </div>
-  <div><span id="sensor-data2">12 sensor</span></div>
+  <div><span id="sensor-data2">4 sensor</span></div>
   <div class="progress">
-    <div id="theprogressbar2" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="theprogressbar2" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <div><span id="sensor-data3">5 sensor</span></div>
+  <div class="progress">
+    <div id="theprogressbar3" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
   </div>
 
   <ul id="messages"></ul>
@@ -44,8 +49,12 @@
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
     $(function () {
-      var photocell;
       var socket = io();
+      var photocell;
+      var redValue = 0;
+      var greenValue = 0;
+      var blueValue = 0;
+      var rgbled;
       // Send message
       $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
@@ -53,75 +62,107 @@
         return false;
       });
       socket.on('chat message', function(msg){
-       $('#messages').append($('<li>').text(msg));
-     });
-
-     // Message notifys Online
-     socket.on('online', function(txt){
-       $('#messages').append($('<p>').text(txt + " is online now!"));
-     });
-
-     // Message notifys offline
-     socket.on('offline', function(txt){
-       $('#messages').append($('<p>').text(txt + " is offline now!"));
-     });
-
-     // If content updates, get all the content again
-     socket.on('update content', function(data){
-      var buffer = new Uint8Array(data);
-      var fileString= String.fromCharCode.apply(null, buffer);
-      var obj = JSON.parse(fileString)
-      console.log(obj);
-      for (i = 0; i < obj.length; i++) {
-        $('#messages').append($('<li>').text(obj[i].ID));   
-      }    
-    });
-
-     // Get the intial content when connected for the first time
-     socket.on('initial content', function(data){
-      var buffer = new Uint8Array(data);
-      var fileString= String.fromCharCode.apply(null, buffer);
-      var obj = JSON.parse(fileString)
-      for (i = 0; i < obj.length; i++) {
-       $('#messages').append($('<li>').text(obj[i].ID));   
-     }  
-   });
-
-    // Connect to Smart and emit sensor data
-    boardReady({board: 'Smart', url: '172.20.10.10'}, function (board) {
-      board.systemReset();
-      board.samplingInterval = 100;
-      photocell = getPhotocell(board, 0);
-      photocell.on(function(val){
-        photocell.detectedVal = val;
-        socket.emit('sensor data', (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100);
+        $('#messages').append($('<li>').text(msg));
       });
-    });
 
-    // Write data from sensor 1 on html
-    socket.on('sensor data', function(txt){
-      $('#sensor-data').text("10 sensor :  " + txt);
-      $('#theprogressbar').attr('aria-valuenow', txt).css('width',txt+ '%');
-    });
-
-    // Connect to Smart and emit sensor data 2
-    boardReady({board: 'Smart', url: '172.20.10.12'}, function (board) {
-      board.systemReset();
-      board.samplingInterval = 100;
-      photocell = getPhotocell(board, 0);
-      photocell.on(function(val){
-        photocell.detectedVal = val;
-        socket.emit('sensor data2', (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100);
+      // Message notifys Online
+      socket.on('online', function(txt){
+        $('#messages').append($('<p>').text(txt + " is online now!"));
       });
-    });
 
-    // Write data from sensor 2 on html
-    socket.on('sensor data2', function(txt){
-      $('#sensor-data2').text("12 sensor :  " + txt);
-      $('#theprogressbar2').attr('aria-valuenow', txt).css('width',txt+ '%');
-    });
+      // Message notifys offline
+      socket.on('offline', function(txt){
+        $('#messages').append($('<p>').text(txt + " is offline now!"));
+      });
 
-  });
-</script>
+      // If content updates, get all the content again
+      socket.on('update content', function(data){
+        var buffer = new Uint8Array(data);
+        var fileString= String.fromCharCode.apply(null, buffer);
+        var obj = JSON.parse(fileString)
+        console.log(obj);
+        for (i = 0; i < obj.length; i++) {
+          $('#messages').append($('<li>').text(obj[i].ID));   
+        }    
+      });
+
+      // Get the intial content when connected for the first time
+      socket.on('initial content', function(data){
+        var buffer = new Uint8Array(data);
+        var fileString= String.fromCharCode.apply(null, buffer);
+        var obj = JSON.parse(fileString)
+        for (i = 0; i < obj.length; i++) {
+          $('#messages').append($('<li>').text(obj[i].ID));
+        }
+      });
+
+      // Set sensor rgb color 
+      boardReady({board: 'Smart', url: '192.168.2.6'}, function (board) {
+        board.systemReset();
+        board.samplingInterval = 50;
+        rgbled = getRGBLedCathode(board, 15, 12, 13);
+        rgbled.setColor(0,0,0);
+      });
+
+      // Connect to Smart and emit sensor data
+      boardReady({board: 'Smart', url: '192.168.2.3'}, function (board) {
+        board.systemReset();
+        board.samplingInterval = 50;
+        photocell = getPhotocell(board, 0);
+        photocell.on(function(val){
+          photocell.detectedVal = val;
+          redValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
+          socket.emit('sensor data', redValue);
+        });
+      });
+
+      // Write data from sensor 1 on html
+      socket.on('sensor data', function(txt){
+        $('#sensor-data').text("3 sensor :  " + txt);
+        $('#theprogressbar').attr('aria-valuenow', txt).css('width',txt+ '%');
+        rgbled.setColor(txt,greenValue,blueValue);
+      });
+
+      // Connect to Smart and emit sensor data 2
+      boardReady({board: 'Smart', url: '192.168.2.4'}, function (board) {
+        board.systemReset();
+        board.samplingInterval = 50;
+        photocell = getPhotocell(board, 0);
+        photocell.on(function(val){
+          photocell.detectedVal = val;
+          greenValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
+          socket.emit('sensor data2', greenValue);
+        });
+      });
+
+      // Write data from sensor 2 on html
+      socket.on('sensor data2', function(txt){
+        $('#sensor-data2').text("4 sensor :  " + txt);
+        $('#theprogressbar2').attr('aria-valuenow', txt).css('width',txt+ '%');
+        rgbled.setColor(redValue,txt,blueValue);
+      });
+
+      // Connect to Smart and emit sensor data 3
+      boardReady({board: 'Smart', url: '192.168.2.5'}, function (board) {
+        board.systemReset();
+        board.samplingInterval = 50;
+        photocell = getPhotocell(board, 0);
+        photocell.on(function(val){
+          photocell.detectedVal = val;
+          blueValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
+          socket.emit('sensor data3', blueValue);
+
+        });
+      });
+
+      // Write data from sensor 3 on html
+      socket.on('sensor data3', function(txt){
+        $('#sensor-data3').text("5 sensor :  " + txt);
+        $('#theprogressbar3').attr('aria-valuenow', txt).css('width',txt+ '%');
+        rgbled.setColor(redValue,greenValue,txt);
+      });
+
+    });
+  </script>
 </body>
 </html>
