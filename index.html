@@ -109,6 +109,8 @@
         board.systemReset();
         board.samplingInterval = 50;
         photocell = getPhotocell(board, 0);
+        rgbledRed = getRGBLedCathode(board, 15, 12, 13);
+        rgbledRed.setColor(255,0,0);
         photocell.on(function(val){
           photocell.detectedVal = val;
           redValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
@@ -128,6 +130,8 @@
         board.systemReset();
         board.samplingInterval = 50;
         photocell = getPhotocell(board, 0);
+        rgbledGreen = getRGBLedCathode(board, 15, 12, 13);
+        rgbledGreen.setColor(0,255,0);
         photocell.on(function(val){
           photocell.detectedVal = val;
           greenValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
@@ -147,6 +151,8 @@
         board.systemReset();
         board.samplingInterval = 50;
         photocell = getPhotocell(board, 0);
+        rgbledBlue = getRGBLedCathode(board, 15, 12, 13);
+        rgbledBlue.setColor(0,0,255);
         photocell.on(function(val){
           photocell.detectedVal = val;
           blueValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
