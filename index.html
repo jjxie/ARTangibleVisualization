@@ -11,6 +11,10 @@
   <script src="http://blockly.webduino.io/lib/webduino-blockly.js"></script>
   <script src="http://blockly.webduino.io/lib/firebase.js"></script>
   <script src="http://blockly.webduino.io/lib/runtime.min.js"></script>
+  <!-- include A-Frame obviously -->
+  <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
+  <!-- include ar.js for A-Frame -->
+  <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script> 
   <style>
   body { margin: 5px; padding: 0; box-sizing: border-box; }
   body { font: 13px Helvetica, Arial; }
@@ -27,6 +31,34 @@
 </style>
 </head>
 <body>
+  <a-scene embedded arjs='sourceType: webcam;'>
+    <!-- define a camera which will move according to the marker position -->
+
+    <!-- marker webo -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/webo.patt'>
+      <a-box position='0 0.1 0' rotation="0 45 0" material='opacity: 0.5; color="#4CC3D9'></a-box>
+      <a-sphere position="0 0.2 0" radius="0.5" color="#EF2D5E"></a-sphere>
+    </a-marker>
+
+    <!-- marker type -->
+   <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/type.patt'>
+     <a-box position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#D05A6E">
+      <a-animation attribute="material.color"  begin="2000" from="white" to="#D05A6E" dur="2000" repeat="indefinite"></a-animation>
+      <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
+    </a-box>
+  </a-marker>
+
+  <!-- marker hiro -->
+  <a-marker preset='hiro'>
+    <a-sphere id="sphereTest" position="0 0.3 0" radius="0.5" color="#F75C2F"></a-sphere>
+    <a-text position="1 1 0.5" rotation="-90 0 -180" value="Now Interactable" color="#D05A6E"></a-text>
+    <a-text position="1 1.5 -0.5" rotation="-180 0 -180" value="haha" color="#2B5F75"></a-text>
+  </a-marker>
+
+  <!-- camera -->
+  <a-entity camera></a-entity>
+</a-scene>
+
 	<div><span id="sensor-data">3 sensor</span></div>
 	<div class="progress">
     <div id="theprogressbar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
@@ -48,13 +80,15 @@
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <script>
+    // Get scene
+    var sceneEl = document.querySelector('a-scene');
     $(function () {
       var socket = io();
       var photocell;
       var redValue = 0;
       var greenValue = 0;
       var blueValue = 0;
-      var rgbled;
+      var rgbled;     
       // Send message
       $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
@@ -68,11 +102,14 @@
       // Message notifys Online
       socket.on('online', function(txt){
         $('#messages').append($('<p>').text(txt + " is online now!"));
+        sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
+        console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
       });
 
       // Message notifys offline
       socket.on('offline', function(txt){
         $('#messages').append($('<p>').text(txt + " is offline now!"));
+        sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
       });
 
       // If content updates, get all the content again
