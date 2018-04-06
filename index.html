@@ -25,9 +25,9 @@
   #messages li { padding: 5px 10px; }
   #messages li:nth-child(odd) { background: #eee; }
   #messages p { padding: 5px 10px; background: #5DAC81; color:#0B1013; font-size:20px; }
-  #sensor-data { font-size: 60px; pointer-events: auto!important;}
-  #sensor-data2 { font-size: 60px; pointer-events: auto!important;}
-  #sensor-data3 { font-size: 60px; pointer-events: auto!important;}
+  #sensor-data-red { font-size: 60px; pointer-events: auto!important;}
+  #sensor-data-green { font-size: 60px; pointer-events: auto!important;}
+  #sensor-data-blue { font-size: 60px; pointer-events: auto!important;}
 </style>
 </head>
 <body>
@@ -41,7 +41,7 @@
     </a-marker>
 
     <!-- marker type -->
-   <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/type.patt'>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/type.patt'>
      <a-box position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#D05A6E">
       <a-animation attribute="material.color"  begin="2000" from="white" to="#D05A6E" dur="2000" repeat="indefinite"></a-animation>
       <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
@@ -59,27 +59,27 @@
   <a-entity camera></a-entity>
 </a-scene>
 
-	<div><span id="sensor-data">3 sensor</span></div>
-	<div class="progress">
-    <div id="theprogressbar" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-  </div>
-  <div><span id="sensor-data2">4 sensor</span></div>
-  <div class="progress">
-    <div id="theprogressbar2" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-  </div>
-  <div><span id="sensor-data3">5 sensor</span></div>
-  <div class="progress">
-    <div id="theprogressbar3" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-  </div>
+<div><span id="sensor-data-red">Red sensor</span></div>
+<div class="progress">
+  <div id="theprogressbarRed" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<div><span id="sensor-data-green">Green sensor</span></div>
+<div class="progress">
+  <div id="theprogressbarGreen" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
+<div><span id="sensor-data-blue">Blue sensor</span></div>
+<div class="progress">
+  <div id="theprogressbarBlue" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+</div>
 
-  <ul id="messages"></ul>
-  <form action="">
-    <input id="m" autocomplete="off" /><button>Send</button>
-  </form>
+<ul id="messages"></ul>
+<form action="">
+  <input id="m" autocomplete="off" /><button>Send</button>
+</form>
 
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  <script>
+<script src="/socket.io/socket.io.js"></script>
+<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+<script>
     // Get scene
     var sceneEl = document.querySelector('a-scene');
     $(function () {
@@ -88,7 +88,10 @@
       var redValue = 0;
       var greenValue = 0;
       var blueValue = 0;
-      var rgbled;     
+      var rgbled; 
+      var rgbledRed;
+      var rgbledGreen;
+      var rgbledBlue;      
       // Send message
       $('form').submit(function(){
         socket.emit('chat message', $('#m').val());
@@ -151,18 +154,18 @@
         photocell.on(function(val){
           photocell.detectedVal = val;
           redValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-          socket.emit('sensor data', redValue);
+          socket.emit('sensor data red', redValue);
         });
       });
 
-      // Write data from sensor 1 on html
-      socket.on('sensor data', function(txt){
-        $('#sensor-data').text("3 sensor :  " + txt);
-        $('#theprogressbar').attr('aria-valuenow', txt).css('width',txt+ '%');
-        rgbled.setColor(txt,greenValue,blueValue);
+      // Write data from sensor red on html
+      socket.on('sensor data red', function(red){
+        $('#sensor-data-red').text("Red sensor :  " + red);
+        $('#theprogressbarRed').attr('aria-valuenow', red).css('width',red+ '%');
+        rgbled.setColor(red,greenValue,blueValue);
       });
 
-      // Connect to Smart and emit sensor data 2
+      // Connect to Smart and emit sensor data red
       boardReady({board: 'Smart', url: '192.168.2.4'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
@@ -172,18 +175,18 @@
         photocell.on(function(val){
           photocell.detectedVal = val;
           greenValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-          socket.emit('sensor data2', greenValue);
+          socket.emit('sensor data green', greenValue);
         });
       });
 
-      // Write data from sensor 2 on html
-      socket.on('sensor data2', function(txt){
-        $('#sensor-data2').text("4 sensor :  " + txt);
-        $('#theprogressbar2').attr('aria-valuenow', txt).css('width',txt+ '%');
-        rgbled.setColor(redValue,txt,blueValue);
+      // Write data from sensor green on html
+      socket.on('sensor data green', function(green){
+        $('#sensor-data-green').text("Green sensor :  " + green);
+        $('#theprogressbarGreen').attr('aria-valuenow', green).css('width',green+ '%');
+        rgbled.setColor(redValue,green,blueValue);
       });
 
-      // Connect to Smart and emit sensor data 3
+      // Connect to Smart and emit sensor data green
       boardReady({board: 'Smart', url: '192.168.2.5'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
@@ -193,16 +196,16 @@
         photocell.on(function(val){
           photocell.detectedVal = val;
           blueValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-          socket.emit('sensor data3', blueValue);
+          socket.emit('sensor data blue', blueValue);
 
         });
       });
 
       // Write data from sensor 3 on html
-      socket.on('sensor data3', function(txt){
-        $('#sensor-data3').text("5 sensor :  " + txt);
-        $('#theprogressbar3').attr('aria-valuenow', txt).css('width',txt+ '%');
-        rgbled.setColor(redValue,greenValue,txt);
+      socket.on('sensor data blue', function(blue){
+        $('#sensor-data-blue').text("Blue sensor :  " + blue);
+        $('#theprogressbarBlue').attr('aria-valuenow', blue).css('width',blue+ '%');
+        rgbled.setColor(redValue,greenValue,blue);
       });
 
     });
