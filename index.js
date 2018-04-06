@@ -24,29 +24,29 @@ io.on('connection', function(socket){
 		// socket.broadcast.emit('chat message', msg);
 	});
 
-	// Send sensor data
-	socket.on('sensor data', function(sensorData){
+	// Send sensor data red
+	socket.on('sensor data red', function(sensorData){
 		//console.log('sensor data: ' + sensorData);
 		// send to all
-		io.emit('sensor data',  sensorData);
+		io.emit('sensor data red',  sensorData);
 		// send to others except the sender
 		// socket.broadcast.emit('chat message', msg);
 	});
 
-	// Send sensor data 2
-	socket.on('sensor data2', function(sensorData){
+	// Send sensor data green
+	socket.on('sensor data green', function(sensorData){
 		//console.log('sensor data2: ' + sensorData);
 		// send to all
-		io.emit('sensor data2',  sensorData);
+		io.emit('sensor data green',  sensorData);
 		// send to others except the sender
 		// socket.broadcast.emit('chat message', msg);
 	});
 
 	// Send sensor data 3
-	socket.on('sensor data3', function(sensorData){
+	socket.on('sensor data blue', function(sensorData){
 		//console.log('sensor data2: ' + sensorData);
 		// send to all
-		io.emit('sensor data3',  sensorData);
+		io.emit('sensor data blue',  sensorData);
 		// send to others except the sender
 		// socket.broadcast.emit('chat message', msg);
 	});
