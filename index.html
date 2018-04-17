@@ -1,16 +1,17 @@
 <!doctype html>
 <html>
 <head>
-  <title>Socket.IO chat</title>
-  <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-  <script src="http://blockly.webduino.io/lib/jquery-1.9.1.min.js"></script>
-  <script src="http://blockly.webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
-  <script src="http://blockly.webduino.io/lib/webduino-blockly.js"></script>
-  <script src="http://blockly.webduino.io/lib/firebase.js"></script>
-  <script src="http://blockly.webduino.io/lib/runtime.min.js"></script>
+	<title>Socket.IO chat</title>
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="http://blockly.webduino.io/lib/jquery-1.9.1.min.js"></script>
+	<script src="http://blockly.webduino.io/components/webduino-js/dist/webduino-all.min.js"></script>
+	<script src="http://blockly.webduino.io/lib/webduino-blockly.js"></script>
+	<script src="http://blockly.webduino.io/lib/firebase.js"></script>
+	<script src="http://blockly.webduino.io/lib/runtime.min.js"></script>
+  <script src="client.js"></script>
   <!-- include A-Frame obviously -->
   <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
   <!-- include ar.js for A-Frame -->
@@ -31,109 +32,134 @@
 </style>
 </head>
 <body>
-  <a-scene embedded arjs='sourceType: webcam;'>
+
+    <a-scene embedded arjs='sourceType: webcam;'>
     <!-- define a camera which will move according to the marker position -->
 
-    <!-- marker webo -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/webo.patt'>
-      <a-box position='0 0.1 0' rotation="0 45 0" material='opacity: 0.5; color="#4CC3D9'></a-box>
-      <a-sphere position="0 0.2 0" radius="0.5" color="#EF2D5E"></a-sphere>
+    <!-- marker milk -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/milk.patt'>
+      <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" material='opacity: 0.5; color="#4CC3D9'></a-box>
+      <a-sphere position="0 0.5 0" radius="0.3" color="#EF2D5E"></a-sphere>
     </a-marker>
 
-    <!-- marker type -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/type.patt'>
-     <a-box position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#D05A6E">
-      <a-animation attribute="material.color"  begin="2000" from="white" to="#D05A6E" dur="2000" repeat="indefinite"></a-animation>
-      <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
-    </a-box>
-  </a-marker>
+    <!-- marker orange -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/orange.patt'>
+      <a-box position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#F9BF45">
+        <a-animation attribute="material.color"  begin="2000" from="white" to="#F9BF45" dur="2000" repeat="indefinite"></a-animation>
+        <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
+      </a-box>
+    </a-marker>
 
-  <!-- marker hiro -->
-  <a-marker preset='hiro'>
-    <a-sphere id="sphereTest" position="0 0.3 0" radius="0.5" color="#F75C2F"></a-sphere>
-    <a-text position="1 1 0.5" rotation="-90 0 -180" value="Now Interactable" color="#D05A6E"></a-text>
-    <a-text position="1 1.5 -0.5" rotation="-180 0 -180" value="haha" color="#2B5F75"></a-text>
-  </a-marker>
+    <!-- marker fish -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/fish.patt'>
+      <a-sphere position="0 0.5 0" radius="0.3" color="#2EA9DF">
+        <a-animation attribute="material.color" from="white" to="#2EA9DF" dur="3000" repeat="indefinite"></a-animation>
+      </a-sphere>
+    </a-marker>
 
-  <!-- camera -->
-  <a-entity camera></a-entity>
-</a-scene>
+    <!-- marker meat -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/meat.patt'>
+      <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" color="#D0104C"></a-box>
+    </a-marker>
 
-<div><span id="sensor-data-red">Red sensor</span></div>
-<div class="progress">
-  <div id="theprogressbarRed" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-<div><span id="sensor-data-green">Green sensor</span></div>
-<div class="progress">
-  <div id="theprogressbarGreen" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
-<div><span id="sensor-data-blue">Blue sensor</span></div>
-<div class="progress">
-  <div id="theprogressbarBlue" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-</div>
+    <!-- marker broccoli -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/broccoli.patt'>
+      <a-sphere position="0 0.5 0" radius="0.3" color="#1B813E"></a-sphere>
+      <a-text position="1 1 0.5" rotation="-90 0 -180" value="broccoli" color="#D05A6E"></a-text>
+    </a-marker>
 
-<ul id="messages"></ul>
-<form action="">
-  <input id="m" autocomplete="off" /><button>Send</button>
-</form>
+    <!-- marker hiro -->
+    <a-marker preset='hiro'>
+      <a-sphere position="0 0.3 0" radius="0.5" color="#F75C2F"></a-sphere>
+      <a-text position="1 1 0.5" rotation="-90 0 -180" value="Now Interactable" color="#D05A6E"></a-text>
+      <a-text position="1 1.5 -0.5" rotation="-180 0 -180" value="haha" color="#2B5F75"></a-text>
+    </a-marker>
 
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script>
+    <!-- camera -->
+    <a-entity camera></a-entity>
+
+  </a-scene>
+
+  <!-- set frenquency -->
+  <div class="container">
+    <h1>WeMos D1 Web Control Panel</h1>
+    <div class="row">
+      <div class="col-md-12">
+        <h4>LED Pulse Delay (ms)</h4>
+        <p><input type="text" class="form-control" id="ledDelay" name="ledDelay" value="1000" /></p>
+        <p><button id="ledSet" class="btn btn-primary">Set Delay</button></p>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- sensor data area -->
+  <div><span id="sensor-data-red">Red sensor</span></div>
+  <div class="progress">
+    <div id="theprogressbarRed" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <div><span id="sensor-data-green">Green sensor</span></div>
+  <div class="progress">
+    <div id="theprogressbarGreen" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+  <div><span id="sensor-data-blue">Blue sensor</span></div>
+  <div class="progress">
+    <div id="theprogressbarBlue" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <!-- Message box area -->
+  <ul id="messages"></ul>
+  <!-- <form action="">
+    <input id="m" autocomplete="off" /><button>Send</button>
+  </form> -->
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <script>
+    var socket = io.connect('http://localhost:3000');
+
+    socket.on('ledFrequency', function (data) {
+      console.log("Set LED frequency ",data);
+    });
+
+    $('#ledSet').on('click',function(){
+      var tmp = parseInt($('#ledDelay').val(),10);
+      console.log("Setting LED Delay:",tmp)
+      socket.emit('ledFrequencySet',tmp);
+    });
+
     // Get scene
-    var sceneEl = document.querySelector('a-scene');
+    // var sceneEl = document.querySelector('a-scene');
     $(function () {
-      var socket = io();
-      var photocell;
-      var redValue = 0;
-      var greenValue = 0;
-      var blueValue = 0;
-      var rgbled; 
-      var rgbledRed;
-      var rgbledGreen;
-      var rgbledBlue;      
-      // Send message
-      $('form').submit(function(){
-        socket.emit('chat message', $('#m').val());
-        $('#m').val('');
-        return false;
-      });
-      socket.on('chat message', function(msg){
-        $('#messages').append($('<li>').text(msg));
-      });
+    	// var socket = io();
+    	var photocell;
+
+      // // Send message
+      // $('form').submit(function(){
+      // 	socket.emit('chat message', $('#m').val());
+      // 	$('#m').val('');
+      // 	return false;
+      // });
+      // socket.on('chat message', function(msg){
+      // 	$('#messages').append($('<li>').text(msg));
+      // });
 
       // Message notifys Online
       socket.on('online', function(txt){
-        $('#messages').append($('<p>').text(txt + " is online now!"));
-        sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
-        console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
+      	$('#messages').append($('<p>').text(txt + " is online now!"));
+      	// sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
+      	// console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
       });
 
       // Message notifys offline
       socket.on('offline', function(txt){
-        $('#messages').append($('<p>').text(txt + " is offline now!"));
-        sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
-      });
-
-      // If content updates, get all the content again
-      socket.on('update content', function(data){
-        var buffer = new Uint8Array(data);
-        var fileString= String.fromCharCode.apply(null, buffer);
-        var obj = JSON.parse(fileString)
-        console.log(obj);
-        for (i = 0; i < obj.length; i++) {
-          $('#messages').append($('<li>').text(obj[i].ID));   
-        }    
-      });
-
-      // Get the intial content when connected for the first time
-      socket.on('initial content', function(data){
-        var buffer = new Uint8Array(data);
-        var fileString= String.fromCharCode.apply(null, buffer);
-        var obj = JSON.parse(fileString)
-        for (i = 0; i < obj.length; i++) {
-          $('#messages').append($('<li>').text(obj[i].ID));
-        }
+      	$('#messages').append($('<p>').text(txt + " is offline now!"));
+      	// sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
       });
 
       // Set sensor rgb color 
@@ -158,14 +184,14 @@
         });
       });
 
-      // Write data from sensor red on html
+      // Set red data
       socket.on('sensor data red', function(red){
+        rgbled.setColor(red,greenValue,blueValue);
         $('#sensor-data-red').text("Red sensor :  " + red);
         $('#theprogressbarRed').attr('aria-valuenow', red).css('width',red+ '%');
-        rgbled.setColor(red,greenValue,blueValue);
       });
 
-      // Connect to Smart and emit sensor data red
+      // Connect to Smart and emit sensor data green
       boardReady({board: 'Smart', url: '192.168.2.4'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
@@ -179,14 +205,14 @@
         });
       });
 
-      // Write data from sensor green on html
+      // Set green data
       socket.on('sensor data green', function(green){
+        rgbled.setColor(redValue,green,blueValue);
         $('#sensor-data-green').text("Green sensor :  " + green);
         $('#theprogressbarGreen').attr('aria-valuenow', green).css('width',green+ '%');
-        rgbled.setColor(redValue,green,blueValue);
       });
 
-      // Connect to Smart and emit sensor data green
+      // Connect to Smart and emit sensor data blue
       boardReady({board: 'Smart', url: '192.168.2.5'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
@@ -201,11 +227,50 @@
         });
       });
 
-      // Write data from sensor 3 on html
+      // Set blue data
       socket.on('sensor data blue', function(blue){
+        rgbled.setColor(redValue,greenValue,blue);
         $('#sensor-data-blue').text("Blue sensor :  " + blue);
         $('#theprogressbarBlue').attr('aria-valuenow', blue).css('width',blue+ '%');
-        rgbled.setColor(redValue,greenValue,blue);
+      });
+
+      // // Write data from sensor red on html
+      // socket.on('sensor data red', function(red){
+      //   $('#sensor-data-red').text("Red sensor :  " + red);
+      //   $('#theprogressbarRed').attr('aria-valuenow', red).css('width',red+ '%');
+      // });
+
+      // // Write data from sensor green on html
+      // socket.on('sensor data green', function(green){
+      //   $('#sensor-data-green').text("Green sensor :  " + green);
+      //   $('#theprogressbarGreen').attr('aria-valuenow', green).css('width',green+ '%');
+      // });
+
+      // // Write data from sensor blue on html
+      // socket.on('sensor data blue', function(blue){
+      //   $('#sensor-data-blue').text("Blue sensor :  " + blue);
+      //   $('#theprogressbarBlue').attr('aria-valuenow', blue).css('width',blue+ '%');
+      // });
+
+      // If content updates, get all the content again
+      socket.on('update content', function(data){
+        var buffer = new Uint8Array(data);
+        var fileString= String.fromCharCode.apply(null, buffer);
+        var obj = JSON.parse(fileString)
+        console.log(obj);
+        for (i = 0; i < obj.length; i++) {
+          $('#messages').append($('<li>').text(obj[i].ID));   
+        }    
+      });
+
+      // Get the intial content when connected for the first time
+      socket.on('initial content', function(data){
+        var buffer = new Uint8Array(data);
+        var fileString= String.fromCharCode.apply(null, buffer);
+        var obj = JSON.parse(fileString)
+        for (i = 0; i < obj.length; i++) {
+          $('#messages').append($('<li>').text(obj[i].ID));
+        }
       });
 
     });
