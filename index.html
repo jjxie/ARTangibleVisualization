@@ -37,13 +37,13 @@
     <!-- define a camera which will move according to the marker position -->
 
     <!-- marker milk -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/milk.patt'>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/milk.patt'>
       <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" material='opacity: 0.5; color="#4CC3D9'></a-box>
       <a-sphere position="0 0.5 0" radius="0.3" color="#EF2D5E"></a-sphere>
     </a-marker>
 
     <!-- marker orange -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/orange.patt'>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/orange.patt'>
       <a-box position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#F9BF45">
         <a-animation attribute="material.color"  begin="2000" from="white" to="#F9BF45" dur="2000" repeat="indefinite"></a-animation>
         <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
@@ -51,19 +51,19 @@
     </a-marker>
 
     <!-- marker fish -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/fish.patt'>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/fish.patt'>
       <a-sphere position="0 0.5 0" radius="0.3" color="#2EA9DF">
         <a-animation attribute="material.color" from="white" to="#2EA9DF" dur="3000" repeat="indefinite"></a-animation>
       </a-sphere>
     </a-marker>
 
     <!-- marker meat -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/meat.patt'>
-      <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" color="#D0104C"></a-box>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/meat.patt'>
+      <a-sphere id="sphereTest" position='0 0.1 0' radius="0.3" color="#2EA9DF"></a-sphere>
     </a-marker>
 
     <!-- marker broccoli -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/AR-js-Example/master/Marker/broccoli.patt'>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/broccoli.patt'>
       <a-sphere position="0 0.5 0" radius="0.3" color="#1B813E"></a-sphere>
       <a-text position="1 1 0.5" rotation="-90 0 -180" value="broccoli" color="#D05A6E"></a-text>
     </a-marker>
@@ -79,18 +79,6 @@
     <a-entity camera></a-entity>
 
   </a-scene>
-
-  <!-- set frenquency -->
-  <div class="container">
-    <h1>WeMos D1 Web Control Panel</h1>
-    <div class="row">
-      <div class="col-md-12">
-        <h4>LED Pulse Delay (ms)</h4>
-        <p><input type="text" class="form-control" id="ledDelay" name="ledDelay" value="1000" /></p>
-        <p><button id="ledSet" class="btn btn-primary">Set Delay</button></p>
-      </div>
-    </div>
-  </div>
 
 
   <!-- sensor data area -->
@@ -113,6 +101,19 @@
     <input id="m" autocomplete="off" /><button>Send</button>
   </form> -->
 
+  <!-- set frenquency -->
+  <div class="container">
+    <h1>WeMos D1 Web Control Panel</h1>
+    <div class="row">
+      <div class="col-md-12">
+        <h4>LED Pulse Delay (ms)</h4>
+        <p><input type="text" class="form-control" id="ledDelay" name="ledDelay" value="1000" /></p>
+        <p><button id="ledSet" class="btn btn-primary">Set Delay</button></p>
+      </div>
+    </div>
+  </div>
+
+
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
   <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
@@ -133,8 +134,8 @@
       socket.emit('ledFrequencySet',tmp);
     });
 
-    // Get scene
-    // var sceneEl = document.querySelector('a-scene');
+    //Get scene
+    var sceneEl = document.querySelector('a-scene');
     $(function () {
     	// var socket = io();
     	var photocell;
@@ -152,14 +153,14 @@
       // Message notifys Online
       socket.on('online', function(txt){
       	$('#messages').append($('<p>').text(txt + " is online now!"));
-      	// sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
-      	// console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
+      	sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
+      	console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
       });
 
       // Message notifys offline
       socket.on('offline', function(txt){
       	$('#messages').append($('<p>').text(txt + " is offline now!"));
-      	// sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
+      	sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
       });
 
       // Set sensor rgb color 
