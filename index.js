@@ -4,6 +4,7 @@ var io = require('socket.io')(http);
 var fs = require('fs');
 var connectedIDArray = [];
 
+
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -11,18 +12,18 @@ app.get('/', function(req, res){
 
 io.on('connection', function(socket){
 	console.log('a user connected');
-	console.log(socket.id);
+	// console.log(socket.id);
 	connectedIDArray.push(socket.id);
-	console.log("Connected array length: " + connectedIDArray.length); 
+	// console.log("Connected array length: " + connectedIDArray.length); 
 
-	// Send message
-	socket.on('chat message', function(msg){
-		console.log('message: ' + msg);
-		// send to all
-		io.emit('chat message', socket.id + " : " + msg);
-		// send to others except the sender
-		// socket.broadcast.emit('chat message', msg);
-	});
+	// // Send message
+	// socket.on('chat message', function(msg){
+	// 	// console.log('message: ' + msg);
+	// 	// send to all
+	// 	io.emit('chat message', socket.id + " : " + msg);
+	// 	// send to others except the sender
+	// 	// socket.broadcast.emit('chat message', msg);
+	// });
 
 	// Send sensor data red
 	socket.on('sensor data red', function(sensorData){
@@ -70,9 +71,15 @@ io.on('connection', function(socket){
 		if(index > -1){	
 			connectedIDArray.splice(index, 1);
 		}
-		console.log("Connected array length: " + connectedIDArray.length); 
+		// console.log("Connected array length: " + connectedIDArray.length); 
 		// Offline event
 		io.emit('offline', socket.id);
+	});
+
+	// if led message received
+	socket.on('ledFrequencySet', function (data) {
+		console.log(data);
+		io.sockets.emit('ledFrequency',data);
 	});
 });
 
