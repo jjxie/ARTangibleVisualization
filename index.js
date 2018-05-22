@@ -27,8 +27,6 @@ io.on('connection', function(socket){
 
 	// Send sensor data red
 	socket.on('sensor data red', function(sensorData){
-		//console.log('sensor data: ' + sensorData);
-		// send to all
 		io.emit('sensor data red',  sensorData);
 		// send to others except the sender
 		// socket.broadcast.emit('chat message', msg);
@@ -36,20 +34,12 @@ io.on('connection', function(socket){
 
 	// Send sensor data green
 	socket.on('sensor data green', function(sensorData){
-		//console.log('sensor data2: ' + sensorData);
-		// send to all
 		io.emit('sensor data green',  sensorData);
-		// send to others except the sender
-		// socket.broadcast.emit('chat message', msg);
 	});
 
 	// Send sensor data 3
 	socket.on('sensor data blue', function(sensorData){
-		//console.log('sensor data2: ' + sensorData);
-		// send to all
 		io.emit('sensor data blue',  sensorData);
-		// send to others except the sender
-		// socket.broadcast.emit('chat message', msg);
 	});
 
 	// Online event
@@ -76,11 +66,36 @@ io.on('connection', function(socket){
 		io.emit('offline', socket.id);
 	});
 
-	// if led message received
+	// If led message received
 	socket.on('ledFrequencySet', function (data) {
 		console.log(data);
 		io.sockets.emit('ledFrequency',data);
 	});
+
+	// Milk selection status
+	socket.on('Milk selection status', function (data) {
+		console.log("Milk selection status ", data);
+		if(data == true){
+			io.sockets.emit('milkIsSelected', true);
+		}
+		else{
+			io.sockets.emit('milkIsDeselected', false);
+		}
+		
+	});
+
+	// Orange selection status
+	socket.on('Orange selection status', function (data) {
+		console.log("Orange selection status ", data);
+		if(data == true){
+			io.sockets.emit('orangeIsSelected', true);
+		}
+		else{
+			io.sockets.emit('orangeIsDeselected', false);
+		}
+		
+	});
+
 });
 
 // Real time check file content changes

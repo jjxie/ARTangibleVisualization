@@ -1,7 +1,7 @@
 <!doctype html>
 <html>
 <head>
-	<title>Socket.IO chat</title>
+	<title>Visualization of food consumption and daily nutrition</title>
 	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -33,21 +33,23 @@
 </head>
 <body>
 
-    <a-scene embedded arjs='sourceType: webcam;'>
+  <a-scene embedded arjs='sourceType: webcam;'>
     <!-- define a camera which will move according to the marker position -->
 
     <!-- marker milk -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/milk.patt'>
       <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" material='opacity: 0.5; color="#4CC3D9'></a-box>
-      <a-sphere position="0 0.5 0" radius="0.3" color="#EF2D5E"></a-sphere>
+      <a-sphere id="milk" position="0 0.5 0" radius="0.3" color="#EF2D5E"></a-sphere>
+      <a-text id="milkText" position="1 1 0.5" rotation="-90 0 -180" value="Milk" color="#D05A6E"></a-text>
     </a-marker>
 
     <!-- marker orange -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/orange.patt'>
-      <a-box position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#F9BF45">
+      <a-box id="orange" position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#F9BF45">
         <a-animation attribute="material.color"  begin="2000" from="white" to="#F9BF45" dur="2000" repeat="indefinite"></a-animation>
         <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
       </a-box>
+      <a-text id="orangeText" position="1 1 0.5" rotation="-90 0 -180" value="Orange" color="#D05A6E"></a-text>
     </a-marker>
 
     <!-- marker fish -->
@@ -123,6 +125,8 @@
 
   <script>
     var socket = io.connect('http://localhost:3000');
+    //Get AR scene
+    var sceneEl = document.querySelector('a-scene');
 
     socket.on('ledFrequency', function (data) {
       console.log("Set LED frequency ",data);
@@ -134,8 +138,42 @@
       socket.emit('ledFrequencySet',tmp);
     });
 
-    //Get scene
-    var sceneEl = document.querySelector('a-scene');
+    // Message notifys Online
+    socket.on('online', function(txt){
+      $('#messages').append($('<p>').text(txt + " is online now!"));
+      sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
+      console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
+    });
+
+    // Message notifys offline
+    socket.on('offline', function(txt){
+      $('#messages').append($('<p>').text(txt + " is offline now!"));
+      sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
+    });
+
+    // Milk selection show detailed information
+    socket.on('milkIsSelected', function(txt){
+      sceneEl.querySelector('#milkText').setAttribute('value', "Milk is selected"); 
+      sceneEl.querySelector('#milk').setAttribute('color', '#F75C2F');    
+    });
+
+    socket.on('milkIsDeselected', function(txt){
+      sceneEl.querySelector('#milkText').setAttribute('value', "Milk is deselected");  
+      sceneEl.querySelector('#milk').setAttribute('color', '#000000');   
+    });
+
+    // Orange selection show detailed information
+    socket.on('orangeIsSelected', function(txt){
+      sceneEl.querySelector('#orangeText').setAttribute('value', "Orange is selected"); 
+      sceneEl.querySelector('#orange').setAttribute('color', '#F75C2F');     
+    });
+
+    socket.on('orangeIsDeselected', function(txt){
+      sceneEl.querySelector('#orangeText').setAttribute('value', "Orange is deselected");  
+      sceneEl.querySelector('#orange').setAttribute('color', '#000000');   
+    });
+
+
     $(function () {
     	// var socket = io();
     	var photocell;
@@ -149,19 +187,6 @@
       // socket.on('chat message', function(msg){
       // 	$('#messages').append($('<li>').text(msg));
       // });
-
-      // Message notifys Online
-      socket.on('online', function(txt){
-      	$('#messages').append($('<p>').text(txt + " is online now!"));
-      	sceneEl.querySelector('#sphereTest').setAttribute('color', '#2B5F75');
-      	console.log("sphereEl ", sceneEl.querySelector('#sphereTest'));
-      });
-
-      // Message notifys offline
-      socket.on('offline', function(txt){
-      	$('#messages').append($('<p>').text(txt + " is offline now!"));
-      	sceneEl.querySelector('#sphereTest').setAttribute('color', '#F75C2F');    
-      });
 
       // Set sensor rgb color 
       boardReady({board: 'Smart', url: '192.168.2.6'}, function (board) {
