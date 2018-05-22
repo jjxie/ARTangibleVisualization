@@ -53,50 +53,53 @@ board.on("ready", function() {
   	console.log("Orange selected ", orangeSelected); 	
   });
 
-  // // Touch sensor digital PIN 4, meat
-  // this.pinMode(4, five.Pin.INPUT);
-  // this.digitalRead(4, function(value) {
-  // 	if(value === 1)
-  // 	{
-  // 		if(meatSelected === false){
-  // 			meatSelected = true;
-  // 		}
-  // 		else{
-  // 			meatSelected = false;
-  // 		}
-  // 	}
-  // 	console.log("Meat selected ", meatSelected);
-  // });
+  // Touch sensor digital PIN 4, meat
+  this.pinMode(4, five.Pin.INPUT);
+  this.digitalRead(4, function(value) {
+  	if(value === 1)
+  	{
+  		if(meatSelected === false){
+  			meatSelected = true;
+  		}
+  		else{
+  			meatSelected = false;
+  		}
+  	}
+    socket.emit('Meat selection status', meatSelected);
+    console.log("Meat selected ", meatSelected);
+  });
 
-  // // Touch sensor digital PIN 5, broccoli
-  // this.pinMode(5, five.Pin.INPUT);
-  // this.digitalRead(5, function(value) {
-  // 	if(value === 1)
-  // 	{
-  // 		if(broccoliSelected === false){
-  // 			broccoliSelected = true;
-  // 		}
-  // 		else{
-  // 			broccoliSelected = false;
-  // 		}
-  // 	}
-  // 	console.log("Broccoli selected ", broccoliSelected);
-  // });
+  // Touch sensor digital PIN 5, broccoli
+  this.pinMode(5, five.Pin.INPUT);
+  this.digitalRead(5, function(value) {
+  	if(value === 1)
+  	{
+  		if(broccoliSelected === false){
+  			broccoliSelected = true;
+  		}
+  		else{
+  			broccoliSelected = false;
+  		}
+  	}
+    socket.emit('Broccoli selection status', broccoliSelected);
+    console.log("Broccoli selected ", broccoliSelected);
+  });
 
-  //  // Touch sensor digital PIN 6, fish
-  //  this.pinMode(6, five.Pin.INPUT);
-  //  this.digitalRead(6, function(value) {
-  //  	if(value === 1)
-  //  	{
-  //  		if(fishSelected === false){
-  //  			fishSelected = true;
-  //  		}
-  //  		else{
-  //  			fishSelected = false;
-  //  		}
-  //  	}
-  //  	console.log("Fish selected ", fishSelected);
-  //  });
+  // Touch sensor digital PIN 6, fish
+  this.pinMode(6, five.Pin.INPUT);
+  this.digitalRead(6, function(value) {
+    if(value === 1)
+    {
+     if(fishSelected === false){
+      fishSelected = true;
+    }
+    else{
+      fishSelected = false;
+    }
+  }
+  socket.emit('Fish selection status', fishSelected);
+  console.log("Fish selected ", fishSelected);
+});
 
 });
 
@@ -106,8 +109,8 @@ socket.on('sensor data red', function (red) {
 		if(red > 90){
 			led.blink(2000);
       //servoMilk.to( 90 );
-  }  
-}
+    }  
+  }
 });
 
 socket.on('sensor data green', function (green) {
@@ -115,8 +118,8 @@ socket.on('sensor data green', function (green) {
 		if(green > 90){
 			led.blink(500);
       //servoFish.to( 90 );
-  }  
-}
+    }  
+  }
 });
 
 socket.on('sensor data blue', function (blue) {
@@ -125,6 +128,6 @@ socket.on('sensor data blue', function (blue) {
 			led.blink(100);
       //servoMilk.to( 0 );
       //servoFish.to( 0 );
-  }  
-}
+    }  
+  }
 });

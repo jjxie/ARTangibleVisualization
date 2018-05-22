@@ -96,6 +96,42 @@ io.on('connection', function(socket){
 		
 	});
 
+	// Meat selection status
+	socket.on('Meat selection status', function (data) {
+		console.log("Meat selection status ", data);
+		if(data == true){
+			io.sockets.emit('meatIsSelected', true);
+		}
+		else{
+			io.sockets.emit('meatIsDeselected', false);
+		}
+		
+	});
+
+	// Broccoli selection status
+	socket.on('Broccoli selection status', function (data) {
+		console.log("Broccoli selection status ", data);
+		if(data == true){
+			io.sockets.emit('broccoliIsSelected', true);
+		}
+		else{
+			io.sockets.emit('broccoliIsDeselected', false);
+		}
+		
+	});
+
+	// Fish selection status
+	socket.on('Fish selection status', function (data) {
+		console.log("Fish selection status ", data);
+		if(data == true){
+			io.sockets.emit('fishIsSelected', true);
+		}
+		else{
+			io.sockets.emit('fishIsDeselected', false);
+		}
+		
+	});
+
 });
 
 // Real time check file content changes

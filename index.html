@@ -52,22 +52,24 @@
       <a-text id="orangeText" position="1 1 0.5" rotation="-90 0 -180" value="Orange" color="#D05A6E"></a-text>
     </a-marker>
 
-    <!-- marker fish -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/fish.patt'>
-      <a-sphere position="0 0.5 0" radius="0.3" color="#2EA9DF">
-        <a-animation attribute="material.color" from="white" to="#2EA9DF" dur="3000" repeat="indefinite"></a-animation>
-      </a-sphere>
-    </a-marker>
-
     <!-- marker meat -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/meat.patt'>
       <a-sphere id="sphereTest" position='0 0.1 0' radius="0.3" color="#2EA9DF"></a-sphere>
+      <a-text id="meatText" position="1 1 0.5" rotation="-90 0 -180" value="broccoli" color="#D05A6E"></a-text>
     </a-marker>
 
     <!-- marker broccoli -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/broccoli.patt'>
       <a-sphere position="0 0.5 0" radius="0.3" color="#1B813E"></a-sphere>
-      <a-text position="1 1 0.5" rotation="-90 0 -180" value="broccoli" color="#D05A6E"></a-text>
+      <a-text id="broccoliText" position="1 1 0.5" rotation="-90 0 -180" value="broccoli" color="#D05A6E"></a-text>
+    </a-marker>
+
+    <!-- marker fish -->
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/fish.patt'>
+      <a-sphere position="0 0.5 0" radius="0.3" color="#2EA9DF">
+        <a-animation attribute="material.color" from="white" to="#2EA9DF" dur="3000" repeat="indefinite"></a-animation>
+      </a-sphere>
+      <a-text id="fishText" position="1 1 0.5" rotation="-90 0 -180" value="Orange" color="#D05A6E"></a-text>
     </a-marker>
 
     <!-- marker hiro -->
@@ -173,9 +175,35 @@
       sceneEl.querySelector('#orange').setAttribute('color', '#000000');   
     });
 
+    // Meat selection show detailed information
+    socket.on('meatIsSelected', function(txt){   
+      sceneEl.querySelector('#meatText').setAttribute('value', "Meat is selected"); 
+    });
+
+    socket.on('meatIsDeselected', function(txt){ 
+      sceneEl.querySelector('#meatText').setAttribute('value', "Meat is deselected"); 
+    });
+
+    // Broccoli selection show detailed information
+    socket.on('broccoliIsSelected', function(txt){   
+      sceneEl.querySelector('#broccoliText').setAttribute('value', "Broccoli is selected"); 
+    });
+
+    socket.on('broccoliIsDeselected', function(txt){ 
+      sceneEl.querySelector('#broccoliText').setAttribute('value', "Broccoli is deselected");
+    });
+
+    // Fish selection show detailed information
+    socket.on('fishIsSelected', function(txt){
+      sceneEl.querySelector('#fishText').setAttribute('value', "Fish is selected");   
+    });
+
+    socket.on('fishIsDeselected', function(txt){ 
+      sceneEl.querySelector('#fishText').setAttribute('value', "Fish is deselected"); 
+    });
+
 
     $(function () {
-    	// var socket = io();
     	var photocell;
 
       // // Send message
@@ -189,7 +217,7 @@
       // });
 
       // Set sensor rgb color 
-      boardReady({board: 'Smart', url: '192.168.2.6'}, function (board) {
+      boardReady({board: 'Smart', url: '192.168.0.106'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
         rgbled = getRGBLedCathode(board, 15, 12, 13);
@@ -197,7 +225,7 @@
       });
 
       // Connect to Smart and emit sensor data
-      boardReady({board: 'Smart', url: '192.168.2.3'}, function (board) {
+      boardReady({board: 'Smart', url: '192.168.0.103'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
         photocell = getPhotocell(board, 0);
@@ -218,7 +246,7 @@
       });
 
       // Connect to Smart and emit sensor data green
-      boardReady({board: 'Smart', url: '192.168.2.4'}, function (board) {
+      boardReady({board: 'Smart', url: '192.168.0.104'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
         photocell = getPhotocell(board, 0);
@@ -239,7 +267,7 @@
       });
 
       // Connect to Smart and emit sensor data blue
-      boardReady({board: 'Smart', url: '192.168.2.5'}, function (board) {
+      boardReady({board: 'Smart', url: '192.168.0.105'}, function (board) {
         board.systemReset();
         board.samplingInterval = 50;
         photocell = getPhotocell(board, 0);
