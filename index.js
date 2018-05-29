@@ -5,6 +5,14 @@ var fs = require('fs');
 var connectedIDArray = [];
 
 
+// Node serialport
+var Serialport = require('serialport');
+var myPort = new Serialport("/dev/tty.wchusbserial1420",{
+	baudrate: 9600,
+	parser: Serialport.parsers.readline("\n")
+});
+
+
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -134,6 +142,17 @@ io.on('connection', function(socket){
 
 });
 
+// Read data from serial port and emit the data
+myPort.on('data', function (scaleDataMilk){
+	console.log(scaleDataMilk);
+	io.emit("scaleData", scaleDataMilk);
+});
+
+// Print error message on console when has problem connecting to the port
+myPort.on('error', function(err) {
+  console.log('Error: ', err.message);
+});
+
 // Real time check file content changes
 fs.watch('test.json', 
 	function(event, filename){
@@ -144,6 +163,7 @@ fs.watch('test.json',
 				console.log('file data: ' + data);
 			});
 	});
+
 
 http.listen(3000, function(){
 	console.log('listening on *:3000');

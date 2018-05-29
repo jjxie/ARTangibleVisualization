@@ -1,5 +1,5 @@
 var five = require("johnny-five");
-var board = new five.Board();
+var board = new five.Board({port : '/dev/tty.wchusbserial1410'});
 var socket = require('socket.io-client')('http://localhost:3000');
 var led;
 var servoMilk, servoOrange, serveoMeat, servoBroccoli, servoFish;

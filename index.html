@@ -16,6 +16,38 @@
   <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
   <!-- include ar.js for A-Frame -->
   <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script> 
+  <script src="js/three.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script>
+    // AFRAME.registerGeometry('example', {
+    //   schema: {
+    //     vertices: {
+    //       default: ['0 0 0', '5 0 0', '6.54 4.75 0', '2.50 7.69 0', '-1.54 4.75 0'],
+    //     }
+    //   },
+
+    //   init: function (data) {
+    //     var geometry = new THREE.Geometry();
+    //     geometry.groupsNeedUpdate = true;
+    //     geometry.vertices = data.vertices.map(function (vertex) {
+    //       var points = vertex.split(' ').map(function(x){return parseInt(x);});
+    //       return new THREE.Vector3(points[0], points[1], points[2], points[4], points[5]);
+    //     });
+    //     geometry.computeBoundingBox();
+    //     geometry.faces.push(new THREE.Face3(3, 4, 5));
+    //     geometry.mergeVertices();
+    //     geometry.computeFaceNormals();
+    //     geometry.computeVertexNormals();
+    //     this.geometry = geometry;
+    //   }
+    // });
+  </script>
+
   <style>
   body { margin: 5px; padding: 0; box-sizing: border-box; }
   body { font: 13px Helvetica, Arial; }
@@ -33,7 +65,9 @@
 </head>
 <body>
 
+
   <a-scene embedded arjs='sourceType: webcam;'>
+
     <!-- define a camera which will move according to the marker position -->
 
     <!-- marker milk -->
@@ -41,6 +75,7 @@
       <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" material='opacity: 0.5; color="#4CC3D9'></a-box>
       <a-sphere id="milk" position="0 0.5 0" radius="0.3" color="#EF2D5E"></a-sphere>
       <a-text id="milkText" position="1 1 0.5" rotation="-90 0 -180" value="Milk" color="#D05A6E"></a-text>
+      <!-- <a-entity geometry="primitive: example; vertices: 0 0 0, 5 0 0, 6.54 4.75 0, 2.50 7.69 0, -1.54 4.75 0"></a-entity> -->
     </a-marker>
 
     <!-- marker orange -->
@@ -116,14 +151,6 @@
       </div>
     </div>
   </div>
-
-
-  <script src="/socket.io/socket.io.js"></script>
-  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-  <!-- Include all compiled plugins (below), or include individual files as needed -->
-  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
 
   <script>
     var socket = io.connect('http://localhost:3000');
@@ -288,23 +315,10 @@
         $('#theprogressbarBlue').attr('aria-valuenow', blue).css('width',blue+ '%');
       });
 
-      // // Write data from sensor red on html
-      // socket.on('sensor data red', function(red){
-      //   $('#sensor-data-red').text("Red sensor :  " + red);
-      //   $('#theprogressbarRed').attr('aria-valuenow', red).css('width',red+ '%');
-      // });
-
-      // // Write data from sensor green on html
-      // socket.on('sensor data green', function(green){
-      //   $('#sensor-data-green').text("Green sensor :  " + green);
-      //   $('#theprogressbarGreen').attr('aria-valuenow', green).css('width',green+ '%');
-      // });
-
-      // // Write data from sensor blue on html
-      // socket.on('sensor data blue', function(blue){
-      //   $('#sensor-data-blue').text("Blue sensor :  " + blue);
-      //   $('#theprogressbarBlue').attr('aria-valuenow', blue).css('width',blue+ '%');
-      // });
+      // Get Milk weight data
+      socket.on('scaleData', function(milkWeight){
+        console.log(milkWeight);
+      });
 
       // If content updates, get all the content again
       socket.on('update content', function(data){
