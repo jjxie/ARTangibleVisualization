@@ -1,5 +1,5 @@
 var five = require("johnny-five");
-var board = new five.Board({port : '/dev/tty.wchusbserial1410'});
+var board = new five.Board({port : '/dev/tty.wchusbserial14230'});
 var socket = require('socket.io-client')('http://localhost:3000');
 var led;
 var servoMilk, servoOrange, serveoMeat, servoBroccoli, servoFish;
@@ -8,6 +8,12 @@ var orangeSelected = false;
 var meatSelected = false;
 var broccoliSelected = false;
 var fishSelected = false;
+
+var milkPreWeight = 0;
+var orangePreWeight = 0;
+var meatPreWeight = 0;
+var broccoliPreWeight = 0;
+var fishPreWeight = 0;
 
 board.on("ready", function() {
 	led = new five.Led(13);
@@ -34,7 +40,7 @@ board.on("ready", function() {
   		}
   	}
   	socket.emit('Milk selection status', milkSelected);
-  	console.log("Milk selected ", milkSelected);
+  	// console.log("Milk selected ", milkSelected);
   });
 
   // Touch sensor digital PIN 3, orange
@@ -50,7 +56,7 @@ board.on("ready", function() {
   		}
   	}
   	socket.emit('Orange selection status', orangeSelected);
-  	console.log("Orange selected ", orangeSelected); 	
+  	// console.log("Orange selected ", orangeSelected); 	
   });
 
   // Touch sensor digital PIN 4, meat
@@ -66,7 +72,7 @@ board.on("ready", function() {
   		}
   	}
     socket.emit('Meat selection status', meatSelected);
-    console.log("Meat selected ", meatSelected);
+    // console.log("Meat selected ", meatSelected);
   });
 
   // Touch sensor digital PIN 5, broccoli
@@ -82,7 +88,7 @@ board.on("ready", function() {
   		}
   	}
     socket.emit('Broccoli selection status', broccoliSelected);
-    console.log("Broccoli selected ", broccoliSelected);
+    // console.log("Broccoli selected ", broccoliSelected);
   });
 
   // Touch sensor digital PIN 6, fish
@@ -98,22 +104,26 @@ board.on("ready", function() {
     }
   }
   socket.emit('Fish selection status', fishSelected);
-  console.log("Fish selected ", fishSelected);
+  // console.log("Fish selected ", fishSelected);
 });
 
 });
 
-
-socket.on('sensor data red', function (red) {
+// Act on the scale data change
+socket.on('scaleDataMilk', function (milkWeight) {
 	if(board.isReady) {
-		if(red > 90){
-			led.blink(2000);
+    // may be check from arduino,
+    // here only push the data to histry data
+    // or could have double check
+    if(milkPreWeight > milkWeight){
+     led.blink(2000);
       //servoMilk.to( 90 );
+      milkPreWeight = milkWeight;
     }  
   }
 });
 
-socket.on('sensor data green', function (green) {
+socket.on('scaleDataOrange', function (orangeWeight) {
 	if(board.isReady) {
 		if(green > 90){
 			led.blink(500);
@@ -122,12 +132,30 @@ socket.on('sensor data green', function (green) {
   }
 });
 
-socket.on('sensor data blue', function (blue) {
+socket.on('scaleDataMeat', function (meatWeight) {
 	if(board.isReady) {
 		if(blue > 90){
 			led.blink(100);
       //servoMilk.to( 0 );
       //servoFish.to( 0 );
+    }  
+  }
+});
+
+socket.on('scaleDataBroccoli', function (broccoliWeight) {
+  if(board.isReady) {
+    if(green > 90){
+      led.blink(500);
+      //servoFish.to( 90 );
+    }  
+  }
+});
+
+socket.on('scaleDataFish', function (fishWeight) {
+  if(board.isReady) {
+    if(green > 90){
+      led.blink(500);
+      //servoFish.to( 90 );
     }  
   }
 });

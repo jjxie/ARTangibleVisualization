@@ -7,7 +7,7 @@ var connectedIDArray = [];
 
 // Node serialport
 var Serialport = require('serialport');
-var myPort = new Serialport("/dev/tty.wchusbserial1420",{
+var myPort = new Serialport("/dev/tty.wchusbserial14240",{
 	baudrate: 9600,
 	parser: Serialport.parsers.readline("\n")
 });
@@ -32,23 +32,6 @@ io.on('connection', function(socket){
 	// 	// send to others except the sender
 	// 	// socket.broadcast.emit('chat message', msg);
 	// });
-
-	// Send sensor data red
-	socket.on('sensor data red', function(sensorData){
-		io.emit('sensor data red',  sensorData);
-		// send to others except the sender
-		// socket.broadcast.emit('chat message', msg);
-	});
-
-	// Send sensor data green
-	socket.on('sensor data green', function(sensorData){
-		io.emit('sensor data green',  sensorData);
-	});
-
-	// Send sensor data 3
-	socket.on('sensor data blue', function(sensorData){
-		io.emit('sensor data blue',  sensorData);
-	});
 
 	// Online event
 	io.emit('online', socket.id);
@@ -82,7 +65,7 @@ io.on('connection', function(socket){
 
 	// Milk selection status
 	socket.on('Milk selection status', function (data) {
-		console.log("Milk selection status ", data);
+		// console.log("Milk selection status ", data);
 		if(data == true){
 			io.sockets.emit('milkIsSelected', true);
 		}
@@ -94,7 +77,7 @@ io.on('connection', function(socket){
 
 	// Orange selection status
 	socket.on('Orange selection status', function (data) {
-		console.log("Orange selection status ", data);
+		// console.log("Orange selection status ", data);
 		if(data == true){
 			io.sockets.emit('orangeIsSelected', true);
 		}
@@ -106,7 +89,7 @@ io.on('connection', function(socket){
 
 	// Meat selection status
 	socket.on('Meat selection status', function (data) {
-		console.log("Meat selection status ", data);
+		// console.log("Meat selection status ", data);
 		if(data == true){
 			io.sockets.emit('meatIsSelected', true);
 		}
@@ -118,7 +101,7 @@ io.on('connection', function(socket){
 
 	// Broccoli selection status
 	socket.on('Broccoli selection status', function (data) {
-		console.log("Broccoli selection status ", data);
+		// console.log("Broccoli selection status ", data);
 		if(data == true){
 			io.sockets.emit('broccoliIsSelected', true);
 		}
@@ -130,7 +113,7 @@ io.on('connection', function(socket){
 
 	// Fish selection status
 	socket.on('Fish selection status', function (data) {
-		console.log("Fish selection status ", data);
+		// console.log("Fish selection status ", data);
 		if(data == true){
 			io.sockets.emit('fishIsSelected', true);
 		}
@@ -139,18 +122,44 @@ io.on('connection', function(socket){
 		}
 		
 	});
-
 });
 
-// Read data from serial port and emit the data
-myPort.on('data', function (scaleDataMilk){
-	console.log(scaleDataMilk);
-	io.emit("scaleData", scaleDataMilk);
+// Read data from serial port and emit the weight data
+myPort.on('data', function (data){
+	console.log("Data received from Wemos: " + data);
+	// Get the first character which indicates which food's weight
+	var foodType = data.substring(0,1);
+  	// Remove the first letter, the remaining is the weight data
+  	var weight = data.substring(1);
+  	switch(foodType) {
+    	// Type A represents milk
+    	case "A":
+    	io.emit("scaleDataMilk", weight);
+    	break;
+    	// Type B represents orange
+    	case "B":
+    	io.emit("scaleDataOrange", weight);
+    	break;
+    	// Type C represents meat
+    	case "C":
+    	io.emit("scaleDataMeat", weight);
+    	break;
+    	// Type D represents broccoli
+    	case "D":
+    	io.emit("scaleDataBroccoli", weight);
+    	break;
+    	// Type E represents fish
+    	case "E":
+    	io.emit("scaleDataFish", weight);
+    	break;
+    	default:
+    	console.log("unknownMessage", data);
+    }
 });
 
 // Print error message on console when has problem connecting to the port
 myPort.on('error', function(err) {
-  console.log('Error: ', err.message);
+	console.log('Error: ', err.message);
 });
 
 // Real time check file content changes

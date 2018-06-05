@@ -58,9 +58,7 @@
   #messages li { padding: 5px 10px; }
   #messages li:nth-child(odd) { background: #eee; }
   #messages p { padding: 5px 10px; background: #5DAC81; color:#0B1013; font-size:20px; }
-  #sensor-data-red { font-size: 60px; pointer-events: auto!important;}
-  #sensor-data-green { font-size: 60px; pointer-events: auto!important;}
-  #sensor-data-blue { font-size: 60px; pointer-events: auto!important;}
+  #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 40px; pointer-events: auto!important;}
 </style>
 </head>
 <body>
@@ -120,18 +118,30 @@
   </a-scene>
 
 
-  <!-- sensor data area -->
-  <div><span id="sensor-data-red">Red sensor</span></div>
-  <div class="progress">
-    <div id="theprogressbarRed" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  <!-- scale data area on the webpage-->
+  <div><span id="scale-data-milk">Milk: 0.00 g</span></div>
+  <div class="progress col-md-2">
+    <div id="theprogressbarMilk" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
   </div>
-  <div><span id="sensor-data-green">Green sensor</span></div>
+
+  <div><span id="scale-data-orange">Orange: 0.00 g</span></div>
   <div class="progress">
-    <div id="theprogressbarGreen" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="theprogressbarOrange" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
   </div>
-  <div><span id="sensor-data-blue">Blue sensor</span></div>
+
+  <div><span id="scale-data-meat">Meat: 0.00 g</span></div>
   <div class="progress">
-    <div id="theprogressbarBlue" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+    <div id="theprogressbarMeat" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <div><span id="scale-data-broccoli">Broccoli: 0.00 g</span></div>
+  <div class="progress">
+    <div id="theprogressbarBroccoli" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+  </div>
+
+  <div><span id="scale-data-fish">Fish: 0.00 g</span></div>
+  <div class="progress">
+    <div id="theprogressbarFish" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
   </div>
 
   <!-- Message box area -->
@@ -231,11 +241,11 @@
 
 
     $(function () {
-    	var photocell;
+    	// var photocell;
 
       // // Send message
       // $('form').submit(function(){
-      // 	socket.emit('chat message', $('#m').val());
+      // 	socket.emit(s'chat message', $('#m').val());
       // 	$('#m').val('');
       // 	return false;
       // });
@@ -243,82 +253,69 @@
       // 	$('#messages').append($('<li>').text(msg));
       // });
 
-      // Set sensor rgb color 
-      boardReady({board: 'Smart', url: '192.168.0.106'}, function (board) {
-        board.systemReset();
-        board.samplingInterval = 50;
-        rgbled = getRGBLedCathode(board, 15, 12, 13);
-        rgbled.setColor(0,0,0);
+      // // Webduino Smart Set sensor rgb color 
+      // boardReady({board: 'Smart', url: '192.168.0.106'}, function (board) {
+      //   board.systemReset();
+      //   board.samplingInterval = 50;
+      //   rgbled = getRGBLedCathode(board, 15, 12, 13);
+      //   rgbled.setColor(0,0,0);
+      // });
+
+      // // Connect to Smart and emit sensor data
+      // boardReady({board: 'Smart', url: '192.168.0.103'}, function (board) {
+      //   board.systemReset();
+      //   board.samplingInterval = 50;
+      //   photocell = getPhotocell(board, 0);
+      //   rgbledRed = getRGBLedCathode(board, 15, 12, 13);
+      //   rgbledRed.setColor(255,0,0);
+      //   photocell.on(function(val){
+      //     photocell.detectedVal = val;
+      //     redValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
+      //     socket.emit('sensor data red', redValue);
+      //   });
+      // });
+
+      // Set milke weight data, max 1kg
+      socket.on('scaleDataMilk', function(milk){
+        console.log("Milk " + milk);
+        var percentageMilk = milk/1000 * 100;
+        $('#scale-data-milk').text("Milk:  " + milk + " g");
+        $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
       });
 
-      // Connect to Smart and emit sensor data
-      boardReady({board: 'Smart', url: '192.168.0.103'}, function (board) {
-        board.systemReset();
-        board.samplingInterval = 50;
-        photocell = getPhotocell(board, 0);
-        rgbledRed = getRGBLedCathode(board, 15, 12, 13);
-        rgbledRed.setColor(255,0,0);
-        photocell.on(function(val){
-          photocell.detectedVal = val;
-          redValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-          socket.emit('sensor data red', redValue);
-        });
+      // Set orange weight data, max 5kg
+      socket.on('scaleDataOrange', function(orange){
+        console.log("Orange " + orange);
+        var percentageOrange = orange/5000 * 100;
+        $('#scale-data-orange').text("Orange:  " + orange + " g");
+        $('#theprogressbarOrange').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
+      }); 
+
+      // Set meat weight data, max 5kg
+      socket.on('scaleDataMeat', function(meat){
+        console.log("Meat " + meat);
+        var percentageMeat = meat/5000 * 100;
+        $('#scale-data-meat').text("Meat:  " + meat + " g");
+        $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
       });
 
-      // Set red data
-      socket.on('sensor data red', function(red){
-        rgbled.setColor(red,greenValue,blueValue);
-        $('#sensor-data-red').text("Red sensor :  " + red);
-        $('#theprogressbarRed').attr('aria-valuenow', red).css('width',red+ '%');
+      // Set brocoli weight data, max 1kg
+      socket.on('scaleDataBroccoli', function(broccoli){
+        console.log("Broccoli " + broccoli);
+        var percentageBroccoli = broccoli/1000 * 100;
+        $('#scale-data-broccoli').text("Broccoli:  " + broccoli + " g");
+        $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
       });
 
-      // Connect to Smart and emit sensor data green
-      boardReady({board: 'Smart', url: '192.168.0.104'}, function (board) {
-        board.systemReset();
-        board.samplingInterval = 50;
-        photocell = getPhotocell(board, 0);
-        rgbledGreen = getRGBLedCathode(board, 15, 12, 13);
-        rgbledGreen.setColor(0,255,0);
-        photocell.on(function(val){
-          photocell.detectedVal = val;
-          greenValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-          socket.emit('sensor data green', greenValue);
-        });
+      // Set fish weight data, max 1kg 
+      socket.on('scaleDataFish', function(fish){
+        console.log("Fish " + fish);
+        var percentageFish = fish/1000 * 100;
+        $('#scale-data-fish').text("Fish:  " + fish + " g");
+        $('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
       });
 
-      // Set green data
-      socket.on('sensor data green', function(green){
-        rgbled.setColor(redValue,green,blueValue);
-        $('#sensor-data-green').text("Green sensor :  " + green);
-        $('#theprogressbarGreen').attr('aria-valuenow', green).css('width',green+ '%');
-      });
 
-      // Connect to Smart and emit sensor data blue
-      boardReady({board: 'Smart', url: '192.168.0.105'}, function (board) {
-        board.systemReset();
-        board.samplingInterval = 50;
-        photocell = getPhotocell(board, 0);
-        rgbledBlue = getRGBLedCathode(board, 15, 12, 13);
-        rgbledBlue.setColor(0,0,255);
-        photocell.on(function(val){
-          photocell.detectedVal = val;
-          blueValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-          socket.emit('sensor data blue', blueValue);
-
-        });
-      });
-
-      // Set blue data
-      socket.on('sensor data blue', function(blue){
-        rgbled.setColor(redValue,greenValue,blue);
-        $('#sensor-data-blue').text("Blue sensor :  " + blue);
-        $('#theprogressbarBlue').attr('aria-valuenow', blue).css('width',blue+ '%');
-      });
-
-      // Get Milk weight data
-      socket.on('scaleData', function(milkWeight){
-        console.log(milkWeight);
-      });
 
       // If content updates, get all the content again
       socket.on('update content', function(data){
