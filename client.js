@@ -1,7 +1,8 @@
 var five = require("johnny-five");
-var board = new five.Board({port : '/dev/tty.wchusbserial14230'});
+var board = new five.Board({port : '/dev/tty.wchusbserial14220'});
 var socket = require('socket.io-client')('http://localhost:3000');
 var led;
+var maxWeight = 1000;
 var servoMilk, servoOrange, serveoMeat, servoBroccoli, servoFish;
 var milkSelected = false;
 var orangeSelected = false;
@@ -9,21 +10,59 @@ var meatSelected = false;
 var broccoliSelected = false;
 var fishSelected = false;
 
+// The full length of each servo
+var servoMilkFullLength = 13.4;
+var servoOrangeFullLength = 12.3;
+var serveoMeatFullLength = 12.3;
+var servoBroccoliFullLength = 12.3;
+var servoFishFullLength = 11.9;
+
+// The length of per degree
+var servoMilkLengthPerDegree = 0.087;
+var servoOrangeLengthPerDegree = 0.072;
+var servoMeatLengthPerDegree = 0.072;
+var servoBroccoliLengthPerDegree = 0.087;
+var servoFishLengthPerDegree = 0.087;
+
+// The max degree of each servo
+var servoMilkMaxDegree = 160;
+var servoOrangeMaxDegree = 170;
+var servoMeatMaxDegree = 170;
+var servoBroccoliMaxDegree = 170;
+var servoFishMaxDegree = 180;
+
+// Each servo's position
+var servoMilkPosition = 0;
+var servoOrangePosition = 0;
+var serveoMeatPosition = 0;
+var servoBroccoliPosition = 0;
+var servoFishPosition = 0;
+
+// The number before current number
 var milkPreWeight = 0;
 var orangePreWeight = 0;
 var meatPreWeight = 0;
 var broccoliPreWeight = 0;
 var fishPreWeight = 0;
 
+// Historical data
+var milkHistory = {date:"Wed Jun 06 2018 10:41:53 GMT+0200 (CEST)", time:"1528274513.542", weight:0};
+var orangeHistory = {date:"Wed Jun 06 2018 10:41:53 GMT+0200 (CEST)", time:"1528274513.542", weight:0};
+var meatHistory = {date:"Wed Jun 06 2018 10:41:53 GMT+0200 (CEST)", time:"1528274513.542", weight:0};
+var broccoliHistory = {date:"Wed Jun 06 2018 10:41:53 GMT+0200 (CEST)", time:"1528274513.542", weight:0};
+var fishHistory = {date:"Wed Jun 06 2018 10:41:53 GMT+0200 (CEST)", time:"1528274513.542", weight:0};
+
+
+
 board.on("ready", function() {
 	led = new five.Led(13);
 	led.blink(2000);
 
   // Attach 5 servos to PIN from 8 - 12
-  // servoMilk = new five.Servo(8);
-  // servoOrange =  new five.Servo(9);
-  // serveoMeat = new five.Servo(10);
-  // servoBroccoli = new five.Servo(11);
+  servoMilk = new five.Servo(8);
+  servoOrange =  new five.Servo(9);
+  serveoMeat = new five.Servo(10);
+  servoBroccoli = new five.Servo(11);
   // servoFish = new five.Servo(12);
 
 
@@ -109,53 +148,46 @@ board.on("ready", function() {
 
 });
 
-// Act on the scale data change
+// Dealing with the weight changes
 socket.on('scaleDataMilk', function (milkWeight) {
 	if(board.isReady) {
-    // may be check from arduino,
-    // here only push the data to histry data
-    // or could have double check
-    if(milkPreWeight > milkWeight){
-     led.blink(2000);
-      //servoMilk.to( 90 );
-      milkPreWeight = milkWeight;
-    }  
+    // servoMilk.attach(8);
+    servoMilk.to( Math.round((milkWeight/maxWeight * servoMilkFullLength) / servoMilkLengthPerDegree + 0.5) );
   }
 });
 
 socket.on('scaleDataOrange', function (orangeWeight) {
-	if(board.isReady) {
-		if(green > 90){
-			led.blink(500);
-      //servoFish.to( 90 );
-    }  
+  if(board.isReady) {
+    // servoOrange.attach(9);
+    console.log("ENTER");
+    var degree = Math.round((orangeWeight/maxWeight * servoOrangeFullLength) / servoOrangeLengthPerDegree + 0.5) ;
+    console.log(degree);
+    servoOrange.to(degree);
+    servoOrange.stop();
   }
+
 });
 
 socket.on('scaleDataMeat', function (meatWeight) {
 	if(board.isReady) {
-		if(blue > 90){
-			led.blink(100);
-      //servoMilk.to( 0 );
-      //servoFish.to( 0 );
-    }  
+    // serveoMeat.attach(10);
+    serveoMeat.to( Math.round((meatWeight/maxWeight * serveoMeatFullLength) / servoMeatLengthPerDegree + 0.5) );
+    // serveoMeat.detach();
   }
 });
 
 socket.on('scaleDataBroccoli', function (broccoliWeight) {
   if(board.isReady) {
-    if(green > 90){
-      led.blink(500);
-      //servoFish.to( 90 );
-    }  
+    // servoBroccoli.attach(11);
+    servoBroccoli.to( Math.round((broccoliWeight/maxWeight * servoBroccoliFullLength) / servoBroccoliLengthPerDegree + 0.5) );
+    // servoBroccoli.detach();
   }
 });
 
-socket.on('scaleDataFish', function (fishWeight) {
-  if(board.isReady) {
-    if(green > 90){
-      led.blink(500);
-      //servoFish.to( 90 );
-    }  
-  }
-});
+// socket.on('scaleDataFish', function (fishWeight) {
+//   if(board.isReady) {
+//     servoFish.attach(12);
+//     servoFish.to( Math.round((fishWeight/maxWeight * servoFishFullLength) / servoFishLengthPerDegree + 0.5) );
+//     servoFish.detach();
+//   }
+// });
