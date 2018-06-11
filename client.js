@@ -3,6 +3,7 @@ var board = new five.Board({port : '/dev/tty.wchusbserial14220'});
 var socket = require('socket.io-client')('http://localhost:3000');
 var led;
 var maxWeight = 1000;
+var servoStartDegree = 5;
 var servoMilk, servoOrange, serveoMeat, servoBroccoli, servoFish;
 var milkSelected = false;
 var orangeSelected = false;
@@ -59,11 +60,26 @@ board.on("ready", function() {
 	led.blink(2000);
 
   // Attach 5 servos to PIN from 8 - 12
-  servoMilk = new five.Servo(8);
-  servoOrange =  new five.Servo(9);
-  serveoMeat = new five.Servo(10);
-  servoBroccoli = new five.Servo(11);
-  // servoFish = new five.Servo(12);
+  servoMilk = new five.Servo({
+    pin: 8,
+    startAt: servoStartDegree
+  });
+  servoOrange = new five.Servo({
+    pin: 9,
+    startAt: servoStartDegree
+  });
+  serveoMeat = new five.Servo({
+    pin: 10,
+    startAt: servoStartDegree
+  });
+  servoBroccoli = new five.Servo({
+    pin: 11,
+    startAt: servoStartDegree
+  });
+  // servoFish = new five.Servo({
+  //   pin: 12,
+  //   startAt: 5
+  // });
 
 
   // Touch sensor digital PIN 2, milk
@@ -151,43 +167,36 @@ board.on("ready", function() {
 // Dealing with the weight changes
 socket.on('scaleDataMilk', function (milkWeight) {
 	if(board.isReady) {
-    // servoMilk.attach(8);
-    servoMilk.to( Math.round((milkWeight/maxWeight * servoMilkFullLength) / servoMilkLengthPerDegree + 0.5) );
+    servoMilk.to( calDegree(milkWeight, servoMilkFullLength, servoMilkLengthPerDegree));
   }
 });
 
 socket.on('scaleDataOrange', function (orangeWeight) {
   if(board.isReady) {
-    // servoOrange.attach(9);
-    console.log("ENTER");
-    var degree = Math.round((orangeWeight/maxWeight * servoOrangeFullLength) / servoOrangeLengthPerDegree + 0.5) ;
-    console.log(degree);
-    servoOrange.to(degree);
-    servoOrange.stop();
+    servoOrange.to ( calDegree(orangeWeight, servoOrangeFullLength, servoOrangeLengthPerDegree));
   }
 
 });
 
 socket.on('scaleDataMeat', function (meatWeight) {
 	if(board.isReady) {
-    // serveoMeat.attach(10);
-    serveoMeat.to( Math.round((meatWeight/maxWeight * serveoMeatFullLength) / servoMeatLengthPerDegree + 0.5) );
-    // serveoMeat.detach();
+    serveoMeat.to( calDegree(meatWeight, serveoMeatFullLength, servoMeatLengthPerDegree));
   }
 });
 
 socket.on('scaleDataBroccoli', function (broccoliWeight) {
   if(board.isReady) {
-    // servoBroccoli.attach(11);
-    servoBroccoli.to( Math.round((broccoliWeight/maxWeight * servoBroccoliFullLength) / servoBroccoliLengthPerDegree + 0.5) );
-    // servoBroccoli.detach();
+    servoBroccoli.to( calDegree(broccoliWeight, servoBroccoliFullLength, servoBroccoliLengthPerDegree));
   }
 });
 
 // socket.on('scaleDataFish', function (fishWeight) {
 //   if(board.isReady) {
-//     servoFish.attach(12);
-//     servoFish.to( Math.round((fishWeight/maxWeight * servoFishFullLength) / servoFishLengthPerDegree + 0.5) );
-//     servoFish.detach();
+//     servoFish.to( calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree));
 //   }
 // });
+
+function calDegree(weight, fullLength, lenghPerDegree){
+  var degree = Math.round((weight/maxWeight * fullLength) / lenghPerDegree + 0.5)
+  return degree;
+}
