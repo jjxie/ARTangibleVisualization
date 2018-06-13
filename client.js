@@ -22,8 +22,8 @@ var servoFishFullLength = 11.9;
 var servoMilkLengthPerDegree = 0.087;
 var servoOrangeLengthPerDegree = 0.072;
 var servoMeatLengthPerDegree = 0.072;
-var servoBroccoliLengthPerDegree = 0.087;
-var servoFishLengthPerDegree = 0.087;
+var servoBroccoliLengthPerDegree = 0.072;
+var servoFishLengthPerDegree = 0.06;
 
 // The max degree of each servo
 var servoMilkMaxDegree = 160;
@@ -168,6 +168,7 @@ board.on("ready", function() {
 socket.on('scaleDataMilk', function (milkWeight) {
 	if(board.isReady) {
     servoMilk.to( calDegree(milkWeight, servoMilkFullLength, servoMilkLengthPerDegree));
+    
   }
 });
 
