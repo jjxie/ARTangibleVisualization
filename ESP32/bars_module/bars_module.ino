@@ -1,21 +1,28 @@
-#include <SocketIoClient.h>
+#define ESP32
 
 #include <SparkFun_VL6180X.h>
+
+
+#include <SocketIoClient.h>
+
+
 #include <Wire.h>
 #include <math.h>
-#include <Servo.h>
-#include <esp_wifi.h>
+#include <ESP32_Servo.h>
 
 
-#define VL6180X_ADDRESS 0x29
+#include <WiFi.h>
+const char* ssid = "TP-LINK_8F96";
+const char* password = "49005875";
 
-VL6180xIdentification identification;
-VL6180x sensor(VL6180X_ADDRESS);
+// comment the distance sensors out as long as their are not connected
+//#define VL6180X_ADDRESS 0x29
+//VL6180xIdentification identification;
+//VL6180x sensor(VL6180X_ADDRESS);
+
 
 // socket.io connection
 SocketIoClient socket;
-
-// TODO: setup wifi connection
 
 
 Servo servoMilk;
@@ -99,25 +106,42 @@ float meatRackDistance = 0.00;
 float broccoliRackDistance = 0.00;
 float fishRackDistance = 0.00;
 
+boolean servosConnected = false;
 
 void setup() {
   // put your setup code here, to run once:
   Serial.begin(57600);
+  delay(10);
+    Serial.print("Connecting to WiFi network ");
+    Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("");
+  Serial.println("Connected to the WiFi network");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+  // the above line is the last one that is printed out on the serial monitor before the kernel panic
+
+  
   Wire.begin();
-  socket.begin("192.168.0.xxx", 3000);
+  socket.begin("192.168.0.100", 3000);
   delay(100);
 
-  sensor.getIdentification(&identification); // Retrieve manufacture info from device memory
-  printIdentification(&identification); // Helper function to print all the Module information
+  //sensor.getIdentification(&identification); // Retrieve manufacture info from device memory
+  //printIdentification(&identification); // Helper function to print all the Module information
 
   // Setting Distance sensor 
-  if(sensor.VL6180xInit() != 0){
-    Serial.println("FAILED TO INITALIZE"); //Initialize device and check for errors
-  }; 
-  sensor.VL6180xDefautSettings(); //Load default settings to get started.
-  delay(1000); // delay 1s
+  //if(sensor.VL6180xInit() != 0){
+  //  Serial.println("FAILED TO INITALIZE"); //Initialize device and check for errors
+  //}; 
+  //sensor.VL6180xDefautSettings(); //Load default settings to get started.
+  //delay(1000); // delay 1s
 
   // Servos
+  if (servosConnected){
   servoMilk.attach(8);
   servoOrange.attach(9);
   servoMeat.attach(10);
@@ -129,7 +153,7 @@ void setup() {
   servoMeat.write(servoStartDegree);
   servoBroccoli.write(servoStartDegree);
   servoFish.write(servoStartDegree);
-
+  }
 
   // Touch sensors
   pinMode(milkTouchPin, INPUT); 
@@ -141,20 +165,23 @@ void setup() {
   // define socket io callbacks
   socket.on("connect", socketConnected);
   socket.on("scaleDataMilk", setMilkServo);
-  socket.on("scaleDataOrange", setOrangeServo);
-  socket.on("scaleDataMeat", setMeatServo);
-  socket.on("scaleDataBroccoli", setBroccoliServo);
-  socket.on("scaleDataFish", setFishServo);
+  //TODO: uncomment after functions are implemented
+//  socket.on("scaleDataOrange", setOrangeServo);
+//  socket.on("scaleDataMeat", setMeatServo);
+//  socket.on("scaleDataBroccoli", setBroccoliServo);
+//  socket.on("scaleDataFish", setFishServo);
 
 }
 
 void loop() 
 { 
+  socket.loop();
   // we need to read the touch sensors and emit a socket.io message if a status changes
   boolean milk = digitalRead(milkTouchPin);
   if (milk != milkSelected) {
     milkSelected = milk;
-    socket.emit("Milk selection status", milk);
+    if (milk) socket.emit("Milk selection status", "\"1\"");
+    if (!milk) socket.emit("Milk selection status", "\"0\"");
   }
 
   //TODO: do the same for the other 4 sensors
@@ -181,8 +208,8 @@ void loop()
 
 
 
-  // Read distance sensor 
-  milkRackDistance =  sensor.getDistance();
+  // Read distance sensors, probably needs to use i2c addresses to indicate which sensor to query.
+//  milkRackDistance =  sensor.getDistance();
 
 }
 
@@ -199,7 +226,7 @@ void setMilkServo(const char *weight, size_t length){
   // get value from message
   String data;
   for (int i = 0; i < length; i++) {
-    data += (char)payload[i];
+    data += (char)weight[i];
   }
   int value = data.toInt();
 
@@ -207,6 +234,9 @@ void setMilkServo(const char *weight, size_t length){
   float transformedValue = calDegree(value, servoMilkFullLength, servoMilkLengthPerDegree);
   attachAndSetServo(servoMilk, milkServoPin, transformedValue);
 }
+
+
+
 
 //TODO: add functions for orange, meat, broccoli and fish
 
@@ -239,16 +269,19 @@ void setMilkServo(const char *weight, size_t length){
 void attachAndSetServo(Servo servo, int pin, int value) {
   servo.attach(pin);
   servo.write(value);
-  servo.detach;
+  servo.detach();
 }
 
 
 void socketConnected(const char *weight, size_t length){
   // get value from message
-  serial.println("Socket.io server connected.");
+  Serial.println("Socket.io server connected.");
 }
 
-
+const char* printBoolean(boolean input){
+  if (input) return("1");
+  if (!input) return("0");
+}
 
 void printIdentification(struct VL6180xIdentification *temp){
   Serial.print("Model ID = ");
