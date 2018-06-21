@@ -7,12 +7,29 @@
    return VL6180x_getRegister(VL6180X_I2C_SLAVE_DEVICE_ADDRESS); }
 
    Add one Euro filter to reduce jitter, http://cristal.univ-lille.fr/~casiez/1euro/
+
+   SocketIoClient, have to comment // hexdump(payload, length); in the SocketIoClient.cpp file to avoid error.
+   I2C: SDA 21  SCL 22
  ******************************************************************************/
- 
+#define ESP32
+#include <SocketIoClient.h>
+
 #include <SF1eFilter.h>
 #include <stdlib.h>
 #include <time.h>
 #include <stdio.h>
+#include <SparkFun_VL6180X.h>
+#include <Wire.h>
+#include <math.h>
+#include <ESP32_Servo.h>
+#include <WiFi.h>
+
+// The Router that the board connects to
+const char* ssid = "TP-LINK_8F96";
+const char* password = "49005875";
+
+// socket.io connection
+SocketIoClient socket;
 
 // Each distance sensor uses one SF1eFilter structure
 SF1eFilter filter1;
@@ -21,12 +38,6 @@ SF1eFilter filter3;
 SF1eFilter filter4;
 //SF1eFilter filter5;
 
-#include <SparkFun_VL6180X.h>
-#include <Wire.h>
-#include <math.h>
-#include <Servo.h>
-
-
 #define VL6180X_ADDRESS 0x29
 #define NEWVL6180X_ADDRESS1 0x30
 #define NEWVL6180X_ADDRESS2 0x32
@@ -34,18 +45,18 @@ SF1eFilter filter4;
 #define NEWVL6180X_ADDRESS4 0x36
 //#define NEWVL6180X_ADDRESS5 0x38
 
-int enable1 = A0;
-int enable2 = A1;
-int enable3 = A2;
-int enable4 = A3;
+int enable1 = 4;  //AO-A4 Arduino
+int enable2 = 0;
+int enable3 = 2;
+int enable4 = 15;
 //int enable5 = A4;
 
-VL6180xIdentification identification;
-VL6180x sensor1(VL6180X_ADDRESS);
-VL6180x sensor2(VL6180X_ADDRESS);
-VL6180x sensor3(VL6180X_ADDRESS);
-VL6180x sensor4(VL6180X_ADDRESS);
-VL6180x sensor5(VL6180X_ADDRESS);
+//VL6180xIdentification identification;
+//VL6180x sensor1(VL6180X_ADDRESS);
+//VL6180x sensor2(VL6180X_ADDRESS);
+//VL6180x sensor3(VL6180X_ADDRESS);
+//VL6180x sensor4(VL6180X_ADDRESS);
+//VL6180x sensor5(VL6180X_ADDRESS);
 
 
 Servo servoMilk;
@@ -53,6 +64,13 @@ Servo servoOrange;
 Servo servoMeat;
 Servo servoBroccoli;
 Servo servoFish;
+
+// Define servo pins
+int milkServoPin = 36;
+int orangeServoPin = 39;
+int meatServoPin = 34;
+int brocolliServoPin = 35;
+int fishServoPin = 32;
 
 int servoStartDegree = 0;
 float maxWeight = 1000;
@@ -94,11 +112,11 @@ float fishDegree = 0.00;
 
 
 // Define touch sensor pins
-int milkTouchPin = 2;
-int orangeTouchPin = 3;
-int meatTouchPin = 4;
-int brocolliTouchPin = 5;
-int fishTouchPin = 6;
+int milkTouchPin = 33;
+int orangeTouchPin = 25;
+int meatTouchPin = 26;
+int brocolliTouchPin = 27;
+int fishTouchPin = 14;
 
 // Touch sensor value
 int milkTouchValue = 0;
@@ -226,13 +244,32 @@ void setup() {
   Wire.begin();
   delay(100);
 
+  // connect to wifi rounter in the environment
+  Serial.print("Connecting to WiFi network ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("");
+  Serial.println("Connected to the WiFi network");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // Begin the socket, find your computer WiFi TCP/IP Address
+  // Mac Network--> WiFi--> Advanced--> TCP/IP
+  socket.begin("192.168.0.100", 3000);
+  delay(100);
+
+  socket.on("connect", socketConnected);
 
   // Servos
-  servoMilk.attach(8);
-  servoOrange.attach(9);
-  servoMeat.attach(10);
-  servoBroccoli.attach(11);
-  servoFish.attach(12);
+  servoMilk.attach(milkServoPin);
+  servoOrange.attach(orangeServoPin);
+  servoMeat.attach(meatServoPin);
+  servoBroccoli.attach(brocolliServoPin);
+  servoFish.attach(fishServoPin);
 
   servoMilk.write(servoStartDegree);
   servoOrange.write(servoStartDegree);
@@ -249,89 +286,92 @@ void setup() {
   pinMode(fishTouchPin, INPUT);
 
 
-  // Distance sensors
-  pinMode(enable1, OUTPUT);
-  pinMode(enable2, OUTPUT);
-  pinMode(enable3, OUTPUT);
-  pinMode(enable4, OUTPUT);
-  //  pinMode(enable5, OUTPUT);
-
-  // Enable sensor 1 pin, disable other pins
-  digitalWrite(enable1, HIGH);
-  digitalWrite(enable2, LOW);
-  digitalWrite(enable3, LOW);
-  digitalWrite(enable4, LOW);
-  sensor1.getIdentification(&identification); // Retrieve manufacture info from device memory
-  printIdentification(&identification); // Helper function to print all the Module information
-
-  if (sensor1.VL6180xInit() != 0) {
-    Serial.println("SENSOR 1 FAILED TO INITALIZE"); //Initialize device and check for errors
-  };
-  sensor1.VL6180xDefautSettings(); //Load default settings to get started.
-  delay(1000); // delay 1s
-  sensor1.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS1);
-
-  // Enable sensor 2 pin, disable other pins
-  digitalWrite(enable2, HIGH);
-  sensor2.getIdentification(&identification);
-  if (sensor2.VL6180xInit() != 0) {
-    Serial.println("SENSOR 2 FAILED TO INITALIZE"); //Initialize device and check for errors
-  };
-  sensor2.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS2);
-
-  // Enable sensor 3 pin, disable other pins
-  digitalWrite(enable3, HIGH);
-  sensor3.getIdentification(&identification);
-  if (sensor3.VL6180xInit() != 0) {
-    Serial.println("SENSOR 3 FAILED TO INITALIZE"); //Initialize device and check for errors
-  };
-  sensor3.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS3);
-
-  // Enable sensor 4 pin, disable other pins
-  digitalWrite(enable4, HIGH);
-  sensor4.getIdentification(&identification);
-  if (sensor4.VL6180xInit() != 0) {
-    Serial.println("SENSOR 4 FAILED TO INITALIZE"); //Initialize device and check for errors
-  };
-  sensor4.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS4);
-
-  // The presettings of each fliter
-  srand((unsigned int)time(NULL));
-  filter1.config.frequency = 120;
-  filter1.config.cutoffSlope = 1;
-  filter1.config.derivativeCutoffFrequency = 1;
-  filter1.config.minCutoffFrequency = 1;
-  SF1eFilterInit(&filter1);
-
-  filter2.config.frequency = 120;
-  filter2.config.cutoffSlope = 1;
-  filter2.config.derivativeCutoffFrequency = 1;
-  filter2.config.minCutoffFrequency = 1;
-  SF1eFilterInit(&filter2);
-
-  filter3.config.frequency = 120;
-  filter3.config.cutoffSlope = 1;
-  filter3.config.derivativeCutoffFrequency = 1;
-  filter3.config.minCutoffFrequency = 1;
-  SF1eFilterInit(&filter3);
-
-  filter4.config.frequency = 120;
-  filter4.config.cutoffSlope = 1;
-  filter4.config.derivativeCutoffFrequency = 1;
-  filter4.config.minCutoffFrequency = 1;
-  SF1eFilterInit(&filter4);
-
-  //  filter5.config.frequency = 120;
-  //  filter5.config.cutoffSlope = 1;
-  //  filter5.config.derivativeCutoffFrequency = 1;
-  //  filter5.config.minCutoffFrequency = 1;
-  //  SF1eFilterInit(&filter5);
-  //
+//  // Distance sensors
+//  pinMode(enable1, OUTPUT);
+//  pinMode(enable2, OUTPUT);
+//  pinMode(enable3, OUTPUT);
+//  pinMode(enable4, OUTPUT);
+//  //  pinMode(enable5, OUTPUT);
+//
+//  // Enable sensor 1 pin, disable other pins
+//  digitalWrite(enable1, HIGH);
+//  digitalWrite(enable2, LOW);
+//  digitalWrite(enable3, LOW);
+//  digitalWrite(enable4, LOW);
+//  sensor1.getIdentification(&identification); // Retrieve manufacture info from device memory
+//  printIdentification(&identification); // Helper function to print all the Module information
+//
+//  if (sensor1.VL6180xInit() != 0) {
+//    Serial.println("SENSOR 1 FAILED TO INITALIZE"); //Initialize device and check for errors
+//  };
+//  sensor1.VL6180xDefautSettings(); //Load default settings to get started.
+//  delay(1000); // delay 1s
+//  sensor1.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS1);
+//
+//  // Enable sensor 2 pin, disable other pins
+//  digitalWrite(enable2, HIGH);
+//  sensor2.getIdentification(&identification);
+//  if (sensor2.VL6180xInit() != 0) {
+//    Serial.println("SENSOR 2 FAILED TO INITALIZE"); //Initialize device and check for errors
+//  };
+//  sensor2.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS2);
+//
+//  // Enable sensor 3 pin, disable other pins
+//  digitalWrite(enable3, HIGH);
+//  sensor3.getIdentification(&identification);
+//  if (sensor3.VL6180xInit() != 0) {
+//    Serial.println("SENSOR 3 FAILED TO INITALIZE"); //Initialize device and check for errors
+//  };
+//  sensor3.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS3);
+//
+//  // Enable sensor 4 pin, disable other pins
+//  digitalWrite(enable4, HIGH);
+//  sensor4.getIdentification(&identification);
+//  if (sensor4.VL6180xInit() != 0) {
+//    Serial.println("SENSOR 4 FAILED TO INITALIZE"); //Initialize device and check for errors
+//  };
+//  sensor4.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS4);
+//
+//  // The presettings of each fliter
+//  srand((unsigned int)time(NULL));
+//  filter1.config.frequency = 120;
+//  filter1.config.cutoffSlope = 1;
+//  filter1.config.derivativeCutoffFrequency = 1;
+//  filter1.config.minCutoffFrequency = 1;
+//  SF1eFilterInit(&filter1);
+//
+//  filter2.config.frequency = 120;
+//  filter2.config.cutoffSlope = 1;
+//  filter2.config.derivativeCutoffFrequency = 1;
+//  filter2.config.minCutoffFrequency = 1;
+//  SF1eFilterInit(&filter2);
+//
+//  filter3.config.frequency = 120;
+//  filter3.config.cutoffSlope = 1;
+//  filter3.config.derivativeCutoffFrequency = 1;
+//  filter3.config.minCutoffFrequency = 1;
+//  SF1eFilterInit(&filter3);
+//
+//  filter4.config.frequency = 120;
+//  filter4.config.cutoffSlope = 1;
+//  filter4.config.derivativeCutoffFrequency = 1;
+//  filter4.config.minCutoffFrequency = 1;
+//  SF1eFilterInit(&filter4);
+//
+//  //  filter5.config.frequency = 120;
+//  //  filter5.config.cutoffSlope = 1;
+//  //  filter5.config.derivativeCutoffFrequency = 1;
+//  //  filter5.config.minCutoffFrequency = 1;
+//  //  SF1eFilterInit(&filter5);
+//  //
 
 }
 
 void loop()
 {
+  socket.loop();
+  socket.on("connect", socketConnected);
+  
   // Receive milk weight datarotate servo
   milkDegree = calDegree(milkWeight, servoMilkFullLength, servoMilkLengthPerDegree);
   servoMilk.write(milkDegree);
@@ -357,12 +397,7 @@ void loop()
   milkTouchValue = digitalRead(milkTouchPin);
   if (checkTouchStatus(milkTouchValue)) {
     milkSelected = checkSelectedStatus(milkSelected);
-    //emit
-//    //Test
-//    Serial.print(milkSelected);
-//    servoMilk.write(100);
-//    delay(1000);
-//    servoMilk.detach();
+    socket.emit("Milk selection status", BoolToString(milkSelected));
   }
 
   // Read orange touch sensor pins value and set status
@@ -394,24 +429,24 @@ void loop()
   }
 
 
-  //  Read distance data
-  //  Get Sensor Distance and filtered by One Euro filter
-  milkRackDistance = SF1eFiltered1(sensor1.getDistance());
-//  Serial.print("1 ");
-//  Serial.println(milkRackDistance);
-//  Serial.println();
-  delay(100);
-  
-  orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
-  delay(100);
-
-  meatRackDistance = SF1eFiltered3(sensor3.getDistance());
-  delay(100);
-
-  broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
-  delay(100);
-
-//  fishRackDistance = SF1eFiltered5(sensor5.getDistance())
+//  //  Read distance data
+//  //  Get Sensor Distance and filtered by One Euro filter
+//  milkRackDistance = SF1eFiltered1(sensor1.getDistance());
+////  Serial.print("1 ");
+////  Serial.println(milkRackDistance);
+////  Serial.println();
+//  delay(100);
+//  
+//  orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
+//  delay(100);
+//
+//  meatRackDistance = SF1eFiltered3(sensor3.getDistance());
+//  delay(100);
+//
+//  broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
+//  delay(100);
+//
+////  fishRackDistance = SF1eFiltered5(sensor5.getDistance())
 
 }
 
@@ -474,81 +509,92 @@ void printIdentification(struct VL6180xIdentification *temp) {
   Serial.println();
 }
 
-// 1 Euro filter, IN initializeScaleData(scale1.get_units(), 1), OUT filtered
-float SF1eFiltered1(float readData)
-{
-  float signal = readData;
-  float randnum = (float)rand() * 1.f / RAND_MAX;
-  float noisy = signal + (randnum - 0.5f) / 5.f;
-  float filtered = SF1eFilterDo(&filter1, noisy);
-//    Serial.print(signal);
-//    Serial.print(" ");
-//    Serial.print(noisy);
-//    Serial.print(" ");
-//    Serial.print(filtered);
-//    Serial.print(" ");
-  return filtered;
-}
-
-float SF1eFiltered2(float readData)
-{
-  float signal = readData;
-  float randnum = (float)rand() * 1.f / RAND_MAX;
-  float noisy = signal + (randnum - 0.5f) / 5.f;
-  float filtered = SF1eFilterDo(&filter2, noisy);
-  //  Serial.print(signal);
-  //  Serial.print(" ");
-  //  Serial.print(noisy);
-  //  Serial.print(" ");
-  //  Serial.print(filtered);
-  //  Serial.print(" ");
-  return filtered;
-}
-
-float SF1eFiltered3(float readData)
-{
-  float signal = readData;
-  float randnum = (float)rand() * 1.f / RAND_MAX;
-  float noisy = signal + (randnum - 0.5f) / 5.f;
-  float filtered = SF1eFilterDo(&filter3, noisy);
-  //  Serial.print(signal);
-  //  Serial.print(" ");
-  //  Serial.print(noisy);
-  //  Serial.print(" ");
-  //  Serial.print(filtered);
-  //  Serial.print(" ");
-  return filtered;
-}
-
-float SF1eFiltered4(float readData)
-{
-  float signal = readData;
-  float randnum = (float)rand() * 1.f / RAND_MAX;
-  float noisy = signal + (randnum - 0.5f) / 5.f;
-  float filtered = SF1eFilterDo(&filter4, noisy);
-  //  Serial.print(signal);
-  //  Serial.print(" ");
-  //  Serial.print(noisy);
-  //  Serial.print(" ");
-  //  Serial.print(filtered);
-  //  Serial.print(" ");
-  return filtered;
-}
-
-//float SF1eFiltered5(float readData)
+//// 1 Euro filter, IN initializeScaleData(scale1.get_units(), 1), OUT filtered
+//float SF1eFiltered1(float readData)
 //{
 //  float signal = readData;
 //  float randnum = (float)rand() * 1.f / RAND_MAX;
 //  float noisy = signal + (randnum - 0.5f) / 5.f;
-//  float filtered = SF1eFilterDo(&filter5, noisy);
-////  Serial.print(signal);
-////  Serial.print(" ");
-////  Serial.print(noisy);
-////  Serial.print(" ");
-////  Serial.print(filtered);
-////  Serial.println();
+//  float filtered = SF1eFilterDo(&filter1, noisy);
+////    Serial.print(signal);
+////    Serial.print(" ");
+////    Serial.print(noisy);
+////    Serial.print(" ");
+////    Serial.print(filtered);
+////    Serial.print(" ");
 //  return filtered;
 //}
+//
+//float SF1eFiltered2(float readData)
+//{
+//  float signal = readData;
+//  float randnum = (float)rand() * 1.f / RAND_MAX;
+//  float noisy = signal + (randnum - 0.5f) / 5.f;
+//  float filtered = SF1eFilterDo(&filter2, noisy);
+//  //  Serial.print(signal);
+//  //  Serial.print(" ");
+//  //  Serial.print(noisy);
+//  //  Serial.print(" ");
+//  //  Serial.print(filtered);
+//  //  Serial.print(" ");
+//  return filtered;
+//}
+//
+//float SF1eFiltered3(float readData)
+//{
+//  float signal = readData;
+//  float randnum = (float)rand() * 1.f / RAND_MAX;
+//  float noisy = signal + (randnum - 0.5f) / 5.f;
+//  float filtered = SF1eFilterDo(&filter3, noisy);
+//  //  Serial.print(signal);
+//  //  Serial.print(" ");
+//  //  Serial.print(noisy);
+//  //  Serial.print(" ");
+//  //  Serial.print(filtered);
+//  //  Serial.print(" ");
+//  return filtered;
+//}
+//
+//float SF1eFiltered4(float readData)
+//{
+//  float signal = readData;
+//  float randnum = (float)rand() * 1.f / RAND_MAX;
+//  float noisy = signal + (randnum - 0.5f) / 5.f;
+//  float filtered = SF1eFilterDo(&filter4, noisy);
+//  //  Serial.print(signal);
+//  //  Serial.print(" ");
+//  //  Serial.print(noisy);
+//  //  Serial.print(" ");
+//  //  Serial.print(filtered);
+//  //  Serial.print(" ");
+//  return filtered;
+//}
+//
+////float SF1eFiltered5(float readData)
+////{
+////  float signal = readData;
+////  float randnum = (float)rand() * 1.f / RAND_MAX;
+////  float noisy = signal + (randnum - 0.5f) / 5.f;
+////  float filtered = SF1eFilterDo(&filter5, noisy);
+//////  Serial.print(signal);
+//////  Serial.print(" ");
+//////  Serial.print(noisy);
+//////  Serial.print(" ");
+//////  Serial.print(filtered);
+//////  Serial.println();
+////  return filtered;
+////}
+
+
+// Socket IO functions
+const char * const BoolToString(bool b)
+{
+  return b ? "true" : "false";
+}
+
+void socketConnected(const char *message, size_t length){
+  Serial.println("Board connects to server now!");
+}
 
 
 

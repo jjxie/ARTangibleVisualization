@@ -163,7 +163,7 @@
   </div>
 
   <script>
-    var socket = io.connect('http://localhost:3000');
+    var socket = io.connect('http://192.168.0.100:3000',{secure: true});
     //Get AR scene
     var sceneEl = document.querySelector('a-scene');
 

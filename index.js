@@ -65,7 +65,7 @@ io.on('connection', function(socket){
 
 	// Milk selection status
 	socket.on('Milk selection status', function (data) {
-		// console.log("Milk selection status ", data);
+		console.log("Milk selection status ", data);
 		if(data == true){
 			io.sockets.emit('milkIsSelected', true);
 		}
@@ -174,6 +174,6 @@ fs.watch('test.json',
 	});
 
 
-http.listen(3000, function(){
+http.listen(3000,'192.168.0.100', function(){
 	console.log('listening on *:3000');
 });
