@@ -66,13 +66,13 @@ Servo servoBroccoli;
 Servo servoFish;
 
 // Define servo pins
-int milkServoPin = 36;
-int orangeServoPin = 39;
-int meatServoPin = 34;
-int brocolliServoPin = 35;
+int milkServoPin = 12;
+int orangeServoPin = 13;
+int meatServoPin = 15;
+int broccoliServoPin = 16;
 int fishServoPin = 32;
 
-int servoStartDegree = 0;
+int servoStartDegree = 5;
 float maxWeight = 1000;
 
 // The full length of each servo
@@ -115,21 +115,14 @@ float fishDegree = 0.00;
 int milkTouchPin = 33;
 int orangeTouchPin = 25;
 int meatTouchPin = 26;
-int brocolliTouchPin = 27;
+int broccoliTouchPin = 27;
 int fishTouchPin = 14;
 
-// Touch sensor value
-int milkTouchValue = 0;
-int orangeTouchValue = 0;
-int meatTouchValue = 0;
-int brocolliTouchValue = 0;
-int fishTouchValue = 0;
-
-// Touch sensor status
+// Selection status
 boolean milkSelected = false;
 boolean orangeSelected = false;
 boolean meatSelected = false;
-boolean brocolliSelected = false;
+boolean broccoliSelected = false;
 boolean fishSelected = false;
 
 
@@ -140,6 +133,7 @@ float meatRackDistance = 0.00;
 float broccoliRackDistance = 0.00;
 float fishRackDistance = 0.00;
 
+static unsigned long lastMillis = 0;
 
 // One filter code
 SFLowPassFilter *SFLowPassFilterCreate()
@@ -268,7 +262,7 @@ void setup() {
   servoMilk.attach(milkServoPin);
   servoOrange.attach(orangeServoPin);
   servoMeat.attach(meatServoPin);
-  servoBroccoli.attach(brocolliServoPin);
+  servoBroccoli.attach(broccoliServoPin);
   servoFish.attach(fishServoPin);
 
   servoMilk.write(servoStartDegree);
@@ -282,88 +276,88 @@ void setup() {
   pinMode(milkTouchPin, INPUT);
   pinMode(orangeTouchPin, INPUT);
   pinMode(meatTouchPin, INPUT);
-  pinMode(brocolliTouchPin, INPUT);
+  pinMode(broccoliTouchPin, INPUT);
   pinMode(fishTouchPin, INPUT);
 
 
-//  // Distance sensors
-//  pinMode(enable1, OUTPUT);
-//  pinMode(enable2, OUTPUT);
-//  pinMode(enable3, OUTPUT);
-//  pinMode(enable4, OUTPUT);
-//  //  pinMode(enable5, OUTPUT);
-//
-//  // Enable sensor 1 pin, disable other pins
-//  digitalWrite(enable1, HIGH);
-//  digitalWrite(enable2, LOW);
-//  digitalWrite(enable3, LOW);
-//  digitalWrite(enable4, LOW);
-//  sensor1.getIdentification(&identification); // Retrieve manufacture info from device memory
-//  printIdentification(&identification); // Helper function to print all the Module information
-//
-//  if (sensor1.VL6180xInit() != 0) {
-//    Serial.println("SENSOR 1 FAILED TO INITALIZE"); //Initialize device and check for errors
-//  };
-//  sensor1.VL6180xDefautSettings(); //Load default settings to get started.
-//  delay(1000); // delay 1s
-//  sensor1.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS1);
-//
-//  // Enable sensor 2 pin, disable other pins
-//  digitalWrite(enable2, HIGH);
-//  sensor2.getIdentification(&identification);
-//  if (sensor2.VL6180xInit() != 0) {
-//    Serial.println("SENSOR 2 FAILED TO INITALIZE"); //Initialize device and check for errors
-//  };
-//  sensor2.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS2);
-//
-//  // Enable sensor 3 pin, disable other pins
-//  digitalWrite(enable3, HIGH);
-//  sensor3.getIdentification(&identification);
-//  if (sensor3.VL6180xInit() != 0) {
-//    Serial.println("SENSOR 3 FAILED TO INITALIZE"); //Initialize device and check for errors
-//  };
-//  sensor3.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS3);
-//
-//  // Enable sensor 4 pin, disable other pins
-//  digitalWrite(enable4, HIGH);
-//  sensor4.getIdentification(&identification);
-//  if (sensor4.VL6180xInit() != 0) {
-//    Serial.println("SENSOR 4 FAILED TO INITALIZE"); //Initialize device and check for errors
-//  };
-//  sensor4.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS4);
-//
-//  // The presettings of each fliter
-//  srand((unsigned int)time(NULL));
-//  filter1.config.frequency = 120;
-//  filter1.config.cutoffSlope = 1;
-//  filter1.config.derivativeCutoffFrequency = 1;
-//  filter1.config.minCutoffFrequency = 1;
-//  SF1eFilterInit(&filter1);
-//
-//  filter2.config.frequency = 120;
-//  filter2.config.cutoffSlope = 1;
-//  filter2.config.derivativeCutoffFrequency = 1;
-//  filter2.config.minCutoffFrequency = 1;
-//  SF1eFilterInit(&filter2);
-//
-//  filter3.config.frequency = 120;
-//  filter3.config.cutoffSlope = 1;
-//  filter3.config.derivativeCutoffFrequency = 1;
-//  filter3.config.minCutoffFrequency = 1;
-//  SF1eFilterInit(&filter3);
-//
-//  filter4.config.frequency = 120;
-//  filter4.config.cutoffSlope = 1;
-//  filter4.config.derivativeCutoffFrequency = 1;
-//  filter4.config.minCutoffFrequency = 1;
-//  SF1eFilterInit(&filter4);
-//
-//  //  filter5.config.frequency = 120;
-//  //  filter5.config.cutoffSlope = 1;
-//  //  filter5.config.derivativeCutoffFrequency = 1;
-//  //  filter5.config.minCutoffFrequency = 1;
-//  //  SF1eFilterInit(&filter5);
-//  //
+  //  // Distance sensors
+  //  pinMode(enable1, OUTPUT);
+  //  pinMode(enable2, OUTPUT);
+  //  pinMode(enable3, OUTPUT);
+  //  pinMode(enable4, OUTPUT);
+  //  //  pinMode(enable5, OUTPUT);
+  //
+  //  // Enable sensor 1 pin, disable other pins
+  //  digitalWrite(enable1, HIGH);
+  //  digitalWrite(enable2, LOW);
+  //  digitalWrite(enable3, LOW);
+  //  digitalWrite(enable4, LOW);
+  //  sensor1.getIdentification(&identification); // Retrieve manufacture info from device memory
+  //  printIdentification(&identification); // Helper function to print all the Module information
+  //
+  //  if (sensor1.VL6180xInit() != 0) {
+  //    Serial.println("SENSOR 1 FAILED TO INITALIZE"); //Initialize device and check for errors
+  //  };
+  //  sensor1.VL6180xDefautSettings(); //Load default settings to get started.
+  //  delay(1000); // delay 1s
+  //  sensor1.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS1);
+  //
+  //  // Enable sensor 2 pin, disable other pins
+  //  digitalWrite(enable2, HIGH);
+  //  sensor2.getIdentification(&identification);
+  //  if (sensor2.VL6180xInit() != 0) {
+  //    Serial.println("SENSOR 2 FAILED TO INITALIZE"); //Initialize device and check for errors
+  //  };
+  //  sensor2.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS2);
+  //
+  //  // Enable sensor 3 pin, disable other pins
+  //  digitalWrite(enable3, HIGH);
+  //  sensor3.getIdentification(&identification);
+  //  if (sensor3.VL6180xInit() != 0) {
+  //    Serial.println("SENSOR 3 FAILED TO INITALIZE"); //Initialize device and check for errors
+  //  };
+  //  sensor3.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS3);
+  //
+  //  // Enable sensor 4 pin, disable other pins
+  //  digitalWrite(enable4, HIGH);
+  //  sensor4.getIdentification(&identification);
+  //  if (sensor4.VL6180xInit() != 0) {
+  //    Serial.println("SENSOR 4 FAILED TO INITALIZE"); //Initialize device and check for errors
+  //  };
+  //  sensor4.changeAddress(VL6180X_ADDRESS, NEWVL6180X_ADDRESS4);
+  //
+  //  // The presettings of each fliter
+  //  srand((unsigned int)time(NULL));
+  //  filter1.config.frequency = 120;
+  //  filter1.config.cutoffSlope = 1;
+  //  filter1.config.derivativeCutoffFrequency = 1;
+  //  filter1.config.minCutoffFrequency = 1;
+  //  SF1eFilterInit(&filter1);
+  //
+  //  filter2.config.frequency = 120;
+  //  filter2.config.cutoffSlope = 1;
+  //  filter2.config.derivativeCutoffFrequency = 1;
+  //  filter2.config.minCutoffFrequency = 1;
+  //  SF1eFilterInit(&filter2);
+  //
+  //  filter3.config.frequency = 120;
+  //  filter3.config.cutoffSlope = 1;
+  //  filter3.config.derivativeCutoffFrequency = 1;
+  //  filter3.config.minCutoffFrequency = 1;
+  //  SF1eFilterInit(&filter3);
+  //
+  //  filter4.config.frequency = 120;
+  //  filter4.config.cutoffSlope = 1;
+  //  filter4.config.derivativeCutoffFrequency = 1;
+  //  filter4.config.minCutoffFrequency = 1;
+  //  SF1eFilterInit(&filter4);
+  //
+  //  //  filter5.config.frequency = 120;
+  //  //  filter5.config.cutoffSlope = 1;
+  //  //  filter5.config.derivativeCutoffFrequency = 1;
+  //  //  filter5.config.minCutoffFrequency = 1;
+  //  //  SF1eFilterInit(&filter5);
+  //  //
 
 }
 
@@ -371,82 +365,77 @@ void loop()
 {
   socket.loop();
   socket.on("connect", socketConnected);
-  
-  // Receive milk weight datarotate servo
-  milkDegree = calDegree(milkWeight, servoMilkFullLength, servoMilkLengthPerDegree);
-  servoMilk.write(milkDegree);
+
+  // Receive milk weight data and rotate servo
+  socket.on("scaleDataMilk", setMilkServo);
 
   // Receive orange weight data, rotate servo
-  orangeDegree = calDegree(orangeWeight, servoOrangeFullLength, servoOrangeLengthPerDegree);
-  servoOrange.write(orangeDegree);
+  socket.on("scaleDataOrange", setOrangeServo);
 
   // Receive meat weight data, rotate servo
-  meatDegree = calDegree(meatWeight, servoMeatFullLength, servoMeatLengthPerDegree);
-  servoMeat.write(meatDegree);
+  socket.on("scaleDataMeat", setMeatServo);
 
-  // Receive brocolli weight data, rotate servo
-  brocolliDegree = calDegree(brocolliWeight, servoBrocolliFullLength, servoBrocolliLengthPerDegree);
-  servoBroccoli.write(brocolliDegree);
+  // Receive broccoli weight data, rotate servo
+  socket.on("scaleDataBroccoli", setBroccoliServo);
 
   // Receive fish weight data, rotate servo
-  fishDegree = calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree);
-  servoFish.write(fishDegree);
+  socket.on("scaleDataFish", setFishServo);
 
 
-  // Read milk touch sensor pins value and set status
-  milkTouchValue = digitalRead(milkTouchPin);
-  if (checkTouchStatus(milkTouchValue)) {
-    milkSelected = checkSelectedStatus(milkSelected);
-    socket.emit("Milk selection status", BoolToString(milkSelected));
+  // Read milk touch sensor pins, emit 1 when touch the sensor
+  boolean milkTouch = digitalRead(milkTouchPin);
+  if (milkTouch != milkSelected) {
+    milkSelected = milkTouch;
+    if (milkTouch) socket.emit("milk", "\"1\"");
   }
 
   // Read orange touch sensor pins value and set status
-  orangeTouchValue = digitalRead(orangeTouchPin);
-  if (checkTouchStatus(orangeTouchValue)) {
-    orangeSelected = checkSelectedStatus(orangeSelected);
-    //emit
+  boolean orangeTouch = digitalRead(orangeTouchPin);
+  if (orangeTouch != orangeSelected) {
+    orangeSelected = orangeTouch;
+    if (orangeTouch) socket.emit("orange", "\"1\"");
   }
 
   // Read meat touch sensor pins value and set status
-  meatTouchValue = digitalRead(meatTouchPin);
-  if (checkTouchStatus(meatTouchValue)) {
-    meatSelected = checkSelectedStatus(meatSelected);
-    //emit
+  boolean meatTouch = digitalRead(meatTouchPin);
+  if (meatTouch != meatSelected) {
+    meatSelected = meatTouch;
+    if (meatTouch) socket.emit("meat", "\"1\"");
   }
 
   // Read broccoli touch sensor pins value and set status
-  brocolliTouchValue = digitalRead(brocolliTouchPin);
-  if (checkTouchStatus(brocolliTouchValue)) {
-    brocolliSelected = checkSelectedStatus(brocolliSelected);
-    //emit
+  boolean broccoliTouch = digitalRead(broccoliTouchPin);
+  if (broccoliTouch != broccoliSelected) {
+    broccoliSelected = broccoliTouch;
+    if (broccoliTouch) socket.emit("broccoli", "\"1\"");
   }
 
   // Read fish touch sensor pins value and set status
-  fishTouchValue = digitalRead(fishTouchPin);
-  if (checkTouchStatus(fishTouchValue)) {
-    fishSelected = checkSelectedStatus(fishSelected);
-    // emit
+  boolean fishTouch = digitalRead(fishTouchPin);
+  if (fishTouch != fishSelected) {
+    fishSelected = fishTouch;
+    if (fishTouch) socket.emit("fish", "\"1\"");
   }
 
 
-//  //  Read distance data
-//  //  Get Sensor Distance and filtered by One Euro filter
-//  milkRackDistance = SF1eFiltered1(sensor1.getDistance());
-////  Serial.print("1 ");
-////  Serial.println(milkRackDistance);
-////  Serial.println();
-//  delay(100);
-//  
-//  orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
-//  delay(100);
-//
-//  meatRackDistance = SF1eFiltered3(sensor3.getDistance());
-//  delay(100);
-//
-//  broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
-//  delay(100);
-//
-////  fishRackDistance = SF1eFiltered5(sensor5.getDistance())
+  //  //  Read distance data
+  //  //  Get Sensor Distance and filtered by One Euro filter
+  //  milkRackDistance = SF1eFiltered1(sensor1.getDistance());
+  ////  Serial.print("1 ");
+  ////  Serial.println(milkRackDistance);
+  ////  Serial.println();
+  //  delay(100);
+  //
+  //  orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
+  //  delay(100);
+  //
+  //  meatRackDistance = SF1eFiltered3(sensor3.getDistance());
+  //  delay(100);
+  //
+  //  broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
+  //  delay(100);
+  //
+  ////  fishRackDistance = SF1eFiltered5(sensor5.getDistance())
 
 }
 
@@ -458,28 +447,7 @@ float calDegree(float weight, float fullLength, float lenghPerDegree) {
   return degree;
 }
 
-// Check if touch sensor is touched
-boolean checkTouchStatus(int value) {
-  boolean touched;
-  if (value == 1)
-  {
-    touched = true;
-  } else {
-    touched = false;
-  }
-  return touched;
-}
-
-// Check the status is selected or deselected
-boolean checkSelectedStatus(boolean selected) {
-  if (selected == true) {
-    selected = false;
-  } else {
-    selected = true;
-  }
-  return selected;
-}
-
+// Distance sensor
 void printIdentification(struct VL6180xIdentification *temp) {
   Serial.print("Model ID = ");
   Serial.println(temp->idModel);
@@ -585,15 +553,107 @@ void printIdentification(struct VL6180xIdentification *temp) {
 ////  return filtered;
 ////}
 
+//void attachAndSetServo(Servo &servo, int pin, float value) {
+//  servo.attach(pin);
+//  Serial.println("servo attached");
+//  servo.write(value);
+//  Serial.println("servo writted");
+//  servo.detach();
+//  Serial.println("servo detached");
+//}
+
 
 // Socket IO functions
-const char * const BoolToString(bool b)
-{
-  return b ? "true" : "false";
+void socketConnected(const char *message, size_t length) {
+  Serial.println("Board connects to server now!");
 }
 
-void socketConnected(const char *message, size_t length){
-  Serial.println("Board connects to server now!");
+// Convenience functions to set servos; these are used as callbacks for the socket.io messages
+void setMilkServo(const char *weight, size_t length) {
+  servoMilk.attach(milkServoPin);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(value, servoMilkFullLength, servoMilkLengthPerDegree);  
+//  attachAndSetServo(servoMilk,milkServoPin,transformedValue); 
+  Serial.println(transformedValue);
+  servoMilk.write(transformedValue);
+  delay(100);
+  servoMilk.detach();
+}
+
+void setOrangeServo(const char *weight, size_t length) {
+  servoOrange.attach(orangeServoPin);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(orangeWeight, servoOrangeFullLength, servoOrangeLengthPerDegree);  
+//  attachAndSetServo(servoMilk,milkServoPin,transformedValue); 
+  Serial.println(transformedValue);
+  servoOrange.write(transformedValue);
+  delay(100);
+  servoOrange.detach();
+}
+
+void setMeatServo(const char *weight, size_t length) {
+  servoMeat.attach(meatServoPin);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(meatWeight, servoMeatFullLength, servoMeatLengthPerDegree);
+  Serial.println(transformedValue);
+  servoMeat.write(transformedValue);
+  delay(100);
+  servoMeat.detach();
+}
+
+void setBroccoliServo(const char *weight, size_t length) {
+  servoBroccoli.attach(broccoliServoPin);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(brocolliWeight, servoBrocolliFullLength, servoBrocolliLengthPerDegree); 
+  Serial.println(transformedValue);
+  servoBroccoli.write(transformedValue);
+  delay(100);
+  servoBroccoli.detach();
+}
+
+void setFishServo(const char *weight, size_t length) {
+  servoFish.attach(fishServoPin);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree);
+  Serial.println(transformedValue);
+  servoFish.write(transformedValue);
+  delay(100);
+  servoFish.detach();
 }
 
 

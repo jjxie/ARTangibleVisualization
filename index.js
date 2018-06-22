@@ -2,13 +2,20 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var fs = require('fs');
+
 var connectedIDArray = [];
+
+var milkSelected = false;
+var orangeSelected = false;
+var meatSelected = false;
+var broccoliSelected = false;
+var fishSelected = false;
 
 
 // Node serialport
 var Serialport = require('serialport');
-var myPort = new Serialport("/dev/tty.wchusbserial14240",{
-	baudrate: 9600,
+var myPort = new Serialport("/dev/tty.wchusbserial1410",{
+	baudrate: 74880,
 	parser: Serialport.parsers.readline("\n")
 });
 
@@ -35,6 +42,7 @@ io.on('connection', function(socket){
 
 	// Online event
 	io.emit('online', socket.id);
+
 	// Read initial file data when connected for the first time
 	fs.readFile('test.json', function(err, data) {
 		if (err) throw err;
@@ -64,61 +72,71 @@ io.on('connection', function(socket){
 	});
 
 	// Milk selection status
-	socket.on('Milk selection status', function (data) {
-		console.log("Milk selection status ", data);
-		if(data == true){
-			io.sockets.emit('milkIsSelected', true);
+	socket.on('milk', function (data) {
+		// console.log("Milk touch sensor is touched " + data);
+		// Change selection status and emit corresponding messgae
+		if(milkSelected == true){
+			milkSelected = false;
+			io.sockets.emit('milkIsDeselected', false);	
 		}
 		else{
-			io.sockets.emit('milkIsDeselected', false);
-		}
-		
+			milkSelected = true;
+			io.sockets.emit('milkIsSelected', true);
+		}	
 	});
 
 	// Orange selection status
-	socket.on('Orange selection status', function (data) {
-		// console.log("Orange selection status ", data);
-		if(data == true){
-			io.sockets.emit('orangeIsSelected', true);
+	socket.on('orange', function (data) {
+		// console.log("Orange touch sensor is touched " + data);
+		if(orangeSelected == true){
+			orangeSelected = false;
+			io.sockets.emit('orangeIsDeselected', false);	
 		}
 		else{
-			io.sockets.emit('orangeIsDeselected', false);
+			orangeSelected = true;
+			io.sockets.emit('orangeIsSelected', true);
 		}
 		
 	});
 
 	// Meat selection status
-	socket.on('Meat selection status', function (data) {
-		// console.log("Meat selection status ", data);
-		if(data == true){
-			io.sockets.emit('meatIsSelected', true);
+	socket.on('meat', function (data) {
+		// console.log("Meat touch sensor is touched " + data);
+		if(meatSelected == true){
+			meatSelected = false;
+			io.sockets.emit('meatIsDeselected', false);
 		}
 		else{
-			io.sockets.emit('meatIsDeselected', false);
+			meatSelected = true;
+			io.sockets.emit('meatIsSelected', true);	
 		}
 		
 	});
 
 	// Broccoli selection status
-	socket.on('Broccoli selection status', function (data) {
-		// console.log("Broccoli selection status ", data);
-		if(data == true){
-			io.sockets.emit('broccoliIsSelected', true);
+	socket.on('broccoli', function (data) {
+		// console.log("Broccoli touch sensor is touched " + data);
+		if(broccoliSelected == true){
+			broccoliSelected = false;
+			io.sockets.emit('broccoliIsDeselected', false);
 		}
 		else{
-			io.sockets.emit('broccoliIsDeselected', false);
+			broccoliSelected = true;
+			io.sockets.emit('broccoliIsSelected', true);
 		}
 		
 	});
 
 	// Fish selection status
-	socket.on('Fish selection status', function (data) {
-		// console.log("Fish selection status ", data);
-		if(data == true){
-			io.sockets.emit('fishIsSelected', true);
+	socket.on('fish', function (data) {
+		// console.log("Fish touch sensor is touched " + data);
+		if(fishSelected == true){
+			fishSelected = false;
+			io.sockets.emit('fishIsDeselected', false);
 		}
 		else{
-			io.sockets.emit('fishIsDeselected', false);
+			fishSelected = true;
+			io.sockets.emit('fishIsSelected', true);
 		}
 		
 	});

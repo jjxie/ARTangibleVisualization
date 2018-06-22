@@ -192,50 +192,60 @@
 
     // Milk selection show detailed information
     socket.on('milkIsSelected', function(txt){
+      // console.log("Milk is selected!");
       sceneEl.querySelector('#milkText').setAttribute('value', "Milk is selected"); 
       sceneEl.querySelector('#milk').setAttribute('color', '#F75C2F');    
     });
 
     socket.on('milkIsDeselected', function(txt){
+      // console.log("Milk is deselected!");
       sceneEl.querySelector('#milkText').setAttribute('value', "Milk is deselected");  
       sceneEl.querySelector('#milk').setAttribute('color', '#000000');   
     });
 
     // Orange selection show detailed information
     socket.on('orangeIsSelected', function(txt){
+      // console.log("Orange is selected!");
       sceneEl.querySelector('#orangeText').setAttribute('value', "Orange is selected"); 
       sceneEl.querySelector('#orange').setAttribute('color', '#F75C2F');     
     });
 
     socket.on('orangeIsDeselected', function(txt){
+      // console.log("Orange is deselected!");
       sceneEl.querySelector('#orangeText').setAttribute('value', "Orange is deselected");  
       sceneEl.querySelector('#orange').setAttribute('color', '#000000');   
     });
 
     // Meat selection show detailed information
-    socket.on('meatIsSelected', function(txt){   
+    socket.on('meatIsSelected', function(txt){
+      // console.log("Meat is selected!");   
       sceneEl.querySelector('#meatText').setAttribute('value', "Meat is selected"); 
     });
 
     socket.on('meatIsDeselected', function(txt){ 
+      // console.log("Meat is deselected!");
       sceneEl.querySelector('#meatText').setAttribute('value', "Meat is deselected"); 
     });
 
     // Broccoli selection show detailed information
     socket.on('broccoliIsSelected', function(txt){   
+      // console.log("Broccoli is selected!");
       sceneEl.querySelector('#broccoliText').setAttribute('value', "Broccoli is selected"); 
     });
 
     socket.on('broccoliIsDeselected', function(txt){ 
+      // console.log("Broccoli is deselected!");
       sceneEl.querySelector('#broccoliText').setAttribute('value', "Broccoli is deselected");
     });
 
     // Fish selection show detailed information
     socket.on('fishIsSelected', function(txt){
+      // console.log("Fish is selected!");
       sceneEl.querySelector('#fishText').setAttribute('value', "Fish is selected");   
     });
 
     socket.on('fishIsDeselected', function(txt){ 
+      // console.log("Fish is deselected!");
       sceneEl.querySelector('#fishText').setAttribute('value', "Fish is deselected"); 
     });
 
