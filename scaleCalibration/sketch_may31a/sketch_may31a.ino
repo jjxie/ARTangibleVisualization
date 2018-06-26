@@ -1,9 +1,20 @@
 // This code uses 1 euro filter, http://cristal.univ-lille.fr/~casiez/1euro/
+#define ESP32
 #include <SF1eFilter.h>
 #include <stdlib.h>
 #include <math.h>
 #include <time.h>
 #include <stdio.h>
+#include <WiFi.h>
+#include <Wire.h>
+#include <SocketIoClient.h>
+
+// The Router that the board connects to
+const char* ssid = "TP-LINK_8F96";
+const char* password = "49005875";
+
+// socket.io connection
+SocketIoClient socket;
 
 // Each servo uses one SF1eFilter structure
 SF1eFilter filter1;
@@ -139,17 +150,39 @@ float SF1eFilterAlpha(SF1eFilter *filter, float cutoff)
 
 
 void setup() {
-  Serial.begin(74880);
 
   // parameter "gain" is ommited; the default value 128 is used by the library
   // HX711.DOUT  - pin #A1, FIRST parameter
   // HX711.PD_SCK - pin #A0, SECOND parameter
   // Wemos uses D4,D3, Arduino uses 4,3
+  Serial.begin(115200);
+  Wire.begin();
+  delay(100);
 
-  scale1.begin(D1, D2); //D1,D2  5,4
-  scale2.begin(D3, D4); //D3,D4  0,2
-  scale3.begin(D5, D6); // D5,D6  14,12
-  scale4.begin(D7, D8); // D7,D8  13,15
+  // connect to wifi rounter in the environment
+  Serial.print("Connecting to WiFi network ");
+  Serial.println(ssid);
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(500);
+  }
+  Serial.println("");
+  Serial.println("Connected to the WiFi network");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+  // Begin a secure socket, find your computer WiFi TCP/IP Address
+  // Mac Network--> WiFi--> Advanced--> TCP/IP 192.168.0.100
+  socket.beginSSL("192.168.0.100", 3000);
+  delay(100);
+
+  socket.on("connect", socketConnected);
+
+  scale1.begin(13, 12); //D1,D2  5,4
+  scale2.begin(14, 27); //D3,D4  0,2
+  scale3.begin(26, 25); // D5,D6  14,12
+  scale4.begin(33, 35); // D7,D8  13,15
 
   scale1.set_scale(calibration_factor1);
   scale1.tare();
@@ -212,6 +245,8 @@ void setup() {
 }
 
 void loop() {
+  socket.loop();
+  socket.on("connect", socketConnected);
 
   // Data from scale number 1
   // If the weight changes more than 3g which is compared to preUnits1
@@ -234,6 +269,7 @@ void loop() {
       if (abs(temp2 - temp1) < 1) {
         Serial.print("A");
         Serial.println(temp2);
+//        socket.emit("milkWeight", "\"1\"");
         preUnits1 = temp2;
         break;
       }
@@ -258,12 +294,13 @@ void loop() {
       if (abs(temp2 - temp1) < 1) {
         Serial.print("B");
         Serial.println(temp2);
+//        socket.emit("orangeWeight", "\"1\"");
         preUnits2 = temp2;
         break;
       }
     }
   }
-
+  
   // Data from scale number 3
   units3 = scale3.get_units(), 1;
   units3 = initializeScaleData(units3);
@@ -282,12 +319,13 @@ void loop() {
       if (abs(temp2 - temp1) < 1) {
         Serial.print("C");
         Serial.println(temp2);
+//        socket.emit("meatWeight", "\"1\"");
         preUnits3 = temp2;
         break;
       }
     }
   }
-
+  
   // Data from scale number 4
   units4 = scale4.get_units(), 1;
   units4 = initializeScaleData(units4);
@@ -306,6 +344,7 @@ void loop() {
       if (abs(temp2 - temp1) < 1) {
         Serial.print("D");
         Serial.println(temp2);
+//        socket.emit("broccoliWeight", "\"1\"");
         preUnits4 = temp2;
         break;
       }
@@ -409,4 +448,10 @@ float SF1eFiltered4(float readData)
 ////  Serial.println();
 //  return filtered;
 //}
+
+
+// Socket IO functions
+void socketConnected(const char *message, size_t length) {
+  Serial.println("Board connects to server now!");
+}
 

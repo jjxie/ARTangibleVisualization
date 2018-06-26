@@ -1,10 +1,19 @@
 var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+var https = require('https');
 var fs = require('fs');
 
-var connectedIDArray = [];
+// https secure connection to avoid webcam only secure origins are allowed error
+// https://stackoverflow.com/questions/31156884/how-to-use-https-on-node-js-using-express-socket-io/31165649#31165649?newreg=43fe9326a31942a591b02baf50dc1a07
+var options = {
+  key: fs.readFileSync('./file.pem'),
+  cert: fs.readFileSync('./file.crt')
+};
 
+var server = https.createServer(options, app);
+var io = require('socket.io')(server);
+
+// 
+var connectedIDArray = [];
 var milkSelected = false;
 var orangeSelected = false;
 var meatSelected = false;
@@ -12,12 +21,12 @@ var broccoliSelected = false;
 var fishSelected = false;
 
 
-// Node serialport
-var Serialport = require('serialport');
-var myPort = new Serialport("/dev/tty.wchusbserial1410",{
-	baudrate: 74880,
-	parser: Serialport.parsers.readline("\n")
-});
+// // Node serialport
+// var Serialport = require('serialport');
+// var myPort = new Serialport("/dev/tty.wchusbserial1410",{
+// 	baudrate: 74880,
+// 	parser: Serialport.parsers.readline("\n")
+// });
 
 
 app.get('/', function(req, res){
@@ -73,7 +82,7 @@ io.on('connection', function(socket){
 
 	// Milk selection status
 	socket.on('milk', function (data) {
-		// console.log("Milk touch sensor is touched " + data);
+		console.log("Milk touch sensor is touched " + data);
 		// Change selection status and emit corresponding messgae
 		if(milkSelected == true){
 			milkSelected = false;
@@ -140,45 +149,71 @@ io.on('connection', function(socket){
 		}
 		
 	});
+
+	// Milk weight
+	socket.on('milkWeight', function (data) {
+		console.log("milk " + data);
+		io.sockets.emit('scaleDataMilk', data);		
+	});
+
+	// Orange weight
+	socket.on('orangeWeight', function (data) {
+		console.log("orange" + data);
+		io.sockets.emit("scaleDataOrange", data);		
+	});
+
+	// Orange weight
+	socket.on('meatWeight', function (data) {
+		console.log("meat" + data);	
+		io.sockets.emit("scaleDataMeat", data);	
+	});
+
+	// Orange weight
+	socket.on('broccoliWeight', function (data) {
+		console.log("broccoli" + data);	
+		io.sockets.emit("scaleDataBroccoli", data);	
+	});
+
+	
 });
 
-// Read data from serial port and emit the weight data
-myPort.on('data', function (data){
-	console.log("Data received from Wemos: " + data);
-	// Get the first character which indicates which food's weight
-	var foodType = data.substring(0,1);
-  	// Remove the first letter, the remaining is the weight data
-  	var weight = data.substring(1);
-  	switch(foodType) {
-    	// Type A represents milk
-    	case "A":
-    	io.emit("scaleDataMilk", weight);
-    	break;
-    	// Type B represents orange
-    	case "B":
-    	io.emit("scaleDataOrange", weight);
-    	break;
-    	// Type C represents meat
-    	case "C":
-    	io.emit("scaleDataMeat", weight);
-    	break;
-    	// Type D represents broccoli
-    	case "D":
-    	io.emit("scaleDataBroccoli", weight);
-    	break;
-    	// Type E represents fish
-    	case "E":
-    	io.emit("scaleDataFish", weight);
-    	break;
-    	default:
-    	console.log("unknownMessage", data);
-    }
-});
+// // Read data from serial port and emit the weight data
+// myPort.on('data', function (data){
+// 	console.log("Data received from Wemos: " + data);
+// 	// Get the first character which indicates which food's weight
+// 	var foodType = data.substring(0,1);
+//   	// Remove the first letter, the remaining is the weight data
+//   	var weight = data.substring(1);
+//   	switch(foodType) {
+//     	// Type A represents milk
+//     	case "A":
+//     	io.emit("scaleDataMilk", weight);
+//     	break;
+//     	// Type B represents orange
+//     	case "B":
+//     	io.emit("scaleDataOrange", weight);
+//     	break;
+//     	// Type C represents meat
+//     	case "C":
+//     	io.emit("scaleDataMeat", weight);
+//     	break;
+//     	// Type D represents broccoli
+//     	case "D":
+//     	io.emit("scaleDataBroccoli", weight);
+//     	break;
+//     	// Type E represents fish
+//     	case "E":
+//     	io.emit("scaleDataFish", weight);
+//     	break;
+//     	default:
+//     	console.log("unknownMessage", data);
+//     }
+// });
 
-// Print error message on console when has problem connecting to the port
-myPort.on('error', function(err) {
-	console.log('Error: ', err.message);
-});
+// // Print error message on console when has problem connecting to the port
+// myPort.on('error', function(err) {
+// 	console.log('Error: ', err.message);
+// });
 
 // Real time check file content changes
 fs.watch('test.json', 
@@ -192,6 +227,6 @@ fs.watch('test.json',
 	});
 
 
-http.listen(3000,'192.168.0.100', function(){
+server.listen(3000,'192.168.0.100', function(){
 	console.log('listening on *:3000');
 });
