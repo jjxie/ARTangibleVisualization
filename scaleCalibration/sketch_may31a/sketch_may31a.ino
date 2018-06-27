@@ -32,7 +32,7 @@ HX711 scale4;
 
 float calibration_factor1 = 2195; //1,2190    2,430    3,415    4,2295
 float calibration_factor2 = 430;
-float calibration_factor3 = 500;
+float calibration_factor3 = 498;
 float calibration_factor4 = 2295;
 //float calibration_factor5 = 2010;
 
