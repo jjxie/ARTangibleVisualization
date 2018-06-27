@@ -152,25 +152,25 @@ io.on('connection', function(socket){
 
 	// Milk weight
 	socket.on('milkWeight', function (data) {
-		console.log("milk " + data);
+		console.log("milk weight: " + data);
 		io.sockets.emit('scaleDataMilk', data);		
 	});
 
 	// Orange weight
 	socket.on('orangeWeight', function (data) {
-		console.log("orange" + data);
+		console.log("orange weight: " + data);
 		io.sockets.emit("scaleDataOrange", data);		
 	});
 
 	// Orange weight
 	socket.on('meatWeight', function (data) {
-		console.log("meat" + data);	
+		console.log("meat weight: " + data);	
 		io.sockets.emit("scaleDataMeat", data);	
 	});
 
 	// Orange weight
 	socket.on('broccoliWeight', function (data) {
-		console.log("broccoli" + data);	
+		console.log("broccoli weight: " + data);	
 		io.sockets.emit("scaleDataBroccoli", data);	
 	});
 

@@ -30,9 +30,9 @@ HX711 scale3;
 HX711 scale4;
 //HX711 scale5;
 
-float calibration_factor1 = 2190; //1,1930    2,430    3,415    4,2295
+float calibration_factor1 = 2195; //1,2190    2,430    3,415    4,2295
 float calibration_factor2 = 430;
-float calibration_factor3 = 415;
+float calibration_factor3 = 500;
 float calibration_factor4 = 2295;
 //float calibration_factor5 = 2010;
 
@@ -47,6 +47,11 @@ float units2;
 float units3;
 float units4;
 //float units5;
+
+static char unitString1[15];
+static char unitString2[15];
+static char unitString3[15];
+static char unitString4[15];
 
 
 // One filter code
@@ -182,33 +187,33 @@ void setup() {
   scale1.begin(13, 12); //D1,D2  5,4
   scale2.begin(14, 27); //D3,D4  0,2
   scale3.begin(26, 25); // D5,D6  14,12
-  scale4.begin(33, 35); // D7,D8  13,15
+  scale4.begin(33, 32); // D7,D8  13,15
 
   scale1.set_scale(calibration_factor1);
   scale1.tare();
   delay(100);
-  Serial.print("A");
-  Serial.println(preUnits1);
+  dtostrf(preUnits1, 4, 2, unitString1);
+  socket.emit("milkWeight", unitString1);
 
   scale2.set_scale(calibration_factor2);
   scale2.tare();
   delay(100);
-  Serial.print("B");
-  Serial.println(preUnits2);
+  dtostrf(preUnits2, 4, 2, unitString2);
+  socket.emit("orangeWeight", unitString2);
 
 
   scale3.set_scale(calibration_factor3);
   scale3.tare();
   delay(100);
-  Serial.print("C");
-  Serial.println(preUnits3);
+  dtostrf(preUnits3, 4, 2, unitString3);
+  socket.emit("meatWeight", unitString3);
 
 
   scale4.set_scale(calibration_factor4);
   scale4.tare();
   delay(100);
-  Serial.print("D");
-  Serial.println(preUnits4);
+  dtostrf(preUnits4, 4, 2, unitString4);
+  socket.emit("broccoliWeight", unitString4);
 
   // The presettings of each fliter
   srand((unsigned int)time(NULL));
@@ -250,31 +255,34 @@ void loop() {
 
   // Data from scale number 1
   // If the weight changes more than 3g which is compared to preUnits1
-  // Then delay 2s, and sequencely read two data, compare the two data
+  // Then delay 0.2s, and sequencely read two data, compare the two data
   // If the |second - first| < 1g, then serial print the second, and set preUnits1 = second;
   units1 = scale1.get_units(), 1;
   units1 = initializeScaleData(units1);
   units1 = initializeScaleData(SF1eFiltered1(units1));
-  //Serial.println(units1);
   if (weightChange(preUnits1, units1)) {
-    delay(200);
+    delay(300);
     int i;
-    float readNumber[50];
+    float readNumber[20];
     float temp1, temp2;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < 20; i++) {
       temp1 = scale1.get_units(), 1;
       temp1 = initializeScaleData(SF1eFiltered1(initializeScaleData(temp1)));
       temp2 = scale1.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered1(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-        Serial.print("A");
-        Serial.println(temp2);
-//        socket.emit("milkWeight", "\"1\"");
+//        Serial.print("A");
+//        Serial.println(temp2);
+        // Convert to char and emit this data
+        dtostrf(temp2, 4, 2, unitString1);
+        socket.emit("milkWeight", unitString1);
         preUnits1 = temp2;
         break;
       }
     }
   }
+
+  delay(200);
 
   // Data from scale number 2
   units2 = scale2.get_units(), 1;
@@ -282,24 +290,27 @@ void loop() {
   units2 = initializeScaleData(SF1eFiltered2(units2));
   //Serial.println(units2);
   if (weightChange(preUnits2, units2)) {
-    delay(200);
+    delay(300);
     int i;
-    float readNumber[50];
+    float readNumber[20];
     float temp1, temp2;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < 20; i++) {
       temp1 = scale2.get_units(), 1;
       temp1 = initializeScaleData(SF1eFiltered2(initializeScaleData(temp1)));
       temp2 = scale2.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered2(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-        Serial.print("B");
-        Serial.println(temp2);
-//        socket.emit("orangeWeight", "\"1\"");
+//        Serial.print("B");
+//        Serial.println(temp2);
+        dtostrf(temp2, 4, 2, unitString2);
+        socket.emit("orangeWeight", unitString2);
         preUnits2 = temp2;
         break;
       }
     }
   }
+
+  delay(200);
   
   // Data from scale number 3
   units3 = scale3.get_units(), 1;
@@ -307,49 +318,54 @@ void loop() {
   units3 = initializeScaleData(SF1eFiltered3(units3));
   //Serial.println(units3);
   if (weightChange(preUnits3, units3)) {
-    delay(200);
+    delay(300);
     int i;
-    float readNumber[50];
+    float readNumber[20];
     float temp1, temp2;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < 20; i++) {
       temp1 = scale3.get_units(), 1;
       temp1 = initializeScaleData(SF1eFiltered3(initializeScaleData(temp1)));
       temp2 = scale3.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered3(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-        Serial.print("C");
-        Serial.println(temp2);
-//        socket.emit("meatWeight", "\"1\"");
+//        Serial.print("C");
+//        Serial.println(temp2);
+        dtostrf(temp2, 4, 2, unitString3);
+        socket.emit("meatWeight", unitString3);
         preUnits3 = temp2;
         break;
       }
     }
   }
+
+  delay(200);
   
   // Data from scale number 4
   units4 = scale4.get_units(), 1;
   units4 = initializeScaleData(units4);
   units4 = initializeScaleData(SF1eFiltered4(units4));
-  //Serial.println(units4);
   if (weightChange(preUnits4, units4)) {
-    delay(200);
+    delay(300);
     int i;
-    float readNumber[50];
+    float readNumber[20];
     float temp1, temp2;
-    for (i = 0; i < 50; i++) {
+    for (i = 0; i < 20; i++) {
       temp1 = scale4.get_units(), 1;
       temp1 = initializeScaleData(SF1eFiltered4(initializeScaleData(temp1)));
       temp2 = scale4.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered4(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-        Serial.print("D");
-        Serial.println(temp2);
-//        socket.emit("broccoliWeight", "\"1\"");
+//        Serial.print("D");
+//        Serial.println(temp2);
+        dtostrf(temp2, 4, 2, unitString4);
+        socket.emit("broccoliWeight", unitString4);
         preUnits4 = temp2;
         break;
       }
     }
   }
+  
+  delay(200);
 }
 
 // Check if the reading weight data < 0, then set units to 0.00
