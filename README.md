@@ -1,13 +1,11 @@
-# chat-example
+# Augmented physical visualization of home food consumption and nutrition
 
-This is the source code for a very simple chat example used for
-the [Getting Started](http://socket.io/get-started/chat/) guide
-of the Socket.IO website.
+This Project runs Socket IO client sides on two ESP32 boards and server side on index.js.
 
-Please refer to it to learn how to run this application.
+This project uses:
+1. Three ESP32 boards. 
+2. Four load cells and four HX711 amplifiers to food measure weight.
+3. Four linear servos (SG90) to represent the food weight data. The 3D model files from https://github.com/tscha70/3DPrinterSTLFiles/tree/master/win-D/STL-Parts with minor modifications.
+4. Four touch sensors to select food to show detailed AR information. (using AR.js) 
+5. Four distance sensors (VL6180) to let users to interact with the weight data and see the nutrition changes
 
-You can also spin up a free Heroku dyno to test it out:
-
-[![Deploy](https://www.herokucdn.com/deploy/button.png)](https://heroku.com/deploy?template=https://github.com/socketio/chat-example)
-
-Besides, the application is deployed on [Now](https://zeit.co/now): https://socketio-chat-example.now.sh/
