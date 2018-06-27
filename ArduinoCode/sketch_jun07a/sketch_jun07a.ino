@@ -60,6 +60,9 @@ VL6180x sensor3(VL6180X_ADDRESS);
 VL6180x sensor4(VL6180X_ADDRESS);
 //VL6180x sensor5(VL6180X_ADDRESS);
 
+// Published values for SG90 servos; adjust if needed
+int minUs = 500;
+int maxUs = 2400;
 
 Servo servoMilk;
 Servo servoOrange;
@@ -74,7 +77,7 @@ int meatServoPin = 15;
 int broccoliServoPin = 16;
 //int fishServoPin = 32;
 
-int servoStartDegree = 5;
+int servoStartDegree = 0;
 float maxWeight = 1000;
 
 // The full length of each servo
@@ -261,10 +264,10 @@ void setup() {
   socket.on("connect", socketConnected);
 
   // Servos
-  servoMilk.attach(milkServoPin);
-  servoOrange.attach(orangeServoPin);
-  servoMeat.attach(meatServoPin);
-  servoBroccoli.attach(broccoliServoPin);
+  servoMilk.attach(milkServoPin, minUs, maxUs);
+  servoOrange.attach(orangeServoPin, minUs, maxUs);
+  servoMeat.attach(meatServoPin, minUs, maxUs);
+  servoBroccoli.attach(broccoliServoPin, minUs, maxUs);
   //  servoFish.attach(fishServoPin);
 
   servoMilk.write(servoStartDegree);
@@ -431,23 +434,22 @@ void loop()
   milkRackDistance = SF1eFiltered1(sensor1.getDistance());
   Serial.print("1 ");
   Serial.println(milkRackDistance);
-  //  Serial.println();
-  delay(200);
+  delay(100);
 
   orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
   Serial.print("2 ");
   Serial.println(orangeRackDistance);
-  delay(200);
+  delay(100);
 
   meatRackDistance = SF1eFiltered3(sensor3.getDistance());
   Serial.print("3 ");
   Serial.println(meatRackDistance);
-  delay(200);
+  delay(100);
 
   broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
   Serial.print("4 ");
   Serial.println(broccoliRackDistance);
-  delay(200);
+  delay(100);
 
   //  fishRackDistance = SF1eFiltered5(sensor5.getDistance())
 
@@ -574,7 +576,7 @@ void socketConnected(const char *message, size_t length) {
 
 // Convenience functions to set servos; these are used as callbacks for the socket.io messages
 void setMilkServo(const char *weight, size_t length) {
-  servoMilk.attach(milkServoPin);
+  servoMilk.attach(milkServoPin, minUs, maxUs);
   // get value from message
   String data;
   for (int i = 0; i < length; i++) {
@@ -585,14 +587,16 @@ void setMilkServo(const char *weight, size_t length) {
   // calculate value for servo and send it
   float transformedValue = calDegree(value, servoMilkFullLength, servoMilkLengthPerDegree);
   //  attachAndSetServo(servoMilk,milkServoPin,transformedValue);
+  Serial.print(value);
+  Serial.print("  ");
   Serial.println(transformedValue);
   servoMilk.write(transformedValue);
-  delay(100);
+  delay(200);
   servoMilk.detach();
 }
 
 void setOrangeServo(const char *weight, size_t length) {
-  servoOrange.attach(orangeServoPin);
+  servoOrange.attach(orangeServoPin, minUs, maxUs);
   // get value from message
   String data;
   for (int i = 0; i < length; i++) {
@@ -601,16 +605,18 @@ void setOrangeServo(const char *weight, size_t length) {
   int value = data.toInt();
 
   // calculate value for servo and send it
-  float transformedValue = calDegree(orangeWeight, servoOrangeFullLength, servoOrangeLengthPerDegree);
+  float transformedValue = calDegree(value, servoOrangeFullLength, servoOrangeLengthPerDegree);
   //  attachAndSetServo(servoMilk,milkServoPin,transformedValue);
+  Serial.print(value);
+  Serial.print("  ");
   Serial.println(transformedValue);
   servoOrange.write(transformedValue);
-  delay(100);
+  delay(200);
   servoOrange.detach();
 }
 
 void setMeatServo(const char *weight, size_t length) {
-  servoMeat.attach(meatServoPin);
+  servoMeat.attach(meatServoPin, minUs, maxUs);
   // get value from message
   String data;
   for (int i = 0; i < length; i++) {
@@ -619,15 +625,17 @@ void setMeatServo(const char *weight, size_t length) {
   int value = data.toInt();
 
   // calculate value for servo and send it
-  float transformedValue = calDegree(meatWeight, servoMeatFullLength, servoMeatLengthPerDegree);
+  float transformedValue = calDegree(value, servoMeatFullLength, servoMeatLengthPerDegree);
+  Serial.print(value);
+  Serial.print("  ");
   Serial.println(transformedValue);
   servoMeat.write(transformedValue);
-  delay(100);
+  delay(200);
   servoMeat.detach();
 }
 
 void setBroccoliServo(const char *weight, size_t length) {
-  servoBroccoli.attach(broccoliServoPin);
+  servoBroccoli.attach(broccoliServoPin, minUs, maxUs);
   // get value from message
   String data;
   for (int i = 0; i < length; i++) {
@@ -636,10 +644,12 @@ void setBroccoliServo(const char *weight, size_t length) {
   int value = data.toInt();
 
   // calculate value for servo and send it
-  float transformedValue = calDegree(brocolliWeight, servoBrocolliFullLength, servoBrocolliLengthPerDegree);
+  float transformedValue = calDegree(value, servoBrocolliFullLength, servoBrocolliLengthPerDegree);
+  Serial.print(value);
+  Serial.print("  ");
   Serial.println(transformedValue);
   servoBroccoli.write(transformedValue);
-  delay(100);
+  delay(200);
   servoBroccoli.detach();
 }
 
