@@ -74,11 +74,11 @@ io.on('connection', function(socket){
 		io.emit('offline', socket.id);
 	});
 
-	// If led message received
-	socket.on('ledFrequencySet', function (data) {
-		console.log(data);
-		io.sockets.emit('ledFrequency',data);
-	});
+	// // If led message received
+	// socket.on('ledFrequencySet', function (data) {
+	// 	console.log(data);
+	// 	io.sockets.emit('ledFrequency',data);
+	// });
 
 	// Milk selection status
 	socket.on('milk', function (data) {

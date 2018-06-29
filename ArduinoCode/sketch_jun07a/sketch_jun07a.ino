@@ -284,6 +284,7 @@ void setup() {
   pinMode(broccoliTouchPin, INPUT);
   //  pinMode(fishTouchPin, INPUT);
 
+  delay(100);
 
   // Distance sensors
   pinMode(enable1, OUTPUT);
