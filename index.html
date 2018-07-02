@@ -74,6 +74,7 @@
       <a-sphere id="milk" position="0 0.5 0" radius="0.3" color="#EF2D5E"></a-sphere>
       <a-text id="milkText" position="1 1 0.5" rotation="-90 0 -180" value="Milk" color="#D05A6E"></a-text>
       <!-- <a-entity geometry="primitive: example; vertices: 0 0 0, 5 0 0, 6.54 4.75 0, 2.50 7.69 0, -1.54 4.75 0"></a-entity> -->
+      <a-plane id="milkPlane" color="#4CC3D9" height="20" width="20" visible = "false"></a-plane>
     </a-marker>
 
     <!-- marker orange -->
@@ -191,20 +192,27 @@
     });
 
     // Milk selection show detailed information
-    socket.on('milkIsSelected', function(txt){
+    socket.on('milkIsSelected', function(milkHistoryData){
       // console.log("Milk is selected!");
       sceneEl.querySelector('#milkText').setAttribute('value', "Selected"); 
-      sceneEl.querySelector('#milk').setAttribute('color', '#F75C2F');    
+      sceneEl.querySelector('#milk').setAttribute('color', '#F75C2F'); 
+      for(var i =0; i< Object.keys(milkHistoryData).length; i++){
+        console.log(milkHistoryData[i].date);
+        console.log(milkHistoryData[i].time);
+        console.log(milkHistoryData[i].weight);
+      } 
+      sceneEl.querySelector('#milkPlane').setAttribute("visible",true); 
     });
 
     socket.on('milkIsDeselected', function(txt){
       // console.log("Milk is deselected!");
       sceneEl.querySelector('#milkText').setAttribute('value', "Deselected");  
-      sceneEl.querySelector('#milk').setAttribute('color', '#000000');   
+      sceneEl.querySelector('#milk').setAttribute('color', '#000000'); 
+      sceneEl.querySelector('#milkPlane').setAttribute("visible",false);   
     });
 
     // Orange selection show detailed information
-    socket.on('orangeIsSelected', function(txt){
+    socket.on('orangeIsSelected', function(orangeHistoryData){
       // console.log("Orange is selected!");
       sceneEl.querySelector('#orangeText').setAttribute('value', "Selected"); 
       sceneEl.querySelector('#orange').setAttribute('color', '#F75C2F');     
@@ -217,7 +225,7 @@
     });
 
     // Meat selection show detailed information
-    socket.on('meatIsSelected', function(txt){
+    socket.on('meatIsSelected', function(meatHistoryData){
       // console.log("Meat is selected!");   
       sceneEl.querySelector('#meatText').setAttribute('value', "Selected"); 
     });
@@ -228,7 +236,7 @@
     });
 
     // Broccoli selection show detailed information
-    socket.on('broccoliIsSelected', function(txt){   
+    socket.on('broccoliIsSelected', function(broccoliHistoryData){   
       // console.log("Broccoli is selected!");
       sceneEl.querySelector('#broccoliText').setAttribute('value', "Selected"); 
     });
@@ -239,7 +247,7 @@
     });
 
     // Fish selection show detailed information
-    socket.on('fishIsSelected', function(txt){
+    socket.on('fishIsSelected', function(fishHistoryData){
       // console.log("Fish is selected!");
       sceneEl.querySelector('#fishText').setAttribute('value', "Selected");   
     });
@@ -251,39 +259,6 @@
 
 
     $(function () {
-    	// var photocell;
-
-      // // Send message
-      // $('form').submit(function(){
-      // 	socket.emit(s'chat message', $('#m').val());
-      // 	$('#m').val('');
-      // 	return false;
-      // });
-      // socket.on('chat message', function(msg){
-      // 	$('#messages').append($('<li>').text(msg));
-      // });
-
-      // // Webduino Smart Set sensor rgb color 
-      // boardReady({board: 'Smart', url: '192.168.0.106'}, function (board) {
-      //   board.systemReset();
-      //   board.samplingInterval = 50;
-      //   rgbled = getRGBLedCathode(board, 15, 12, 13);
-      //   rgbled.setColor(0,0,0);
-      // });
-
-      // // Connect to Smart and emit sensor data
-      // boardReady({board: 'Smart', url: '192.168.0.103'}, function (board) {
-      //   board.systemReset();
-      //   board.samplingInterval = 50;
-      //   photocell = getPhotocell(board, 0);
-      //   rgbledRed = getRGBLedCathode(board, 15, 12, 13);
-      //   rgbledRed.setColor(255,0,0);
-      //   photocell.on(function(val){
-      //     photocell.detectedVal = val;
-      //     redValue = (Math.round((((photocell.detectedVal - (0)) * (1/((1)-(0)))) * ((100)-(0)) + (0))*100))/100;
-      //     socket.emit('sensor data red', redValue);
-      //   });
-      // });
 
       // Set milke weight data, max 1kg
       socket.on('scaleDataMilk', function(milk){

@@ -20,6 +20,13 @@ var meatSelected = false;
 var broccoliSelected = false;
 var fishSelected = false;
 
+// Historical data
+var milkHistory = [];
+var orangeHistory = [];
+var meatHistory = [];
+var broccoliHistory = [];
+var fishHistory = [];
+
 
 // // Node serialport
 // var Serialport = require('serialport');
@@ -90,7 +97,7 @@ io.on('connection', function(socket){
 		}
 		else{
 			milkSelected = true;
-			io.sockets.emit('milkIsSelected', true);
+			io.sockets.emit('milkIsSelected', milkHistory);
 		}	
 	});
 
@@ -103,7 +110,7 @@ io.on('connection', function(socket){
 		}
 		else{
 			orangeSelected = true;
-			io.sockets.emit('orangeIsSelected', true);
+			io.sockets.emit('orangeIsSelected', orangeHistory);
 		}
 		
 	});
@@ -117,7 +124,7 @@ io.on('connection', function(socket){
 		}
 		else{
 			meatSelected = true;
-			io.sockets.emit('meatIsSelected', true);	
+			io.sockets.emit('meatIsSelected', meatHistory);	
 		}
 		
 	});
@@ -131,7 +138,7 @@ io.on('connection', function(socket){
 		}
 		else{
 			broccoliSelected = true;
-			io.sockets.emit('broccoliIsSelected', true);
+			io.sockets.emit('broccoliIsSelected', broccoliHistory);
 		}
 		
 	});
@@ -145,7 +152,7 @@ io.on('connection', function(socket){
 		}
 		else{
 			fishSelected = true;
-			io.sockets.emit('fishIsSelected', true);
+			io.sockets.emit('fishIsSelected', fishHistory);
 		}
 		
 	});
@@ -153,28 +160,74 @@ io.on('connection', function(socket){
 	// Milk weight
 	socket.on('milkWeight', function (data) {
 		console.log("milk weight: " + data);
-		io.sockets.emit('scaleDataMilk', data);		
+		io.sockets.emit('scaleDataMilk', data);	
+		var currentDate = new Date();
+		var date = currentDate.toString();
+		var time = currentDate/1000;
+		milkHistory.push({
+			date: date,
+			time: time,
+			weight: data
+		})
 	});
 
 	// Orange weight
 	socket.on('orangeWeight', function (data) {
 		console.log("orange weight: " + data);
-		io.sockets.emit("scaleDataOrange", data);		
+		io.sockets.emit("scaleDataOrange", data);
+		var currentDate = new Date();
+		var date = currentDate.toString();
+		var time = currentDate/1000;
+		orangeHistory.push({
+			date: date,
+			time: time,
+			weight: data
+		})		
 	});
 
-	// Orange weight
+	// Meat weight
 	socket.on('meatWeight', function (data) {
 		console.log("meat weight: " + data);	
 		io.sockets.emit("scaleDataMeat", data);	
+		var currentDate = new Date();
+		var date = currentDate.toString();
+		var time = currentDate/1000;
+		meatHistory.push({
+			date: date,
+			time: time,
+			weight: data
+		})
 	});
 
-	// Orange weight
+	// Broccoli weight
 	socket.on('broccoliWeight', function (data) {
 		console.log("broccoli weight: " + data);	
 		io.sockets.emit("scaleDataBroccoli", data);	
+		var currentDate = new Date();
+		var date = currentDate.toString();
+		var time = currentDate/1000;
+		broccoliHistory.push({
+			date: date,
+			time: time,
+			weight: data
+		})
 	});
 
-	
+	// // Fish weight
+	// socket.on('fishWeight', function (data) {
+	// 	console.log("fish weight: " + data);	
+	// 	io.sockets.emit("scaleDataFish", data);	
+	// 	var currentDate = new Date();
+	// 	var date = currentDate.toString();
+	// 	var time = currentDate/1000;
+	// 	fishHistory.push({
+	// 		date: date,
+	// 		time: time,
+	// 		weight: data
+	// 	})
+	// });
+
+
 });
 
 // // Read data from serial port and emit the weight data
