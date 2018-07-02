@@ -5,15 +5,17 @@ var fs = require('fs');
 // https secure connection to avoid webcam only secure origins are allowed error
 // https://stackoverflow.com/questions/31156884/how-to-use-https-on-node-js-using-express-socket-io/31165649#31165649?newreg=43fe9326a31942a591b02baf50dc1a07
 var options = {
-  key: fs.readFileSync('./file.pem'),
-  cert: fs.readFileSync('./file.crt')
+	key: fs.readFileSync('./file.pem'),
+	cert: fs.readFileSync('./file.crt')
 };
 
 var server = https.createServer(options, app);
 var io = require('socket.io')(server);
 
-// 
+
 var connectedIDArray = [];
+
+// If selected flag
 var milkSelected = false;
 var orangeSelected = false;
 var meatSelected = false;
@@ -26,6 +28,14 @@ var orangeHistory = [];
 var meatHistory = [];
 var broccoliHistory = [];
 var fishHistory = [];
+
+// Initial flag
+var milkIni = true;
+var orangeIni = true;
+var meatIni= true;
+var broccoliIni = true;
+var fishIni = true;
+
 
 
 // // Node serialport
@@ -160,21 +170,60 @@ io.on('connection', function(socket){
 	// Milk weight
 	socket.on('milkWeight', function (data) {
 		console.log("milk weight: " + data);
-		io.sockets.emit('scaleDataMilk', data);	
-		var currentDate = new Date();
-		var date = currentDate.toString();
-		var time = currentDate/1000;
-		milkHistory.push({
-			date: date,
-			time: time,
-			weight: data
-		})
+		if(milkIni === true){
+			if(data < 3.00){
+				io.sockets.emit('scaleDataMilk', 0.00);	
+				console.log("Emit milk data:  " + 0.00);
+			}
+			else{
+				io.sockets.emit('scaleDataMilk', data);	
+				console.log("Emit milk data: " + data);
+			}
+
+			addToHistory(milkHistory, data);
+
+			milkIni = false;
+		}
+
+		else{
+			if( data < 3.00){
+				// Prevent to emit and record multiple zeros if the previous weight is zero
+				if(!checkZeroData(milkHistory, data)){
+					io.sockets.emit('scaleDataMilk', 0.00);	
+					console.log("Emit milk data:  " + 0.00);
+					addToHistory(milkHistory, data);
+				}
+			}	
+			else{
+				if(checkData(milkHistory, data)){
+					io.sockets.emit('scaleDataMilk', data);	
+					console.log("Emit milk data: " + data);
+					addToHistory(milkHistory, data);
+				}	
+			}
+		}
 	});
 
 	// Orange weight
 	socket.on('orangeWeight', function (data) {
 		console.log("orange weight: " + data);
-		io.sockets.emit("scaleDataOrange", data);
+		if( data < 3.00){
+			io.sockets.emit("scaleDataOrange", 0.00);
+		}
+		else{
+			// Check if is the first time 
+			if(orangeIni === true){
+				io.sockets.emit('scaleDataOrange', data);	
+				orangeIni = false;
+			}
+			else{
+				// Check previous weight data to deal with jitter data.
+				// The new received data might not have difference with the previous one in more than 1g, then not emit new data.
+				if(checkData(orangeHistory, data)){
+					io.sockets.emit('scaleDataOrange', data);	
+				}	
+			}
+		}		
 		var currentDate = new Date();
 		var date = currentDate.toString();
 		var time = currentDate/1000;
@@ -187,8 +236,24 @@ io.on('connection', function(socket){
 
 	// Meat weight
 	socket.on('meatWeight', function (data) {
-		console.log("meat weight: " + data);	
-		io.sockets.emit("scaleDataMeat", data);	
+		console.log("meat weight: " + data);
+		if( data < 3.00){
+			io.sockets.emit("scaleDataMeat", 0.00);	
+		}	
+		else{
+			// Check if is the first time 
+			if(meatIni === true){
+				io.sockets.emit('scaleDataMeat', data);	
+				meatIni = false;
+			}
+			else{
+				// Check previous weight data to deal with jitter data.
+				// The new received data might not have difference with the previous one in more than 1g, then not emit new data.
+				if(checkData(meatHistory, data)){
+					io.sockets.emit('scaleDataMeat', data);	
+				}	
+			}
+		}
 		var currentDate = new Date();
 		var date = currentDate.toString();
 		var time = currentDate/1000;
@@ -202,7 +267,23 @@ io.on('connection', function(socket){
 	// Broccoli weight
 	socket.on('broccoliWeight', function (data) {
 		console.log("broccoli weight: " + data);	
-		io.sockets.emit("scaleDataBroccoli", data);	
+		if( data < 3.00){
+			io.sockets.emit("scaleDataBroccoli", 0.00);	
+		}
+		else{
+			// Check if is the first time 
+			if(broccoliIni === true){
+				io.sockets.emit('scaleDataBroccoli', data);	
+				broccoliIni = false;
+			}
+			else{
+				// Check previous weight data to deal with jitter data.
+				// The new received data might not have difference with the previous one in more than 1g, then not emit new data.
+				if(checkData(broccoliHistory, data)){
+					io.sockets.emit('scaleDataBroccoli', data);	
+				}	
+			}
+		}
 		var currentDate = new Date();
 		var date = currentDate.toString();
 		var time = currentDate/1000;
@@ -283,3 +364,40 @@ fs.watch('test.json',
 server.listen(3000,'192.168.0.100', function(){
 	console.log('listening on *:3000');
 });
+
+
+//Add to history object
+function addToHistory(historicalObject, weight){
+	// Add the new data to history
+	var currentDate = new Date();
+	var date = currentDate.toString();
+	var time = currentDate/1000;
+	historicalObject.push({
+		date: date,
+		time: time,
+		weight: weight
+	})
+}
+
+// Check if the previous one is zero, return true is
+function checkZeroData(historicalObject, weight){
+	console.log(" Enter zero check ! ");
+	if(historicalObject[Object.keys(historicalObject).length - 1].weight === 0){
+		return true;
+	}
+	else{
+		return false;
+	}
+}
+
+// Check it the new received data has difference with the previous data more than 1g
+function checkData(historicalObject, weight){
+	console.log(" Enter check ! ");
+	var previousWeight = historicalObject[Object.keys(historicalObject).length - 1].weight;
+	if(Math.abs(weight - previousWeight) < 1.00){
+		return false;
+	}
+	else{
+		return true;
+	}
+}

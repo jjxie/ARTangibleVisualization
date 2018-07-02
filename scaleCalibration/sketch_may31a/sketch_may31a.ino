@@ -30,17 +30,17 @@ HX711 scale3;
 HX711 scale4;
 //HX711 scale5;
 
-float calibration_factor1 = 2195; //1,2190    2,430    3,415    4,2295
+float calibration_factor1 = 2160; //1,2190    2,430    3,415    4,2295
 float calibration_factor2 = 430;
 float calibration_factor3 = 498;
 float calibration_factor4 = 2295;
 //float calibration_factor5 = 2010;
 
-float preUnits1 = 0.0;
-float preUnits2 = 0.0;
-float preUnits3 = 0.0;
-float preUnits4 = 0.0;
-//float preUnits5 = 0.0;
+float preUnits1 = 0.00;
+float preUnits2 = 0.00;
+float preUnits3 = 0.00;
+float preUnits4 = 0.00;
+//float preUnits5 = 0.00;
 
 float units1;
 float units2;
@@ -260,7 +260,17 @@ void loop() {
   units1 = scale1.get_units(), 1;
   units1 = initializeScaleData(units1);
   units1 = initializeScaleData(SF1eFiltered1(units1));
+  Serial.print("units1：");
+  Serial.print("  ");
+  Serial.print(units1);
+  Serial.print("    ");
+  Serial.print("preUnits1：");
+  Serial.print("  ");
+  Serial.println(preUnits1);
   if (weightChange(preUnits1, units1)) {
+    Serial.println("More than 3.00  ");
+    Serial.print("preUnits1:  ");
+    Serial.println(preUnits1);
     delay(300);
     int i;
     float readNumber[20];
@@ -270,13 +280,29 @@ void loop() {
       temp1 = initializeScaleData(SF1eFiltered1(initializeScaleData(temp1)));
       temp2 = scale1.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered1(initializeScaleData(temp2)));
-      if (abs(temp2 - temp1) < 1) {
+      Serial.print("temp1: ");
+      Serial.print(temp1);
+      Serial.print("    ");
+      Serial.print("temp2: ");
+      Serial.print(temp2);
+      float difference = abs(temp2 - temp1);
+      Serial.print("    ");
+      Serial.println(difference);
+      if (abs(temp2 - temp1) < 1.00) {
+        Serial.println("Enter < 1 ");
 //        Serial.print("A");
 //        Serial.println(temp2);
         // Convert to char and emit this data
         dtostrf(temp2, 4, 2, unitString1);
         socket.emit("milkWeight", unitString1);
+        delay(100);
         preUnits1 = temp2;
+        Serial.print("Emit  ");
+        Serial.print("  ");
+        Serial.print(unitString1);
+        Serial.print("    ");
+        Serial.print("preUnits1:  ");
+        Serial.println(preUnits1);
         break;
       }
     }
@@ -304,6 +330,7 @@ void loop() {
 //        Serial.println(temp2);
         dtostrf(temp2, 4, 2, unitString2);
         socket.emit("orangeWeight", unitString2);
+        delay(100);
         preUnits2 = temp2;
         break;
       }
@@ -332,6 +359,7 @@ void loop() {
 //        Serial.println(temp2);
         dtostrf(temp2, 4, 2, unitString3);
         socket.emit("meatWeight", unitString3);
+        delay(100);
         preUnits3 = temp2;
         break;
       }
@@ -359,6 +387,7 @@ void loop() {
 //        Serial.println(temp2);
         dtostrf(temp2, 4, 2, unitString4);
         socket.emit("broccoliWeight", unitString4);
+        delay(100);
         preUnits4 = temp2;
         break;
       }
@@ -372,7 +401,7 @@ void loop() {
 // else return reading data
 float initializeScaleData(float readData) {
   float result;
-  if (readData < 0) {
+  if (readData < 0.00) {
     result = 0.00;
   } else {
     result = readData;
@@ -382,7 +411,7 @@ float initializeScaleData(float readData) {
 
 // If the absolute value of weight changes > 3, then return true, weight changed
 boolean weightChange(float preWeight, float readWeight) {
-  if (abs(readWeight - preWeight) > 3 ) {
+  if (abs(readWeight - preWeight) > 3.00 ) {
     return true;
   } else {
     return false;
