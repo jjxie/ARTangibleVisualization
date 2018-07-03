@@ -47,7 +47,7 @@ SF1eFilter filter4;
 #define NEWVL6180X_ADDRESS4 0x36
 //#define NEWVL6180X_ADDRESS5 0x38
 
-int enable1 = 23;  //AO-A4 Arduino, ESP32 23
+int enable1 = 23;  //AO-A4 Arduino, ESP32 23, SDA: 21 SCL: 22
 int enable2 = 17;
 int enable3 = 18;
 int enable4 = 19;
@@ -131,12 +131,19 @@ boolean broccoliSelected = false;
 //boolean fishSelected = false;
 
 
-// Distance
+// Distance sensors
 float milkRackDistance = 0.00;
 float orangeRackDistance = 0.00;
 float meatRackDistance = 0.00;
 float broccoliRackDistance = 0.00;
 //float fishRackDistance = 0.00;
+
+// When the servo rotates full degree, the rack distance from the distance sensor
+float milkFullDegreeRackDistance = 13.5;
+float orangeFullDegreeRackDistance = 13.5;
+float meatFullDegreeRackDistance = 13.5;
+float broccoliFullDegreeRackDistance = 13.5;
+//float fishZeroDegreeRackDistance = 13.5;
 
 static unsigned long lastMillis = 0;
 
@@ -433,26 +440,26 @@ void loop()
   // Read distance data
   // Get Sensor Distance and filtered by One Euro filter
   milkRackDistance = SF1eFiltered1(sensor1.getDistance());
-  Serial.print("1 ");
-  Serial.println(milkRackDistance);
-  delay(100);
+//  Serial.print("1 ");
+//  Serial.println(milkRackDistance);
+//  delay(100);
 
   orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
-  Serial.print("2 ");
-  Serial.println(orangeRackDistance);
-  delay(100);
+//  Serial.print("2 ");
+//  Serial.println(orangeRackDistance);
+//  delay(100);
 
   meatRackDistance = SF1eFiltered3(sensor3.getDistance());
-  Serial.print("3 ");
-  Serial.println(meatRackDistance);
-  delay(100);
+//  Serial.print("3 ");
+//  Serial.println(meatRackDistance);
+//  delay(100);
 
   broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
-  Serial.print("4 ");
-  Serial.println(broccoliRackDistance);
-  delay(100);
+//  Serial.print("4 ");
+//  Serial.println(broccoliRackDistance);
+//  delay(100);
 
-  //  fishRackDistance = SF1eFiltered5(sensor5.getDistance())
+  //  fishRackDistance = SF1eFiltered5(sensor5.getDistance());
 
 }
 
@@ -461,6 +468,12 @@ void loop()
 float calDegree(float weight, float fullLength, float lenghPerDegree) {
   float degree = round((weight / maxWeight * fullLength) / lenghPerDegree + 0.5);
   return degree;
+}
+
+// Calculate the weight based on the distance of the bottom rack from the distance sensor 
+float calWeight(float distance, float fullLength){
+  float weight = round((distance / fullLength) * maxWeight + 0.5);
+  return weight;
 }
 
 // Distance sensor indentification
@@ -591,8 +604,8 @@ void setMilkServo(const char *weight, size_t length) {
   Serial.print(value);
   Serial.print("  ");
   Serial.println(transformedValue);
-  servoMilk.write(transformedValue);
-  delay(200);
+  servoMilk.write(transformedValue); 
+  delay(4000);
   servoMilk.detach();
 }
 
@@ -612,7 +625,7 @@ void setOrangeServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoOrange.write(transformedValue);
-  delay(200);
+  delay(4000);
   servoOrange.detach();
 }
 
@@ -631,7 +644,7 @@ void setMeatServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoMeat.write(transformedValue);
-  delay(200);
+  delay(4000);
   servoMeat.detach();
 }
 
@@ -650,7 +663,7 @@ void setBroccoliServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoBroccoli.write(transformedValue);
-  delay(200);
+  delay(4000);
   servoBroccoli.detach();
 }
 
