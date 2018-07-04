@@ -1,0 +1,142 @@
+<!doctype html>
+<html>
+<head>
+	<title>Visualization of food consumption and daily nutrition on screen</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <script src="client.js"></script>
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+  <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+  <!-- Include all compiled plugins (below), or include individual files as needed -->
+  <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+  <style>
+  body { margin: 5px; padding: 0; box-sizing: border-box; }
+  body { font: 13px Helvetica, Arial; }
+  #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 28px; pointer-events: auto!important;}
+  .progress-bar-vertical { display: inline-block; width: 200px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg); }
+</style>
+</head> 
+<body>
+
+  <div class="container">
+    <!-- scale data area on the webpage-->
+    <div class="row text-center" style = "padding-top: 20px; padding-left: 30px; background-color: yellow">
+      <div class="col-sm-2"><span id="scale-data-milk">0 g</span></div>
+      <div class="col-sm-2"><span id="scale-data-orange">0 g</span></div>
+      <div class="col-sm-2"><span id="scale-data-meat">0 g</span></div>
+      <div class="col-sm-2"><span id="scale-data-broccoli">0 g</span></div>
+      <div class="col-sm-2"><span id="scale-data-fish">0 g</span></div>
+    </div>
+
+    <div class="row text-left" style = "padding-top: 110px; background-color: pink;">
+      <div class="progress progress-bar-vertical col">
+        <div id="theprogressbarMilk" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 190px"></div>
+      </div>
+      <div class="progress progress-bar-vertical col">
+        <div id="theprogressbarOrange" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100px"></div>
+      </div>
+      <div class="progress progress-bar-vertical col">
+        <div id="theprogressbarMeat" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="progress progress-bar-vertical col">
+        <div id="theprogressbarBroccoli" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="progress progress-bar-vertical col">
+        <div id="theprogressbarFish" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+
+    <div class="row text-center" style = "padding-top: 100px; background-color: green">
+      <div class="col-sm-2" style="font-size: 28px;">Milk</div>
+      <div class="col-sm-2" style="font-size: 28px;">Orange</div>
+      <div class="col-sm-2" style="font-size: 28px">Meat</div>
+      <div class="col-sm-2" style="font-size: 28px">Broccoli</div>
+      <div class="col-sm-2" style="font-size: 28px">Fish</div>
+    </div>
+
+  </div>
+
+  <script>
+    var socket = io.connect('https://192.168.0.100:3000',{secure: true});
+    // Set milke weight data, max 1kg
+    socket.on('scaleDataMilk', function(milk){
+      console.log("Milk " + milk);
+      var percentageMilk = milk/1000 * 100;
+      $('#scale-data-milk').text(milk + " g");
+      $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
+    });
+
+    // Set orange weight data, max 5kg
+    socket.on('scaleDataOrange', function(orange){
+      console.log("Orange " + orange);
+      var percentageOrange = orange/5000 * 100;
+      $('#scale-data-orange').text(orange + " g");
+      $('#theprogressbarOrange').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
+    }); 
+
+    // Set meat weight data, max 5kg
+    socket.on('scaleDataMeat', function(meat){
+      console.log("Meat " + meat);
+      var percentageMeat = meat/5000 * 100;
+      $('#scale-data-meat').text(meat + " g");
+      $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
+    });
+
+    // Set brocoli weight data, max 1kg
+    socket.on('scaleDataBroccoli', function(broccoli){
+      console.log("Broccoli " + broccoli);
+      var percentageBroccoli = broccoli/1000 * 100;
+      $('#scale-data-broccoli').text(broccoli + " g");
+      $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
+    });
+
+    // Set fish weight data, max 1kg 
+    socket.on('scaleDataFish', function(fish){
+      console.log("Fish " + fish);
+      var percentageFish = fish/1000 * 100;
+      $('#scale-data-fish').text(fish + " g");
+      $('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
+    });
+
+
+
+    // Deal with manually change the weight of milk, more milk consumption or less
+    socket.on('manualDataMilk', function(milk){
+      console.log("Manual milk weight " + milk);
+      var percentageMilk = milk/1000 * 100;
+      $('#scale-data-milk').text("Milk:  " + milk + " g");
+      $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
+    });
+
+    // Deal with manually change the weight of orange
+    socket.on('manualDataOrange', function(orange){
+      console.log("Manual orange weight " + orange);
+      var percentageOrange = orange/1000 * 100;
+      $('#scale-data-milk').text("Orange:  " + orange + " g");
+      $('#theprogressbarMilk').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
+    });
+
+    // Set meat weight data, max 5kg
+    socket.on('manualDataMeat', function(meat){
+      console.log("Manual meat weight" + meat);
+      var percentageMeat = meat/5000 * 100;
+      $('#scale-data-meat').text("Meat:  " + meat + " g");
+      $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
+    });
+
+    // Set brocoli weight data, max 1kg
+    socket.on('manualDataBroccoli', function(broccoli){
+      console.log(" Manual broccoli weight" + broccoli);
+      var percentageBroccoli = broccoli/1000 * 100;
+      $('#scale-data-broccoli').text("Broccoli:  " + broccoli + " g");
+      $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
+    });
+
+  </script>
+</body>
+</html>

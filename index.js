@@ -44,10 +44,12 @@ var fishIni = true;
 // 	baudrate: 74880,
 // 	parser: Serialport.parsers.readline("\n")
 // });
-
-
-app.get('/', function(req, res){
+app.get('/index', function(req, res){
 	res.sendFile(__dirname + '/index.html');
+});
+
+app.get('/client', function(req, res){
+	res.sendFile(__dirname+ '/client.html');
 });
 
 
@@ -97,7 +99,7 @@ io.on('connection', function(socket){
 	// 	io.sockets.emit('ledFrequency',data);
 	// });
 
-	// Milk selection status
+	// Milk selection status from touch sensor
 	socket.on('milk', function (data) {
 		console.log("Milk touch sensor is touched " + data);
 		// Change selection status and emit corresponding messgae
@@ -111,7 +113,7 @@ io.on('connection', function(socket){
 		}	
 	});
 
-	// Orange selection status
+	// Orange selection status from touch sensor
 	socket.on('orange', function (data) {
 		// console.log("Orange touch sensor is touched " + data);
 		if(orangeSelected == true){
@@ -125,7 +127,7 @@ io.on('connection', function(socket){
 		
 	});
 
-	// Meat selection status
+	// Meat selection status from touch sensor
 	socket.on('meat', function (data) {
 		// console.log("Meat touch sensor is touched " + data);
 		if(meatSelected == true){
@@ -139,7 +141,7 @@ io.on('connection', function(socket){
 		
 	});
 
-	// Broccoli selection status
+	// Broccoli selection status from touch sensor
 	socket.on('broccoli', function (data) {
 		// console.log("Broccoli touch sensor is touched " + data);
 		if(broccoliSelected == true){
@@ -153,7 +155,7 @@ io.on('connection', function(socket){
 		
 	});
 
-	// Fish selection status
+	// Fish selection status from touch sensor
 	socket.on('fish', function (data) {
 		// console.log("Fish touch sensor is touched " + data);
 		if(fishSelected == true){
@@ -167,7 +169,7 @@ io.on('connection', function(socket){
 		
 	});
 
-	// Milk weight
+	// Milk weight from scale
 	socket.on('milkWeight', function (data) {
 		console.log("milk weight: " + data);
 		// First time, check and emit data, and save to history
@@ -206,7 +208,7 @@ io.on('connection', function(socket){
 		} 
 	});
 
-	// Orange weight
+	// Orange weight from scale
 	socket.on('orangeWeight', function (data) {
 		console.log("orange weight: " + data);
 		// First time, check and emit data, and save to history
@@ -244,7 +246,7 @@ io.on('connection', function(socket){
 		}		
 	});
 
-	// Meat weight
+	// Meat weight from scale
 	socket.on('meatWeight', function (data) {
 		console.log("meat weight: " + data);
 		// First time, check and emit data, and save to history
@@ -282,7 +284,7 @@ io.on('connection', function(socket){
 		}
 	});
 
-	// Broccoli weight
+	// Broccoli weight from scale
 	socket.on('broccoliWeight', function (data) {
 		console.log("broccoli weight: " + data);
 		// First time, check and emit data, and save to history
@@ -320,7 +322,32 @@ io.on('connection', function(socket){
 		}	
 	});
 
-	// // Fish weight
+	// Get new milk weight by moving the rack manually
+	// Emit manual data to move the nutrition servos and AR text of the weight
+	socket.on('milkWeightByMovingRack', function (data) {
+		console.log("milk weight from moving the rack: " + data);
+		io.sockets.emit('manualDataMilk', data);	
+	});
+
+	// Get orange weight by moving the rack manually
+	socket.on('orangeWeightByMovingRack', function (data) {
+		console.log("orange weight from moving the rack: " + data);
+		io.sockets.emit('manualDataOrange', data);	
+	});
+
+	// Get meat weight by moving the rack manually
+	socket.on('meatWeightByMovingRack', function (data) {
+		console.log("meat weight from moving the rack: " + data);
+		io.sockets.emit('manualDataMeat', data);	
+	});
+
+	// Get broccoli weight by moving the rack manually
+	socket.on('broccoliWeightByMovingRack', function (data) {
+		console.log("broccoli weight from moving the rack: " + data);
+		io.sockets.emit('manualDataBroccoli', data);	
+	});
+
+	// // Fish weight from scale
 	// socket.on('fishWeight', function (data) {
 	// 	console.log("fish weight: " + data);	
 	// 	io.sockets.emit("scaleDataFish", data);	

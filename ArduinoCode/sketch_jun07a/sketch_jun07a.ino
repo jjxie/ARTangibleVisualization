@@ -145,6 +145,17 @@ float meatFullDegreeRackDistance = 13.5;
 float broccoliFullDegreeRackDistance = 13.5;
 //float fishZeroDegreeRackDistance = 13.5;
 
+float milkPreviousRackDistance = 0.00;
+float orangePreviousRackDistance = 0.00;
+float meatPreviousRackDistance = 0.00;
+float broccoliPreviousRackDistance = 0.00;
+//float fishPreviousRackDistance = 0.00;
+
+static char milkWeightByMovingRack[15];
+static char orangeWeightByMovingRack[15];
+static char meatWeightByMovingRack[15];
+static char broccoliWeightByMovingRack[15];
+
 static unsigned long lastMillis = 0;
 
 // One filter code
@@ -440,9 +451,16 @@ void loop()
   // Read distance data
   // Get Sensor Distance and filtered by One Euro filter
   milkRackDistance = SF1eFiltered1(sensor1.getDistance());
-//  Serial.print("1 ");
-//  Serial.println(milkRackDistance);
-//  delay(100);
+  // If distance changes more than 2CM, then socket.emit new weight data, and set this distance data as **PreviousRackDistance
+  if(checkDistance(milkPreviousRackDistance, milkRackDistance)){
+    float milkWeight = calWeight (milkRackDistance, milkFullDegreeRackDistance);
+    dtostrf(milkWeight, 4, 2, milkWeightByMovingRack);
+    socket.emit("milkWeightByMovingRack", milkWeightByMovingRack);
+    milkPreviousRackDistance = milkRackDistance;
+  }
+  Serial.print("1 ");
+  Serial.println(milkRackDistance);
+  delay(100);
 
   orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
 //  Serial.print("2 ");
@@ -470,10 +488,22 @@ float calDegree(float weight, float fullLength, float lenghPerDegree) {
   return degree;
 }
 
-// Calculate the weight based on the distance of the bottom rack from the distance sensor 
-float calWeight(float distance, float fullLength){
-  float weight = round((distance / fullLength) * maxWeight + 0.5);
+// Calculate the weight based on the distance of the bottom part of the rack from the distance sensor 
+float calWeight(float readingdistance, float fullLength){
+  // Transform the data from MM to CM
+  readingdistance = readingdistance/10.00;
+  float weight = round((readingdistance / fullLength) * maxWeight + 0.5);
   return weight;
+}
+
+// Check if the reading distance is more than 2CM than the previous distance data
+boolean checkDistance(float previousDistance, float readingDistance){
+  if(abs(readingDistance - previousDistance) > 20.00){
+    return true;
+  }
+  else{
+    return false;
+  }
 }
 
 // Distance sensor indentification
@@ -683,6 +713,25 @@ void setBroccoliServo(const char *weight, size_t length) {
 //  delay(100);
 //  servoFish.detach();
 //}
+
+void moveMilkServo (const char *weight, size_t length) {
+  servoBroccoli.attach(broccoliServoPin, minUs, maxUs);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(value, servoBrocolliFullLength, servoBrocolliLengthPerDegree);
+  Serial.print(value);
+  Serial.print("  ");
+  Serial.println(transformedValue);
+  servoBroccoli.write(transformedValue);
+  delay(4000);
+  servoBroccoli.detach();
+}
 
 
 
