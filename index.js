@@ -36,6 +36,13 @@ var meatIni= true;
 var broccoliIni = true;
 var fishIni = true;
 
+// Json file works as a database for history data
+var milkJson = "milkHistory.json";
+var orangeJson = "orangeHistory.json";
+var meatJson = "meatHistory.json";
+var broccoliJson = "broccoliHistory.json";
+var fishJson = "fishHistory.json";
+
 
 
 // // Node serialport
@@ -184,6 +191,7 @@ io.on('connection', function(socket){
 				console.log("Emit milk data: " + data);
 			}
 			addToHistory(milkHistory, data);
+			addToJson(milkJson, milkHistory);
 			milkIni = false;
 		}
 		// Check data and historical data
@@ -194,6 +202,7 @@ io.on('connection', function(socket){
 					data = 0.00;
 					io.sockets.emit('scaleDataMilk', data);
 					addToHistory(milkHistory, data);	
+					addToJson(milkJson, milkHistory);
 					console.log("Emit milk data:  " + data);	
 				}
 			}	
@@ -202,6 +211,7 @@ io.on('connection', function(socket){
 				if(checkData(milkHistory, data)){
 					io.sockets.emit('scaleDataMilk', data);	
 					addToHistory(milkHistory, data);
+					addToJson(milkJson, milkHistory);
 					console.log("Emit milk data: " + data);
 				}	
 			}
@@ -223,6 +233,7 @@ io.on('connection', function(socket){
 				console.log("Emit orange data: " + data);
 			}
 			addToHistory(orangeHistory, data);
+			addToJson(orangeJson, orangeHistory);
 			orangeIni = false;
 		}
 		// Check data and historical data
@@ -234,6 +245,7 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataOrange', data);	
 					console.log("Emit orange data:  " + data);
 					addToHistory(orangeHistory, data);
+					addToJson(orangeJson, orangeHistory);
 				}
 			}	
 			else{
@@ -241,6 +253,7 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataOrange', data);	
 					console.log("Emit orange data: " + data);
 					addToHistory(orangeHistory, data);
+					addToJson(orangeJson, orangeHistory);
 				}	
 			}
 		}		
@@ -261,6 +274,7 @@ io.on('connection', function(socket){
 				console.log("Emit meat data: " + data);
 			}
 			addToHistory(meatHistory, data);
+			addToJson(meatJson, meatHistory);
 			meatIni = false;
 		}
 		// Check data and historical data
@@ -272,6 +286,7 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataMeat', data);	
 					console.log("Emit meat data:  " + data);
 					addToHistory(meatHistory, data);
+					addToJson(meatJson, meatHistory);
 				}
 			}	
 			else{
@@ -279,6 +294,7 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataMeat', data);	
 					console.log("Emit meat data: " + data);
 					addToHistory(meatHistory, data);
+					addToJson(meatJson, meatHistory);
 				}	
 			}
 		}
@@ -299,6 +315,7 @@ io.on('connection', function(socket){
 				console.log("Emit broccoli data: " + data);
 			}
 			addToHistory(broccoliHistory, data);
+			addToJson(broccoliJson, broccoliHistory);
 			broccoliIni = false;
 		}
 		// Check data and historical data
@@ -310,6 +327,7 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataBroccoli', data);	
 					console.log("Emit broccoli data:  " + data);
 					addToHistory(broccoliHistory, data);
+					addToJson(broccoliJson, broccoliHistory);
 				}
 			}	
 			else{
@@ -317,6 +335,7 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataBroccoli', data);	
 					console.log("Emit broccoli data: " + data);
 					addToHistory(broccoliHistory, data);
+					addToJson(broccoliJson, broccoliHistory);
 				}	
 			}
 		}	
@@ -429,6 +448,14 @@ function addToHistory(historicalObject, weight){
 		time: time,
 		weight: weight
 	})
+}
+
+//Add history data to JSON file in case of lost connection with server
+function addToJson(jsonFileName, historicalObject){
+	fs.appendFile (jsonFileName, JSON.stringify(historicalObject[Object.keys(historicalObject).length-1]), function(err) {
+			if (err) throw err;
+			console.log('Write to json complete');
+		});
 }
 
 // Check if the previous one is zero, return true is

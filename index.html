@@ -2,7 +2,6 @@
 <html>
 <head>
 	<title>Visualization of food consumption and daily nutrition</title>
-	<link rel="stylesheet" href="style.css">
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -60,189 +59,249 @@
     <!-- define a camera which will move according to the marker position -->
 
     <!-- marker milk -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/milk.patt'>
-      <a-box position='0 0.1 0' rotation="0 45 0" depth="0.5" height="0.5" width="0.5" material='opacity: 0.5; color="#4CC3D9'></a-box>
-      <a-text id="milkText" position="1 1 0.5" rotation="-90 0 -180" value="Milk" color="#D05A6E"></a-text>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/milk.patt'>
+      <a-sphere id="milk3D" position='0 0.1 0' radius="0.2" material="opacity: 1.0; color: #4CC3D9"></a-sphere>
+      <a-text id="milkText" position="1 1 0.5" rotation="-90 0 -180"  value="Milk" color="#D05A6E"></a-text>
       <a-text id="milkWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
-      <a-plane id="milkPlane" color="#4CC3D9" height="20" width="20" visible = "false"></a-plane>
+      <a-box id="milkHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#4CC3D9" visible="false"></a-box>
+      <a-box id="milkHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#4CC3D9" visible="false"></a-box>
+      <a-box id="milkHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#4CC3D9" visible="false"></a-box>
+      <a-box id="milkHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#4CC3D9" visible="false"></a-box>
+      <a-box id="milkHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
     </a-marker>
 
     <!-- marker orange -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/orange.patt'>
-      <a-box id="orange" position='0 1 0' depth="0.5" height="0.5" width="0.5" color="#F9BF45">
-        <a-animation attribute="material.color"  begin="2000" from="white" to="#F9BF45" dur="2000" repeat="indefinite"></a-animation>
-        <a-animation attribute="rotation" dur="10000" fill="forwards" to="0 360 0" repeat="indefinite"></a-animation>
-      </a-box>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/orange.patt'>
+      <a-sphere id="orange3D" position='0 0.1 0' radius="0.2" material="color: #F4A95C"></a-sphere>
       <a-text id="orangeText" position="1 1 0.5" rotation="-90 0 -180" value="Orange" color="#D05A6E"></a-text>
+      <a-text id="orangeWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
+      <a-box id="orangeHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#F4A95C" visible="false"></a-box>
+      <a-box id="orangeHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#F4A95C" visible="false"></a-box>
+      <a-box id="orangeHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#F4A95C" visible="false"></a-box>
+      <a-box id="orangeHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#F4A95C" visible="false"></a-box>
+      <a-box id="orangeHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#F4A95C" visible="false"></a-box>
     </a-marker>
 
     <!-- marker meat -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/meat.patt'>
-      <a-sphere id="sphereTest" position='0 0.1 0' radius="0.3" color="#2EA9DF"></a-sphere>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/meat.patt'>
+      <a-sphere id="meat3D" position='0 0.1 0' radius="0.2" color="#D64434"></a-sphere>
       <a-text id="meatText" position="1 1 0.5" rotation="-90 0 -180" value="Meat" color="#D05A6E"></a-text>
+      <a-text id="meatWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
+      <a-box id="meatHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#D64434" visible="false"></a-box>
+      <a-box id="meatHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#D64434" visible="false"></a-box>
+      <a-box id="meatHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#D64434" visible="false"></a-box>
+      <a-box id="meatHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#D64434" visible="false"></a-box>
+      <a-box id="meatHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#D64434" visible="false"></a-box>
     </a-marker>
 
     <!-- marker broccoli -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/broccoli.patt'>
-      <a-sphere position="0 0.5 0" radius="0.3" color="#1B813E"></a-sphere>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/broccoli.patt'>
+      <a-sphere id ="broccoli3D" position="0 0.1 0" radius="0.2" color="#1B813E"></a-sphere>
       <a-text id="broccoliText" position="1 1 0.5" rotation="-90 0 -180" value="Broccoli" color="#D05A6E"></a-text>
+      <a-text id="broccoliWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
+      <a-box id="broccoliHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
     </a-marker>
 
     <!-- marker fish -->
-    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/markers/fish.patt'>
-      <a-sphere position="0 0.5 0" radius="0.3" color="#2EA9DF">
-        <a-animation attribute="material.color" from="white" to="#2EA9DF" dur="3000" repeat="indefinite"></a-animation>
-      </a-sphere>
+    <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/fish.patt'>
+      <a-sphere id="fish3D" position="0 0.1 0" radius="0.2" color="#99A6A6"></a-sphere>
       <a-text id="fishText" position="1 1 0.5" rotation="-90 0 -180" value="Fish" color="#D05A6E"></a-text>
-    </a-marker>
-
-    <!-- marker hiro -->
-    <a-marker preset='hiro'>
-      <a-sphere position="0 0.3 0" radius="0.5" color="#F75C2F"></a-sphere>
-      <a-text position="1 1 0.5" rotation="-90 0 -180" value="Now Interactable" color="#D05A6E"></a-text>
-      <a-text position="1 1.5 -0.5" rotation="-180 0 -180" value="haha" color="#2B5F75"></a-text>
+      <a-text id="fishWeight" position="1 2 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
+      <a-box id="fishHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
     </a-marker>
 
     <!-- camera -->
     <a-entity camera></a-entity>
 
   </a-scene>
+  
+  <div>
+    <button id="reset" type="button" onclick="alert('Hello world!')">Click Me!</button>
+  </div>
 
   <script>
     var socket = io.connect('https://192.168.0.100:3000',{secure: true});
     //Get AR scene
     var sceneEl = document.querySelector('a-scene');
 
+    sceneEl.querySelector('#milk3D').addEventListener('click', function (evt) {
+      console.log('This 2D element was clicked!');
+    });
+
     // Milk selection show detailed information
     socket.on('milkIsSelected', function(milkHistoryData){
       // console.log("Milk is selected!");
       sceneEl.querySelector('#milkText').setAttribute('value', "Selected"); 
-      sceneEl.querySelector('#milk').setAttribute('color', '#F75C2F'); 
       for(var i =0; i< Object.keys(milkHistoryData).length; i++){
         console.log(milkHistoryData[i].date);
         console.log(milkHistoryData[i].time);
         console.log(milkHistoryData[i].weight);
       } 
-      sceneEl.querySelector('#milkPlane').setAttribute("visible",true); 
+      sceneEl.querySelector('#milkHistory1').setAttribute("visible",true); 
+      sceneEl.querySelector('#milkHistory2').setAttribute("visible",true); 
+      sceneEl.querySelector('#milkHistory3').setAttribute("visible",true); 
+      sceneEl.querySelector('#milkHistory4').setAttribute("visible",true); 
+      sceneEl.querySelector('#milkHistory5').setAttribute("visible",true); 
     });
 
     socket.on('milkIsDeselected', function(txt){
       // console.log("Milk is deselected!");
       sceneEl.querySelector('#milkText').setAttribute('value', "Deselected");  
-      sceneEl.querySelector('#milk').setAttribute('color', '#000000'); 
-      sceneEl.querySelector('#milkPlane').setAttribute("visible",false);   
+      sceneEl.querySelector('#milkHistory1').setAttribute("visible",false); 
+      sceneEl.querySelector('#milkHistory2').setAttribute("visible",false); 
+      sceneEl.querySelector('#milkHistory3').setAttribute("visible",false); 
+      sceneEl.querySelector('#milkHistory4').setAttribute("visible",false); 
+      sceneEl.querySelector('#milkHistory5').setAttribute("visible",false);   
     });
 
     // Orange selection show detailed information
     socket.on('orangeIsSelected', function(orangeHistoryData){
       // console.log("Orange is selected!");
       sceneEl.querySelector('#orangeText').setAttribute('value', "Selected"); 
-      sceneEl.querySelector('#orange').setAttribute('color', '#F75C2F');     
+      sceneEl.querySelector('#orangeHistory1').setAttribute("visible",true); 
+      sceneEl.querySelector('#orangeHistory2').setAttribute("visible",true); 
+      sceneEl.querySelector('#orangeHistory3').setAttribute("visible",true); 
+      sceneEl.querySelector('#orangeHistory4').setAttribute("visible",true); 
+      sceneEl.querySelector('#orangeHistory5').setAttribute("visible",true);     
     });
 
     socket.on('orangeIsDeselected', function(txt){
       // console.log("Orange is deselected!");
       sceneEl.querySelector('#orangeText').setAttribute('value', "Deselected");  
-      sceneEl.querySelector('#orange').setAttribute('color', '#000000');   
+      sceneEl.querySelector('#orange').setAttribute('color', '#000000'); 
+      sceneEl.querySelector('#orangeHistory1').setAttribute("visible",false); 
+      sceneEl.querySelector('#orangeHistory2').setAttribute("visible",false); 
+      sceneEl.querySelector('#orangeHistory3').setAttribute("visible",false); 
+      sceneEl.querySelector('#orangeHistory4').setAttribute("visible",false); 
+      sceneEl.querySelector('#orangeHistory5').setAttribute("visible",false);    
     });
 
     // Meat selection show detailed information
     socket.on('meatIsSelected', function(meatHistoryData){
       // console.log("Meat is selected!");   
       sceneEl.querySelector('#meatText').setAttribute('value', "Selected"); 
+      sceneEl.querySelector('#meatHistory1').setAttribute("visible",true); 
+      sceneEl.querySelector('#meatHistory2').setAttribute("visible",true); 
+      sceneEl.querySelector('#meatHistory3').setAttribute("visible",true); 
+      sceneEl.querySelector('#meatHistory4').setAttribute("visible",true); 
+      sceneEl.querySelector('#meatHistory5').setAttribute("visible",true);
     });
 
     socket.on('meatIsDeselected', function(txt){ 
       // console.log("Meat is deselected!");
       sceneEl.querySelector('#meatText').setAttribute('value', "Deselected"); 
+      sceneEl.querySelector('#meatHistory1').setAttribute("visible",false); 
+      sceneEl.querySelector('#meatHistory2').setAttribute("visible",false); 
+      sceneEl.querySelector('#meatHistory3').setAttribute("visible",false); 
+      sceneEl.querySelector('#meatHistory4').setAttribute("visible",false); 
+      sceneEl.querySelector('#meatHistory5').setAttribute("visible",false);
     });
 
     // Broccoli selection show detailed information
     socket.on('broccoliIsSelected', function(broccoliHistoryData){   
       // console.log("Broccoli is selected!");
       sceneEl.querySelector('#broccoliText').setAttribute('value', "Selected"); 
+      sceneEl.querySelector('#broccoliHistory1').setAttribute("visible",true); 
+      sceneEl.querySelector('#broccoliHistory2').setAttribute("visible",true); 
+      sceneEl.querySelector('#broccoliHistory3').setAttribute("visible",true); 
+      sceneEl.querySelector('#broccoliHistory4').setAttribute("visible",true); 
+      sceneEl.querySelector('#broccoliHistory5').setAttribute("visible",true);
     });
 
     socket.on('broccoliIsDeselected', function(txt){ 
       // console.log("Broccoli is deselected!");
       sceneEl.querySelector('#broccoliText').setAttribute('value', "Deselected");
+      sceneEl.querySelector('#broccoliHistory1').setAttribute("visible",false); 
+      sceneEl.querySelector('#broccoliHistory2').setAttribute("visible",false); 
+      sceneEl.querySelector('#broccoliHistory3').setAttribute("visible",false); 
+      sceneEl.querySelector('#broccoliHistory4').setAttribute("visible",false); 
+      sceneEl.querySelector('#broccoliHistory5').setAttribute("visible",false);
     });
 
     // Fish selection show detailed information
     socket.on('fishIsSelected', function(fishHistoryData){
       // console.log("Fish is selected!");
-      sceneEl.querySelector('#fishText').setAttribute('value', "Selected");   
+      sceneEl.querySelector('#fishText').setAttribute('value', "Selected");
+      sceneEl.querySelector('#fishHistory1').setAttribute("visible",true); 
+      sceneEl.querySelector('#fishHistory2').setAttribute("visible",true); 
+      sceneEl.querySelector('#fishHistory3').setAttribute("visible",true); 
+      sceneEl.querySelector('#fishHistory4').setAttribute("visible",true); 
+      sceneEl.querySelector('#fishHistory5').setAttribute("visible",true);   
     });
 
     socket.on('fishIsDeselected', function(txt){ 
       // console.log("Fish is deselected!");
       sceneEl.querySelector('#fishText').setAttribute('value', "Deselected"); 
+      sceneEl.querySelector('#fishHistory1').setAttribute("visible",false); 
+      sceneEl.querySelector('#fishHistory2').setAttribute("visible",false); 
+      sceneEl.querySelector('#fishHistory3').setAttribute("visible",false); 
+      sceneEl.querySelector('#fishHistory4').setAttribute("visible",false); 
+      sceneEl.querySelector('#fishHistory5').setAttribute("visible",false);  
     });
 
 
-    // Set milke weight data, max 1kg
+    // Show milk weight in AR from scale
     socket.on('scaleDataMilk', function(milk){
-      console.log("Milk " + milk);
-      var percentageMilk = milk/1000 * 100;
-      $('#scale-data-milk').text(milk + " g");
+      var weight = milk.toString() + " g";
+      sceneEl.querySelector('#milkWeight').setAttribute('value', weight);
     });
 
-    // Set orange weight data, max 5kg
+    // Show orange weight in AR from scale
     socket.on('scaleDataOrange', function(orange){
-      console.log("Orange " + orange);
-      var percentageOrange = orange/5000 * 100;
-      $('#scale-data-orange').text(orange + " g");
+      var weight = orange.toString() + " g";
+      sceneEl.querySelector('#orangeWeight').setAttribute('value', weight);
     }); 
 
-    // Set meat weight data, max 5kg
+    // Show meat weight in AR from scale
     socket.on('scaleDataMeat', function(meat){
-      console.log("Meat " + meat);
-      var percentageMeat = meat/5000 * 100;
-      $('#scale-data-meat').text(meat + " g");
+      var weight = meat.toString() + " g";
+      sceneEl.querySelector('#meatWeight').setAttribute('value', weight);
     });
 
-    // Set brocoli weight data, max 1kg
+    // Show broccoli weight in AR from scale
     socket.on('scaleDataBroccoli', function(broccoli){
-      console.log("Broccoli " + broccoli);
-      var percentageBroccoli = broccoli/1000 * 100;
-      $('#scale-data-broccoli').text(broccoli + " g");
+      var weight = broccoli.toString() + " g";
+      sceneEl.querySelector('#broccoliWeight').setAttribute('value', weight);
     });
 
-    // Set fish weight data, max 1kg 
+    // Show fish weight in AR from scale
     socket.on('scaleDataFish', function(fish){
-      console.log("Fish " + fish);
-      var percentageFish = fish/1000 * 100;
-      $('#scale-data-fish').text(fish + " g");
+      var weight = fish.toString() + " g";
+      sceneEl.querySelector('#fishWeight').setAttribute('value', weight);
     });
 
 
 
-    // Deal with manually change the weight of milk, more milk consumption or less
+    // Show manually changed weight of milk in AR
     socket.on('manualDataMilk', function(milk){
-      console.log("Manual milk weight " + milk);
-      var percentageMilk = milk/1000 * 100;
-      $('#scale-data-milk').text("Milk:  " + milk + " g");
+      var weight = milk.toString() + " g";
+      sceneEl.querySelector('#milkWeight').setAttribute('value', weight);
     });
 
-    // Deal with manually change the weight of orange
+    // Show manually changed weight of orange in AR
     socket.on('manualDataOrange', function(orange){
-      console.log("Manual orange weight " + orange);
-      var percentageOrange = orange/1000 * 100;
-      $('#scale-data-milk').text("Orange:  " + orange + " g");
+      var weight = orange.toString() + " g";
+      sceneEl.querySelector('#orangeWeight').setAttribute('value', weight);
     });
 
-    // Set meat weight data, max 5kg
+    // Show manually changed weight of meat in AR
     socket.on('manualDataMeat', function(meat){
-      console.log("Manual meat weight" + meat);
-      var percentageMeat = meat/5000 * 100;
-      $('#scale-data-meat').text("Meat:  " + meat + " g");
+      var weight = meat.toString() + " g";
+      sceneEl.querySelector('#meatWeight').setAttribute('value', weight);
     });
 
-    // Set brocoli weight data, max 1kg
+    // Show manually changed weight of broccoli in AR
     socket.on('manualDataBroccoli', function(broccoli){
-      console.log(" Manual broccoli weight" + broccoli);
-      var percentageBroccoli = broccoli/1000 * 100;
-      $('#scale-data-broccoli').text("Broccoli:  " + broccoli + " g");
+      var weight = broccoli.toString() + " g";
+      sceneEl.querySelector('#broccoliWeight').setAttribute('value', weight);
     });
 
 
