@@ -17,72 +17,119 @@
   <style>
   body { margin: 5px; padding: 0; box-sizing: border-box; }
   body { font: 13px Helvetica, Arial; }
-  #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 28px; pointer-events: auto!important;}
+  #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat, #scale-data-unit, #title, #scale-data-calcium, #scale-data-calories, #scale-data-fat, #scale-data-protein,#scale-data-vitaminC { font-size: 22px; pointer-events: auto!important;padding-bottom: 10px;}
   .progress-bar-vertical { display: inline-block; width: 200px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg); }
+  .progress-bar-nutrients {background-color: #FDCC59 !important;}
 </style>
 </head> 
 <body>
 
-  <div class="container">
+  <div class="container" style="background-color: #F4ECF5">
+  	<div><h3 align="center">Food Weight</h3></div>
     <!-- scale data area on the webpage-->
-    <div class="row text-center" style = "padding-top: 20px; padding-left: 30px; background-color: yellow">
-      <div class="col-sm-2"><span id="scale-data-milk">0 g</span></div>
-      <div class="col-sm-2"><span id="scale-data-orange">0 g</span></div>
-      <div class="col-sm-2"><span id="scale-data-meat">0 g</span></div>
-      <div class="col-sm-2"><span id="scale-data-broccoli">0 g</span></div>
-      <div class="col-sm-2"><span id="scale-data-fish">0 g</span></div>
+    <div class="row text-center" style = "padding-top: 5px;">
+      <div class="col-sm-2"><p id="scale-data-milk">0</p></div>
+      <div class="col-sm-2"><p id="scale-data-orange">0</p></div>
+      <div class="col-sm-2"><p id="scale-data-meat">0</p></div>
+      <div class="col-sm-2"><p id="scale-data-broccoli">0</p></div>
+      <div class="col-sm-2"><p id="scale-data-fish">0 </p></div>
+      <div class="col-sm-2"><p id="scale-data-unit">g</p></div>
     </div>
 
-    <div class="row text-left" style = "padding-top: 110px; background-color: pink;">
-      <div class="progress progress-bar-vertical col">
-        <div id="theprogressbarMilk" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 190px"></div>
+    <div class="row text-left" style = "padding-top: 90px;">
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="theprogressbarMilk" class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100px"></div>
       </div>
-      <div class="progress progress-bar-vertical col">
-        <div id="theprogressbarOrange" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100px"></div>
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="theprogressbarOrange" class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      <div class="progress progress-bar-vertical col">
+      <div class="row progress progress-bar-vertical col center-block">
         <div id="theprogressbarMeat" class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      <div class="progress progress-bar-vertical col">
+      <div class="row progress progress-bar-vertical col center-block">
         <div id="theprogressbarBroccoli" class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
-      <div class="progress progress-bar-vertical col">
+      <div class="row progress progress-bar-vertical col center-block">
         <div id="theprogressbarFish" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
       </div>
     </div>
 
-    <div class="row text-center" style = "padding-top: 100px; background-color: green">
-      <div class="col-sm-2" style="font-size: 28px;">Milk</div>
-      <div class="col-sm-2" style="font-size: 28px;">Orange</div>
-      <div class="col-sm-2" style="font-size: 28px">Meat</div>
-      <div class="col-sm-2" style="font-size: 28px">Broccoli</div>
-      <div class="col-sm-2" style="font-size: 28px">Fish</div>
+    <div class="row text-center" style = "padding-top: 80px;">
+      <div class="col-sm-2" id="title">Milk</div>
+      <div class="col-sm-2" id="title" style="padding-left: 30px;">Orange</div>
+      <div class="col-sm-2" id="title" style="padding-left: 55px;">Meat</div>
+      <div class="col-sm-2" id="title" style="padding-left: 70px;">Broccoli</div>
+      <div class="col-sm-2" id="title" style="padding-left: 90px;">Fish</div>
+    </div>
+
+  </div>
+
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+  <div>&nbsp;</div>
+
+  <div class="container" style="background-color: #ABDDC0;">
+  	<div><h3 align="center">Nutrients You Got Today</h3></div>
+    <!-- scale data area on the webpage-->
+    <div class="row text-center" style = "padding-top: 5px;">
+      <div class="col-sm-2"><p id="scale-data-calcium">0 mg</p></div>
+      <div class="col-sm-2"><p id="scale-data-calories">0 kcal</p></div>
+      <div class="col-sm-2"><p id="scale-data-fat">0 g</p></div>
+      <div class="col-sm-2"><p id="scale-data-protein">0 g</p></div>
+      <div class="col-sm-2 text-right"><p id="scale-data-vitaminC">0 mg</p></div>
+    </div>
+
+    <div class="row" style = "padding-top: 90px;">
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="nutrientsCalcium" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100px"></div>
+      </div>
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="nutrientsCalories" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="nutrientsFat" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="nutrientsProtein" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+      <div class="row progress progress-bar-vertical col center-block">
+        <div id="nutrientsVitaminA" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+    </div>
+
+    <div class="row text-center" style = "padding-top: 80px;">
+      <div class="col-sm-2" id="title" style="padding-left: 10px;">Calcium</div>
+      <div class="col-sm-2" id="title" style="padding-left: 30px;">Calories</div>
+      <div class="col-sm-2" id="title" style="padding-left: 50px;">Fat</div>
+      <div class="col-sm-2" id="title" style="padding-left: 70px;">Protein</div>
+      <div class="col-sm-2 text-right" id="title">Vitamin C</div>
     </div>
 
   </div>
 
   <script>
     var socket = io.connect('https://192.168.0.100:3000',{secure: true});
+    var maxWeight = 1000;
     // Set milke weight data, max 1kg
     socket.on('scaleDataMilk', function(milk){
       console.log("Milk " + milk);
-      var percentageMilk = milk/1000 * 100;
+      var percentageMilk = milk/maxWeight * 100;
       $('#scale-data-milk').text(milk + " g");
       $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
     });
 
-    // Set orange weight data, max 5kg
+    // Set orange weight data, max 1kg
     socket.on('scaleDataOrange', function(orange){
       console.log("Orange " + orange);
-      var percentageOrange = orange/5000 * 100;
+      var percentageOrange = orange/maxWeight * 100;
       $('#scale-data-orange').text(orange + " g");
       $('#theprogressbarOrange').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
     }); 
 
-    // Set meat weight data, max 5kg
+    // Set meat weight data, max 1kg
     socket.on('scaleDataMeat', function(meat){
       console.log("Meat " + meat);
-      var percentageMeat = meat/5000 * 100;
+      var percentageMeat = meat/maxWeight * 100;
       $('#scale-data-meat').text(meat + " g");
       $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
     });
@@ -90,7 +137,7 @@
     // Set brocoli weight data, max 1kg
     socket.on('scaleDataBroccoli', function(broccoli){
       console.log("Broccoli " + broccoli);
-      var percentageBroccoli = broccoli/1000 * 100;
+      var percentageBroccoli = broccoli/maxWeight * 100;
       $('#scale-data-broccoli').text(broccoli + " g");
       $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
     });
@@ -98,7 +145,7 @@
     // Set fish weight data, max 1kg 
     socket.on('scaleDataFish', function(fish){
       console.log("Fish " + fish);
-      var percentageFish = fish/1000 * 100;
+      var percentageFish = fish/maxWeight * 100;
       $('#scale-data-fish').text(fish + " g");
       $('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
     });
@@ -109,7 +156,7 @@
     socket.on('manualDataMilk', function(milk){
       console.log("Manual milk weight " + milk);
       var percentageMilk = milk/1000 * 100;
-      $('#scale-data-milk').text("Milk:  " + milk + " g");
+      $('#scale-data-milk').text(milk + " g");
       $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
     });
 
@@ -117,15 +164,15 @@
     socket.on('manualDataOrange', function(orange){
       console.log("Manual orange weight " + orange);
       var percentageOrange = orange/1000 * 100;
-      $('#scale-data-milk').text("Orange:  " + orange + " g");
+      $('#scale-data-milk').text(orange + " g");
       $('#theprogressbarMilk').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
     });
 
     // Set meat weight data, max 5kg
     socket.on('manualDataMeat', function(meat){
       console.log("Manual meat weight" + meat);
-      var percentageMeat = meat/5000 * 100;
-      $('#scale-data-meat').text("Meat:  " + meat + " g");
+      var percentageMeat = meat/1000 * 100;
+      $('#scale-data-meat').text(meat + " g");
       $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
     });
 
@@ -133,7 +180,7 @@
     socket.on('manualDataBroccoli', function(broccoli){
       console.log(" Manual broccoli weight" + broccoli);
       var percentageBroccoli = broccoli/1000 * 100;
-      $('#scale-data-broccoli').text("Broccoli:  " + broccoli + " g");
+      $('#scale-data-broccoli').text(broccoli + " g");
       $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
     });
 
