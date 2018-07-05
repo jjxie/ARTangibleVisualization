@@ -115,7 +115,7 @@
     socket.on('scaleDataMilk', function(milk){
       console.log("Milk " + milk);
       var percentageMilk = milk/maxWeight * 100;
-      $('#scale-data-milk').text(milk + " g");
+      $('#scale-data-milk').text(milk);
       $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
     });
 
@@ -123,7 +123,7 @@
     socket.on('scaleDataOrange', function(orange){
       console.log("Orange " + orange);
       var percentageOrange = orange/maxWeight * 100;
-      $('#scale-data-orange').text(orange + " g");
+      $('#scale-data-orange').text(orange);
       $('#theprogressbarOrange').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
     }); 
 
@@ -131,7 +131,7 @@
     socket.on('scaleDataMeat', function(meat){
       console.log("Meat " + meat);
       var percentageMeat = meat/maxWeight * 100;
-      $('#scale-data-meat').text(meat + " g");
+      $('#scale-data-meat').text(meat);
       $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
     });
 
@@ -139,7 +139,7 @@
     socket.on('scaleDataBroccoli', function(broccoli){
       console.log("Broccoli " + broccoli);
       var percentageBroccoli = broccoli/maxWeight * 100;
-      $('#scale-data-broccoli').text(broccoli + " g");
+      $('#scale-data-broccoli').text(broccoli);
       $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
     });
 
@@ -147,7 +147,7 @@
     socket.on('scaleDataFish', function(fish){
       console.log("Fish " + fish);
       var percentageFish = fish/maxWeight * 100;
-      $('#scale-data-fish').text(fish + " g");
+      $('#scale-data-fish').text(fish);
       $('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
     });
 
@@ -157,7 +157,7 @@
     socket.on('manualDataMilk', function(milk){
       console.log("Manual milk weight " + milk);
       var percentageMilk = milk/1000 * 100;
-      $('#scale-data-milk').text(milk + " g");
+      $('#scale-data-milk').text(milk);
       $('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
     });
 
@@ -165,7 +165,7 @@
     socket.on('manualDataOrange', function(orange){
       console.log("Manual orange weight " + orange);
       var percentageOrange = orange/1000 * 100;
-      $('#scale-data-milk').text(orange + " g");
+      $('#scale-data-milk').text(orange);
       $('#theprogressbarMilk').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
     });
 
@@ -173,7 +173,7 @@
     socket.on('manualDataMeat', function(meat){
       console.log("Manual meat weight" + meat);
       var percentageMeat = meat/1000 * 100;
-      $('#scale-data-meat').text(meat + " g");
+      $('#scale-data-meat').text(meat);
       $('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
     });
 
@@ -181,7 +181,7 @@
     socket.on('manualDataBroccoli', function(broccoli){
       console.log(" Manual broccoli weight" + broccoli);
       var percentageBroccoli = broccoli/1000 * 100;
-      $('#scale-data-broccoli').text(broccoli + " g");
+      $('#scale-data-broccoli').text(broccoli);
       $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
     });
 
