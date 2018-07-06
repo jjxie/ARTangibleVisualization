@@ -17,31 +17,6 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
-  <script>
-    // AFRAME.registerGeometry('example', {
-    //   schema: {
-    //     vertices: {
-    //       default: ['0 0 0', '5 0 0', '6.54 4.75 0', '2.50 7.69 0', '-1.54 4.75 0'],
-    //     }
-    //   },
-
-    //   init: function (data) {
-    //     var geometry = new THREE.Geometry();
-    //     geometry.groupsNeedUpdate = true;
-    //     geometry.vertices = data.vertices.map(function (vertex) {
-    //       var points = vertex.split(' ').map(function(x){return parseInt(x);});
-    //       return new THREE.Vector3(points[0], points[1], points[2], points[4], points[5]);
-    //     });
-    //     geometry.computeBoundingBox();
-    //     geometry.faces.push(new THREE.Face3(3, 4, 5));
-    //     geometry.mergeVertices();
-    //     geometry.computeFaceNormals();
-    //     geometry.computeVertexNormals();
-    //     this.geometry = geometry;
-    //   }
-    // });
-  </script>
-
   <style>
   body { margin: 5px; padding: 0; box-sizing: border-box; }
   body { font: 13px Helvetica, Arial; }
@@ -61,61 +36,66 @@
     <!-- marker milk -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/milk.patt'>
       <a-sphere id="milk3D" position='0 0.1 0' radius="0.2" material="opacity: 1.0; color: #4CC3D9"></a-sphere>
-      <a-text id="milkText" position="1 1 0.5" rotation="-90 0 -180"  value="Milk" color="#D05A6E"></a-text>
-      <a-text id="milkWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
-      <a-box id="milkHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#4CC3D9" visible="false"></a-box>
-      <a-box id="milkHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#4CC3D9" visible="false"></a-box>
-      <a-box id="milkHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#4CC3D9" visible="false"></a-box>
-      <a-box id="milkHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#4CC3D9" visible="false"></a-box>
-      <a-box id="milkHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
+      <a-text id="milkText" position="-0.8 1 -0.6" rotation="-90 0 0"  value="Milk" color="#D05A6E"></a-text>
+      <a-text id="milkWeight" position="0.2 1 -0.6" rotation="-90 0 0" value="0 g" color="#D05A6E"></a-text>
+      <!-- <a-plane position="0 0.5 0" rotation="-90 0 0" width="2" height="2" color="#a3b7ae" shadow></a-plane> -->
+      <a-box id="milkHistory1" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="true"></a-box>
+      <a-box id="milkHistory2" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="true"></a-box>
+      <a-box id="milkHistory3" position='0 1 0.6' depth="0.4" height="0.1" width="0.1" color="#4CC3D9" visible="true"></a-box>
+      <a-box id="milkHistory4" position='0.3 1 0.55' depth="0.5" height="0.1" width="0.1" color="#4CC3D9" visible="true"></a-box>
+      <a-box id="milkHistory5" position='0.55 1 0.5' depth="0.6" height="0.1" width="0.1" color="#4CC3D9" visible="true"></a-box>
     </a-marker>
 
     <!-- marker orange -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/orange.patt'>
-      <a-sphere id="orange3D" position='0 0.1 0' radius="0.2" material="color: #F4A95C"></a-sphere>
-      <a-text id="orangeText" position="1 1 0.5" rotation="-90 0 -180" value="Orange" color="#D05A6E"></a-text>
-      <a-text id="orangeWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
-      <a-box id="orangeHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#F4A95C" visible="false"></a-box>
-      <a-box id="orangeHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#F4A95C" visible="false"></a-box>
-      <a-box id="orangeHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#F4A95C" visible="false"></a-box>
-      <a-box id="orangeHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#F4A95C" visible="false"></a-box>
-      <a-box id="orangeHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#F4A95C" visible="false"></a-box>
+      <a-sphere id="orange3D" position='0 0.1 0' radius="0.2" material="color: #ff953f"></a-sphere>
+      <a-text id="orangeText" position="-0.8 1 -0.6" rotation="-90 0 0" value="Orange" color="#D05A6E"></a-text>
+      <a-text id="orangeWeight" position="0.2 1 -0.6" rotation="-90 0 0" value="0 g" color="#D05A6E"></a-text>
+      <!-- <a-plane position="0 0.5 0" rotation="-90 0 0" width="2" height="2" color="#a3b7ae" shadow></a-plane> -->
+      <a-box id="orangeHistory1" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#ff953f" visible="false"></a-box>
+      <a-box id="orangeHistory2" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#ff953f" visible="false"></a-box>
+      <a-box id="orangeHistory3" position='0 1 0.6' depth="0.4" height="0.1" width="0.1" color="#ff953f" visible="false"></a-box>
+      <a-box id="orangeHistory4" position='0.3 1 0.55' depth="0.5" height="0.1" width="0.1" color="#ff953f" visible="false"></a-box>
+      <a-box id="orangeHistory5" position='0.55 1 0.5' depth="0.6" height="0.1" width="0.1" color="#ff953f" visible="false"></a-box>
     </a-marker>
 
     <!-- marker meat -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/meat.patt'>
-      <a-sphere id="meat3D" position='0 0.1 0' radius="0.2" color="#D64434"></a-sphere>
-      <a-text id="meatText" position="1 1 0.5" rotation="-90 0 -180" value="Meat" color="#D05A6E"></a-text>
-      <a-text id="meatWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
-      <a-box id="meatHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#D64434" visible="false"></a-box>
-      <a-box id="meatHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#D64434" visible="false"></a-box>
-      <a-box id="meatHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#D64434" visible="false"></a-box>
-      <a-box id="meatHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#D64434" visible="false"></a-box>
-      <a-box id="meatHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#D64434" visible="false"></a-box>
+      <a-sphere id="meat3D" position='0 0.1 0' radius="0.2" color="#d31d08"></a-sphere>
+      <a-text id="meatText" position="-0.8 1 -0.6" rotation="-90 0 0" value="Meat" color="#D05A6E"></a-text>
+      <a-text id="meatWeight" position="0.2 1 -0.6" rotation="-90 0 0" value="0 g" color="#D05A6E"></a-text>
+      <!-- <a-plane position="0 0.5 0" rotation="-90 0 0" width="2" height="2" color="#a3b7ae" shadow></a-plane> -->
+      <a-box id="meatHistory1" position='-0.55 1 0.8' depth="1" height="0.1" width="0.1" color="#d31d08" visible="false"></a-box>
+      <a-box id="meatHistory2" position='-0.3 1 0.8' depth="1" height="0.1" width="0.1" color="#d31d08" visible="false"></a-box>
+      <a-box id="meatHistory3" position='0 1 0.8' depth="1" height="0.1" width="0.1" color="#d31d08" visible="false"></a-box>
+      <a-box id="meatHistory4" position='0.3 1 0.8' depth="1" height="0.1" width="0.1" color="#d31d08" visible="false"></a-box>
+      <a-box id="meatHistory5" position='0.55 1 0.8' depth="1" height="0.1" width="0.1" color="#d31d08" visible="false"></a-box>
     </a-marker>
 
     <!-- marker broccoli -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/broccoli.patt'>
       <a-sphere id ="broccoli3D" position="0 0.1 0" radius="0.2" color="#1B813E"></a-sphere>
-      <a-text id="broccoliText" position="1 1 0.5" rotation="-90 0 -180" value="Broccoli" color="#D05A6E"></a-text>
-      <a-text id="broccoliWeight" position="1 1 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
-      <a-box id="broccoliHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#1B813E" visible="false"></a-box>
-      <a-box id="broccoliHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#1B813E" visible="false"></a-box>
-      <a-box id="broccoliHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#1B813E" visible="false"></a-box>
-      <a-box id="broccoliHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#1B813E" visible="false"></a-box>
-      <a-box id="broccoliHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-text id="broccoliText" position="-0.8 1 -0.6" rotation="-90 0 0" value="Broccoli" color="#D05A6E"></a-text>
+      <a-text id="broccoliWeight" position="0.2 1 -0.6" rotation="-90 0 0" value="0 g" color="#D05A6E"></a-text>
+      <!-- <a-plane position="0 0.5 0" rotation="-90 0 0" width="2" height="2" color="#a3b7ae" shadow></a-plane> -->
+      <a-box id="broccoliHistory1" position='-0.55 1 0.8' depth="1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory2" position='-0.3 1 0.8' depth="1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory3" position='0 1 0.8' depth="1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory4" position='0.3 1 0.8' depth="1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
+      <a-box id="broccoliHistory5" position='0.55 1 0.8' depth="1" height="0.1" width="0.1" color="#1B813E" visible="false"></a-box>
     </a-marker>
 
     <!-- marker fish -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/fish.patt'>
       <a-sphere id="fish3D" position="0 0.1 0" radius="0.2" color="#99A6A6"></a-sphere>
-      <a-text id="fishText" position="1 1 0.5" rotation="-90 0 -180" value="Fish" color="#D05A6E"></a-text>
-      <a-text id="fishWeight" position="1 2 0.5" rotation="-90 0 -180" value="0 g" color="#D05A6E"></a-text>
-      <a-box id="fishHistory1" position='-0.5 1 0' depth="0.1" height="0.2" width="0.1" color="#99A6A6" visible="false"></a-box>
-      <a-box id="fishHistory2" position='-0.3 1 0' depth="0.1" height="0.3" width="0.1" color="#99A6A6" visible="false"></a-box>
-      <a-box id="fishHistory3" position='0 1 0' depth="0.1" height="0.3" width="0.1" color="#99A6A6" visible="false"></a-box>
-      <a-box id="fishHistory4" position='0.3 1 0' depth="0.1" height="0.7" width="0.1" color="#99A6A6" visible="false"></a-box>
-      <a-box id="fishHistory5" position='0.5 1 0' depth="0.1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-text id="fishText" position="-0.8 1 -0.6" rotation="-90 0 0" value="Fish" color="#D05A6E"></a-text>
+      <a-text id="fishWeight" position="0.2 1 -0.6" rotation="-90 0 0" value="0 g" color="#D05A6E"></a-text>
+      <!-- <a-plane position="0 0.5 0" rotation="-90 0 0" width="2" height="2" color="#a3b7ae" shadow></a-plane> -->
+      <a-box id="fishHistory1" position='-0.55 1 0.8' depth="1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory2" position='-0.3 1 0.8' depth="1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory3" position='0 1 0.8' depth="1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory4" position='0.3 1 0.8' depth="1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
+      <a-box id="fishHistory5" position='0.55 1 0.8' depth="1" height="0.1" width="0.1" color="#99A6A6" visible="false"></a-box>
     </a-marker>
 
     <!-- camera -->
@@ -131,6 +111,13 @@
     var socket = io.connect('https://192.168.0.100:3000',{secure: true});
     //Get AR scene
     var sceneEl = document.querySelector('a-scene');
+    var maxDepth = 1; 
+    var fistBarX= -0.55;
+    var secondBarX = -0.3;
+    var thirdBarX = 0;
+    var fourthBarX = 0.3
+    var fifthBarX = 0.55
+    var barY = 1;
 
     sceneEl.querySelector('#milk3D').addEventListener('click', function (evt) {
       console.log('This 2D element was clicked!');
@@ -145,6 +132,10 @@
         console.log(milkHistoryData[i].time);
         console.log(milkHistoryData[i].weight);
       } 
+      var depth = 0.9;
+      var z = 0.8- depth/2;
+      sceneEl.querySelector('#milkHistory1').setAttribute("depth",depth); 
+      sceneEl.querySelector('#milkHistory1').setAttribute("position",{ x: fistBarX, y: barY, z: z }); 
       sceneEl.querySelector('#milkHistory1').setAttribute("visible",true); 
       sceneEl.querySelector('#milkHistory2').setAttribute("visible",true); 
       sceneEl.querySelector('#milkHistory3').setAttribute("visible",true); 
@@ -176,7 +167,7 @@
     socket.on('orangeIsDeselected', function(txt){
       // console.log("Orange is deselected!");
       sceneEl.querySelector('#orangeText').setAttribute('value', "Deselected");  
-      sceneEl.querySelector('#orange').setAttribute('color', '#000000'); 
+      sceneEl.querySelector('#orange3D').setAttribute('color', '#000000'); 
       sceneEl.querySelector('#orangeHistory1').setAttribute("visible",false); 
       sceneEl.querySelector('#orangeHistory2').setAttribute("visible",false); 
       sceneEl.querySelector('#orangeHistory3').setAttribute("visible",false); 

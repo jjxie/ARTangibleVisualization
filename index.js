@@ -437,25 +437,69 @@ server.listen(3000,'192.168.0.100', function(){
 });
 
 
+// Calculate food consumption
+// Assumption: never consume all the food. 
+// Self-report food is finished or new food is added, maybe by pressing finish and new buttons.
+// Because when the weight is 0, hard to distinguish if the food is finished or just be taken away and will be returned later
+function calculateConsumption(historicalObject, weight){
+	var consumeWeight = 0;
+	if(weight == 0){
+		consumeWeight = 0;
+	}
+	else{
+		// The first weight number
+		if(Object.keys(historicalObject).length == 0 ){
+			consumeWeight = 0;
+		}
+		// Has two weight numbers
+		if(Object.keys(historicalObject).length == 1){
+			var previousWeight = historicalObject[Object.keys(historicalObject).length-1].weight;
+			// New add food
+			if(previousWeight == 0){
+				consumeWeight = 0;
+			}
+			else{
+				consumeWeight = previousWeight - weight;
+			}		
+		}
+		// Has at least three numbers
+		if(Object.keys(historicalObject).length >= 2 ){
+			var previousWeight = historicalObject[Object.keys(historicalObject).length-1].weight;
+			// The previous number is 0
+			if(previousWeight == 0){
+				// Get the the number of the previous number
+				var previousTwoWeight = historicalObject[Object.keys(historicalObject).length-2].weight;
+				consumeWeight = previousTwoWeight - weight;
+			}
+			else{
+				consumeWeight = previousWeight - weight;
+			}
+		}		
+	}
+	return consumeWeight;
+}
+
 //Add to history object
 function addToHistory(historicalObject, weight){
 	// Add the new data to history
 	var currentDate = new Date();
 	var date = currentDate.toString();
 	var time = currentDate/1000;
+	var consumeWeight = calculateConsumption(historicalObject, weight);
 	historicalObject.push({
 		date: date,
 		time: time,
-		weight: weight
+		weight: weight,
+		consumeWeight: consumeWeight
 	})
 }
 
 //Add history data to JSON file in case of lost connection with server
 function addToJson(jsonFileName, historicalObject){
 	fs.appendFile (jsonFileName, JSON.stringify(historicalObject[Object.keys(historicalObject).length-1]), function(err) {
-			if (err) throw err;
-			console.log('Write to json complete');
-		});
+		if (err) throw err;
+		console.log('Write to json complete');
+	});
 }
 
 // Check if the previous one is zero, return true is
