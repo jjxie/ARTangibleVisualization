@@ -29,6 +29,13 @@ var meatHistory = [];
 var broccoliHistory = [];
 var fishHistory = [];
 
+// This is used to show five days history in AR detailed view. The data is parsed from Json file
+var milkHistoryJson =[];
+var orangeHistoryJson = [];
+var meatHistoryJson = [];
+var broccoliHistoryJson = [];
+var fishHistoryJson = [];
+
 // Initial flag
 var milkIni = true;
 var orangeIni = true;
@@ -43,6 +50,9 @@ var meatJson = "meatHistory.json";
 var broccoliJson = "broccoliHistory.json";
 var fishJson = "fishHistory.json";
 
+var bodyparser = require('body-parser');
+app.use(bodyparser.urlencoded({extended:false}));
+app.use(bodyparser.json());
 
 
 // // Node serialport
@@ -116,7 +126,12 @@ io.on('connection', function(socket){
 		}
 		else{
 			milkSelected = true;
-			io.sockets.emit('milkIsSelected', milkHistory);
+			milkHistoryJson = parseHistory("milkHistory.json");
+			// for(var i =0; i< Object.keys(milkHistoryJson).length; i++){
+			// 	console.log(milkHistoryJson[i].date);
+			// 	console.log(milkHistoryJson[i].sumConsumeWeight);
+			// }
+			io.sockets.emit('milkIsSelected', milkHistoryJson);
 		}	
 	});
 
@@ -129,7 +144,8 @@ io.on('connection', function(socket){
 		}
 		else{
 			orangeSelected = true;
-			io.sockets.emit('orangeIsSelected', orangeHistory);
+			orangeHistoryJson = parseHistory("orangeHistory.json");
+			io.sockets.emit('orangeIsSelected', orangeHistoryJson);
 		}
 		
 	});
@@ -143,7 +159,8 @@ io.on('connection', function(socket){
 		}
 		else{
 			meatSelected = true;
-			io.sockets.emit('meatIsSelected', meatHistory);	
+			meatHistoryJson = parseHistory("meatHistory.json");
+			io.sockets.emit('meatIsSelected', meatHistoryJson);	
 		}
 		
 	});
@@ -157,7 +174,8 @@ io.on('connection', function(socket){
 		}
 		else{
 			broccoliSelected = true;
-			io.sockets.emit('broccoliIsSelected', broccoliHistory);
+			broccoliHistoryJson = parseHistory("broccoliHistory.json");
+			io.sockets.emit('broccoliIsSelected', broccoliHistoryJson);
 		}
 		
 	});
@@ -171,9 +189,9 @@ io.on('connection', function(socket){
 		}
 		else{
 			fishSelected = true;
-			io.sockets.emit('fishIsSelected', fishHistory);
+			fishHistoryJson = parseHistory("fishHistory.json");
+			io.sockets.emit('fishIsSelected', fishHistoryJson);
 		}
-		
 	});
 
 	// Milk weight from scale
@@ -190,8 +208,7 @@ io.on('connection', function(socket){
 				io.sockets.emit('scaleDataMilk', data);	
 				console.log("Emit milk data: " + data);
 			}
-			addToHistory(milkHistory, data);
-			addToJson(milkJson, milkHistory);
+			addToHistoryandToJson(milkHistory, data, "milkHistory.json");
 			milkIni = false;
 		}
 		// Check data and historical data
@@ -201,8 +218,7 @@ io.on('connection', function(socket){
 				if(!checkZeroData(milkHistory, data)){
 					data = 0.00;
 					io.sockets.emit('scaleDataMilk', data);
-					addToHistory(milkHistory, data);	
-					addToJson(milkJson, milkHistory);
+					addToHistoryandToJson(milkHistory, data, "milkHistory.json");	
 					console.log("Emit milk data:  " + data);	
 				}
 			}	
@@ -210,8 +226,7 @@ io.on('connection', function(socket){
 				// If the new weight changes more than 1g, then emit new weight and add to history
 				if(checkData(milkHistory, data)){
 					io.sockets.emit('scaleDataMilk', data);	
-					addToHistory(milkHistory, data);
-					addToJson(milkJson, milkHistory);
+					addToHistoryandToJson(milkHistory, data, "milkHistory.json");
 					console.log("Emit milk data: " + data);
 				}	
 			}
@@ -232,8 +247,7 @@ io.on('connection', function(socket){
 				io.sockets.emit('scaleDataOrange', data);	
 				console.log("Emit orange data: " + data);
 			}
-			addToHistory(orangeHistory, data);
-			addToJson(orangeJson, orangeHistory);
+			addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
 			orangeIni = false;
 		}
 		// Check data and historical data
@@ -244,16 +258,14 @@ io.on('connection', function(socket){
 					data = 0.00;
 					io.sockets.emit('scaleDataOrange', data);	
 					console.log("Emit orange data:  " + data);
-					addToHistory(orangeHistory, data);
-					addToJson(orangeJson, orangeHistory);
+					addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
 				}
 			}	
 			else{
 				if(checkData(orangeHistory, data)){
 					io.sockets.emit('scaleDataOrange', data);	
 					console.log("Emit orange data: " + data);
-					addToHistory(orangeHistory, data);
-					addToJson(orangeJson, orangeHistory);
+					addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
 				}	
 			}
 		}		
@@ -273,8 +285,7 @@ io.on('connection', function(socket){
 				io.sockets.emit('scaleDataMeat', data);	
 				console.log("Emit meat data: " + data);
 			}
-			addToHistory(meatHistory, data);
-			addToJson(meatJson, meatHistory);
+			addToHistoryandToJson(meatHistory, data, "meatHistory.json");
 			meatIni = false;
 		}
 		// Check data and historical data
@@ -285,16 +296,14 @@ io.on('connection', function(socket){
 					data = 0.00;
 					io.sockets.emit('scaleDataMeat', data);	
 					console.log("Emit meat data:  " + data);
-					addToHistory(meatHistory, data);
-					addToJson(meatJson, meatHistory);
+					addToHistoryandToJson(meatHistory, data, "meatHistory.json");
 				}
 			}	
 			else{
 				if(checkData(meatHistory, data)){
 					io.sockets.emit('scaleDataMeat', data);	
 					console.log("Emit meat data: " + data);
-					addToHistory(meatHistory, data);
-					addToJson(meatJson, meatHistory);
+					addToHistoryandToJson(meatHistory, data, "meatHistory.json");
 				}	
 			}
 		}
@@ -314,8 +323,7 @@ io.on('connection', function(socket){
 				io.sockets.emit('scaleDataBroccoli', data);	
 				console.log("Emit broccoli data: " + data);
 			}
-			addToHistory(broccoliHistory, data);
-			addToJson(broccoliJson, broccoliHistory);
+			addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
 			broccoliIni = false;
 		}
 		// Check data and historical data
@@ -326,16 +334,14 @@ io.on('connection', function(socket){
 					data = 0.00;
 					io.sockets.emit('scaleDataBroccoli', data);	
 					console.log("Emit broccoli data:  " + data);
-					addToHistory(broccoliHistory, data);
-					addToJson(broccoliJson, broccoliHistory);
+					addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
 				}
 			}	
 			else{
 				if(checkData(broccoliHistory, data)){
 					io.sockets.emit('scaleDataBroccoli', data);	
 					console.log("Emit broccoli data: " + data);
-					addToHistory(broccoliHistory, data);
-					addToJson(broccoliJson, broccoliHistory);
+					addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
 				}	
 			}
 		}	
@@ -479,8 +485,8 @@ function calculateConsumption(historicalObject, weight){
 	return consumeWeight;
 }
 
-//Add to history object
-function addToHistory(historicalObject, weight){
+//Add to history object and to Json file
+function addToHistoryandToJson(historicalObject, weight, jsonFileName){
 	// Add the new data to history
 	var currentDate = new Date();
 	var date = currentDate.toString();
@@ -492,14 +498,49 @@ function addToHistory(historicalObject, weight){
 		weight: weight,
 		consumeWeight: consumeWeight
 	})
+
+	fs.readFile(jsonFileName, 'utf8', function readFileCallback(err, data){
+		if (err){
+			console.log(err);
+		} else{
+			jsonArray = JSON.parse(data);
+			jsonArray.push({
+				date: date,
+				time: time,
+				weight: weight,
+				consumeWeight: consumeWeight
+			});
+			fs.writeFile(jsonFileName, JSON.stringify(jsonArray), 'utf8', function(err){
+				if (err){
+					console.log(err);
+				}
+			});
+		}	
+	});
 }
 
-//Add history data to JSON file in case of lost connection with server
-function addToJson(jsonFileName, historicalObject){
-	fs.appendFile (jsonFileName, JSON.stringify(historicalObject[Object.keys(historicalObject).length-1]), function(err) {
-		if (err) throw err;
-		console.log('Write to json complete');
-	});
+// Store last five days date and consumption date in an object, and transfer the object to AR histroty view 
+function parseHistory(jsonFileName){
+	var fiveDaysJsonData = [];
+	var historyData = fs.readFileSync(jsonFileName, 'utf8');
+	var jsonData = JSON.parse(historyData);
+	// console.log(jsonData);
+	for(j = 4; j > -1 ; j --){
+		var date = new Date();
+		date.setDate(date.getDate()-j);
+		date = date.toString().substring(4,10);
+		var sumConsumeWeight = 0;
+		for(i = 0; i < jsonData.length; ++i){
+			if(jsonData[i].date.toString().substring(4,10) === date){
+				sumConsumeWeight = sumConsumeWeight + jsonData[i].consumeWeight;
+			}
+		}
+		fiveDaysJsonData.push({
+			date: date,
+			sumConsumeWeight: sumConsumeWeight
+		})
+	}
+	return fiveDaysJsonData;
 }
 
 // Check if the previous one is zero, return true is
