@@ -50,6 +50,15 @@ var meatJson = "meatHistory.json";
 var broccoliJson = "broccoliHistory.json";
 var fishJson = "fishHistory.json";
 
+// Calcium mg, calories, fat g, protein g, vitaminC mg,  per 100g
+var milkNutrients = [125, 42, 1, 3.4, 0];
+var orangeNutrients = [40, 47.01, 0.11, 0.92, 53.2];
+var meatNutrients = [6, 143, 3.5, 26, 0];
+var broccoliNutrients = [47, 34, 0.4, 2.8, 89.2];
+var fishNutrients = [15, 206, 12, 22, 3.7];
+
+var nutrientsArray = [0,0,0,0,0];
+
 var bodyparser = require('body-parser');
 app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
@@ -541,6 +550,46 @@ function parseHistory(jsonFileName){
 		})
 	}
 	return fiveDaysJsonData;
+}
+
+// Check if new day comes every time new weight data changes
+function checkNewDay(historicalObject){
+	var date1 = historicalObject[Object.keys(historicalObject).length - 2].date;
+	var date2 = historicalObject[Object.keys(historicalObject).length - 1].date;
+	if(date2 - date1)
+}
+
+// Calculate new nutrients value when weight changes
+function calculateNutrients(historicalObject, foodType){
+	var newConsumption = historicalObject[Object.keys(historicalObject).length - 1].consumeWeight;
+	var consumptionPer = Math.round(newConsumption/100);
+	switch(foodType) {
+		case milk:
+		for( i = 0; i < nutrientsArray.length ; i ++ ){
+			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * milkNutrients[i];
+		}
+		break;
+		case orange:
+		for( i = 0; i < nutrientsArray.length ; i ++ ){
+			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * orangeNutrients[i];
+		}
+		break;
+		case meat:
+		for( i = 0; i < nutrientsArray.length ; i ++ ){
+			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * meatNutrients[i];
+		}
+		break;
+		case broccoli:
+		for( i = 0; i < nutrientsArray.length ; i ++ ){
+			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * broccoliNutrients[i];
+		}
+		break;
+		case fish:
+		for( i = 0; i < nutrientsArray.length ; i ++ ){
+			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * fishNutrients[i];
+		}
+		break;
+	}
 }
 
 // Check if the previous one is zero, return true is
