@@ -49,6 +49,7 @@ var orangeJson = "orangeHistory.json";
 var meatJson = "meatHistory.json";
 var broccoliJson = "broccoliHistory.json";
 var fishJson = "fishHistory.json";
+var nutritionJson = "nutritionHistory.json";
 
 // Calcium mg, calories, fat g, protein g, vitaminC mg,  per 100g
 var milkNutrients = [125, 42, 1, 3.4, 0];
@@ -56,6 +57,14 @@ var orangeNutrients = [40, 47.01, 0.11, 0.92, 53.2];
 var meatNutrients = [6, 143, 3.5, 26, 0];
 var broccoliNutrients = [47, 34, 0.4, 2.8, 89.2];
 var fishNutrients = [15, 206, 12, 22, 3.7];
+
+// This data based on woman, better collect user data and set more accurate daily intake
+// Calcium, 19-50 years old male and female 1000mg
+// Calories, maintain level, female 2000, male 2500
+// Fat, 70 g 
+// Protein, 0.8 * KG or 0.36 * Pound
+// VitaminC, adults female 75mg, male 90mg
+var dailyIntake =[1000, 2000, 70, 46, 75];
 
 var nutrientsArray = [0,0,0,0,0];
 
@@ -77,6 +86,42 @@ app.get('/index', function(req, res){
 app.get('/client', function(req, res){
 	res.sendFile(__dirname+ '/client.html');
 });
+
+// Check if it is midnight now.
+// If it is, then write nutrientsArray to Json and clear nutrientsArray 
+var midnight = "0:00:00";
+var now = null;
+setInterval(function () {
+	now = moment().format("H:mm:ss");
+	if (now === midnight) {
+		console.log("Write to nutriton json and re-initial nutrition array!");
+		var date = new Date();
+		date.setDate(date.getDate()-1);
+		fs.readFile("nutritionHistory.json", 'utf8', function readFileCallback(err, data){
+			if (err){
+				console.log("Read nutrition history file err: " + err);
+			} else{
+				jsonArray = JSON.parse(data);
+				jsonArray.push({
+					date: date,
+					calcium: nutrientsArray[0],
+					calories: nutrientsArray[1],
+					fat: nutrientsArray[2],
+					protein: nutrientsArray[3],
+					vitaminC: nutrientsArray[4]
+				});
+				fs.writeFile("nutritionHistory.json", JSON.stringify(jsonArray), 'utf8', function(err){
+					if (err){
+						console.log(err);
+					}
+				});
+			}	
+		});
+
+		// Initial the nutrition array for the new day
+		nutrientsArray = [0,0,0,0,0];
+	}
+}, 1000);
 
 
 io.on('connection', function(socket){
@@ -219,6 +264,8 @@ io.on('connection', function(socket){
 			}
 			addToHistoryandToJson(milkHistory, data, "milkHistory.json");
 			milkIni = false;
+			calculateNutrients(milkHistory, "milk");
+			io.sockets.emit('nutritionChanges', nutrientsArray);	
 		}
 		// Check data and historical data
 		else{
@@ -228,7 +275,9 @@ io.on('connection', function(socket){
 					data = 0.00;
 					io.sockets.emit('scaleDataMilk', data);
 					addToHistoryandToJson(milkHistory, data, "milkHistory.json");	
-					console.log("Emit milk data:  " + data);	
+					console.log("Emit milk data:  " + data);
+					calculateNutrients(milkHistory, "milk");
+					io.sockets.emit('nutritionChanges', nutrientsArray);	
 				}
 			}	
 			else{
@@ -237,6 +286,8 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataMilk', data);	
 					addToHistoryandToJson(milkHistory, data, "milkHistory.json");
 					console.log("Emit milk data: " + data);
+					calculateNutrients(milkHistory, "milk");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}	
 			}
 		} 
@@ -258,6 +309,8 @@ io.on('connection', function(socket){
 			}
 			addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
 			orangeIni = false;
+			calculateNutrients(orangeHistory, "orange");
+			io.sockets.emit('nutritionChanges', nutrientsArray);
 		}
 		// Check data and historical data
 		else{
@@ -268,6 +321,8 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataOrange', data);	
 					console.log("Emit orange data:  " + data);
 					addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
+					calculateNutrients(orangeHistory, "orange");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}
 			}	
 			else{
@@ -275,6 +330,8 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataOrange', data);	
 					console.log("Emit orange data: " + data);
 					addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
+					calculateNutrients(orangeHistory, "orange");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}	
 			}
 		}		
@@ -296,6 +353,8 @@ io.on('connection', function(socket){
 			}
 			addToHistoryandToJson(meatHistory, data, "meatHistory.json");
 			meatIni = false;
+			calculateNutrients(meatHistory, "meat");
+			io.sockets.emit('nutritionChanges', nutrientsArray);
 		}
 		// Check data and historical data
 		else{
@@ -306,6 +365,8 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataMeat', data);	
 					console.log("Emit meat data:  " + data);
 					addToHistoryandToJson(meatHistory, data, "meatHistory.json");
+					calculateNutrients(meatHistory, "meat");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}
 			}	
 			else{
@@ -313,6 +374,8 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataMeat', data);	
 					console.log("Emit meat data: " + data);
 					addToHistoryandToJson(meatHistory, data, "meatHistory.json");
+					calculateNutrients(meatHistory, "meat");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}	
 			}
 		}
@@ -334,6 +397,8 @@ io.on('connection', function(socket){
 			}
 			addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
 			broccoliIni = false;
+			calculateNutrients(broccoliHistory, "broccoli");
+			io.sockets.emit('nutritionChanges', nutrientsArray);
 		}
 		// Check data and historical data
 		else{
@@ -344,6 +409,8 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataBroccoli', data);	
 					console.log("Emit broccoli data:  " + data);
 					addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
+					calculateNutrients(broccoliHistory, "broccoli");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}
 			}	
 			else{
@@ -351,6 +418,52 @@ io.on('connection', function(socket){
 					io.sockets.emit('scaleDataBroccoli', data);	
 					console.log("Emit broccoli data: " + data);
 					addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
+					calculateNutrients(broccoliHistory, "broccoli");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
+				}	
+			}
+		}	
+	});
+
+	// Fish weight from scale
+	socket.on('fishWeight', function (data) {
+		console.log("fish weight: " + data);
+		// First time, check and emit data, and save to history
+		if(fishIni === true){
+			if(data < 3.00){
+				data = 0.00;
+				io.sockets.emit('scaleDataFish', data);	
+				console.log("Emit fish data:  " + data);
+			}
+			else{
+				io.sockets.emit('scaleDataFish', data);	
+				console.log("Emit fish data: " + data);
+			}
+			addToHistoryandToJson(fishHistory, data, "fishHistory.json");
+			fishIni = false;
+			calculateNutrients(fishHistory, "fish");
+			io.sockets.emit('nutritionChanges', nutrientsArray);
+		}
+		// Check data and historical data
+		else{
+			if( data < 3.00){
+				// Prevent to emit and record multiple zeros if the previous weight is zero
+				if(!checkZeroData(fishHistory, data)){
+					data = 0.00;
+					io.sockets.emit('scaleDataFish', data);	
+					console.log("Emit fish data:  " + data);
+					addToHistoryandToJson(fishHistory, data, "fishHistory.json");
+					calculateNutrients(fishHistory, "fish");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
+				}
+			}	
+			else{
+				if(checkData(fishHistory, data)){
+					io.sockets.emit('scaleDataFish', data);	
+					console.log("Emit fish data: " + data);
+					addToHistoryandToJson(fishHistory, data, "fishHistory.json");
+					calculateNutrients(fishHistory, "fish");
+					io.sockets.emit('nutritionChanges', nutrientsArray);
 				}	
 			}
 		}	
@@ -381,19 +494,11 @@ io.on('connection', function(socket){
 		io.sockets.emit('manualDataBroccoli', data);	
 	});
 
-	// // Fish weight from scale
-	// socket.on('fishWeight', function (data) {
-	// 	console.log("fish weight: " + data);	
-	// 	io.sockets.emit("scaleDataFish", data);	
-	// 	var currentDate = new Date();
-	// 	var date = currentDate.toString();
-	// 	var time = currentDate/1000;
-	// 	fishHistory.push({
-	// 		date: date,
-	// 		time: time,
-	// 		weight: data
-	// 	})
-	// });
+	// Get fish weight by moving the rack manually
+	socket.on('fishWeightByMovingRack', function (data) {
+		console.log("fish weight from moving the rack: " + data);
+		io.sockets.emit('manualDataFish', data);	
+	});
 
 });
 
@@ -510,7 +615,7 @@ function addToHistoryandToJson(historicalObject, weight, jsonFileName){
 
 	fs.readFile(jsonFileName, 'utf8', function readFileCallback(err, data){
 		if (err){
-			console.log(err);
+			console.log("Read " + jsonFileName + " file err:" + err);
 		} else{
 			jsonArray = JSON.parse(data);
 			jsonArray.push({
@@ -552,41 +657,34 @@ function parseHistory(jsonFileName){
 	return fiveDaysJsonData;
 }
 
-// Check if new day comes every time new weight data changes
-function checkNewDay(historicalObject){
-	var date1 = historicalObject[Object.keys(historicalObject).length - 2].date;
-	var date2 = historicalObject[Object.keys(historicalObject).length - 1].date;
-	if(date2 - date1)
-}
-
-// Calculate new nutrients value when weight changes
+// Calculate accumulate nutrients value of same day when food weight changes
 function calculateNutrients(historicalObject, foodType){
 	var newConsumption = historicalObject[Object.keys(historicalObject).length - 1].consumeWeight;
 	var consumptionPer = Math.round(newConsumption/100);
 	switch(foodType) {
 		case milk:
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
-			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * milkNutrients[i];
+			nutrientsArray[i] += consumptionPer * milkNutrients[i];
 		}
 		break;
 		case orange:
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
-			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * orangeNutrients[i];
+			nutrientsArray[i] += consumptionPer * orangeNutrients[i];
 		}
 		break;
 		case meat:
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
-			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * meatNutrients[i];
+			nutrientsArray[i] += consumptionPer * meatNutrients[i];
 		}
 		break;
 		case broccoli:
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
-			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * broccoliNutrients[i];
+			nutrientsArray[i] += consumptionPer * broccoliNutrients[i];
 		}
 		break;
 		case fish:
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
-			nutrientsArray[i] = nutrientsArray[i] + consumptionPer * fishNutrients[i];
+			nutrientsArray[i] += consumptionPer * fishNutrients[i];
 		}
 		break;
 	}

@@ -185,6 +185,14 @@
       $('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
     });
 
+        // Set fish weight data, max 1kg
+    socket.on('manualDataFish', function(fish){
+      console.log(" Manual fish weight" + fish);
+      var percentageFish = fish/1000 * 100;
+      $('#scale-data-fish').text(fish);
+      $('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
+    });
+
   </script>
 </body>
 </html>

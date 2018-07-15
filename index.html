@@ -339,6 +339,12 @@
       sceneEl.querySelector('#broccoliWeight').setAttribute('value', weight);
     });
 
+    // Show manually changed weight of fish in AR
+    socket.on('manualDataFish', function(fish){
+      var weight = fish.toString() + " g";
+      sceneEl.querySelector('#fishWeight').setAttribute('value', weight);
+    });
+
 
 
     // If content updates, get all the content again
