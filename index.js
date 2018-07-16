@@ -1,6 +1,7 @@
 var app = require('express')();
 var https = require('https');
 var fs = require('fs');
+var moment = require('moment');
 
 // https secure connection to avoid webcam only secure origins are allowed error
 // https://stackoverflow.com/questions/31156884/how-to-use-https-on-node-js-using-express-socket-io/31165649#31165649?newreg=43fe9326a31942a591b02baf50dc1a07
@@ -66,7 +67,12 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // VitaminC, adults female 75mg, male 90mg
 var dailyIntake =[1000, 2000, 70, 46, 75];
 
-var nutrientsArray = [0,0,0,0,0];
+var nutrientsArray = [950,1800,0,40,50];
+var milkNutrientsArray = [200,300,0,0,0];
+var orangeNutrientsArray = [300,400,0,0,30];
+var meatNutrientsArray = [400,100,100,30,0];
+var broccoliNutrientsArray = [100,200,0,0,20];
+var fishNutrientsArray = [50,1000,0,10,0];
 
 var bodyparser = require('body-parser');
 app.use(bodyparser.urlencoded({extended:false}));
@@ -115,11 +121,15 @@ setInterval(function () {
 						console.log(err);
 					}
 				});
-			}	
+			}
+			// Initial the all nutrition array for the new day
+			nutrientsArray = [0,0,0,0,0];
+			milkNutrientsArray = [0,0,0,0,0];
+			orangeNutrientsArray = [0,0,0,0,0];
+			meatNutrientsArray = [0,0,0,0,0];
+			broccoliNutrientsArray = [0,0,0,0,0];
+			fishNutrientsArray = [0,0,0,0,0];
 		});
-
-		// Initial the nutrition array for the new day
-		nutrientsArray = [0,0,0,0,0];
 	}
 }, 1000);
 
@@ -185,7 +195,7 @@ io.on('connection', function(socket){
 			// 	console.log(milkHistoryJson[i].date);
 			// 	console.log(milkHistoryJson[i].sumConsumeWeight);
 			// }
-			io.sockets.emit('milkIsSelected', milkHistoryJson);
+			io.sockets.emit('milkIsSelected', milkHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 		}	
 	});
 
@@ -199,7 +209,7 @@ io.on('connection', function(socket){
 		else{
 			orangeSelected = true;
 			orangeHistoryJson = parseHistory("orangeHistory.json");
-			io.sockets.emit('orangeIsSelected', orangeHistoryJson);
+			io.sockets.emit('orangeIsSelected', orangeHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 		}
 		
 	});
@@ -214,7 +224,7 @@ io.on('connection', function(socket){
 		else{
 			meatSelected = true;
 			meatHistoryJson = parseHistory("meatHistory.json");
-			io.sockets.emit('meatIsSelected', meatHistoryJson);	
+			io.sockets.emit('meatIsSelected', meatHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);	
 		}
 		
 	});
@@ -229,7 +239,7 @@ io.on('connection', function(socket){
 		else{
 			broccoliSelected = true;
 			broccoliHistoryJson = parseHistory("broccoliHistory.json");
-			io.sockets.emit('broccoliIsSelected', broccoliHistoryJson);
+			io.sockets.emit('broccoliIsSelected', broccoliHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 		}
 		
 	});
@@ -244,7 +254,7 @@ io.on('connection', function(socket){
 		else{
 			fishSelected = true;
 			fishHistoryJson = parseHistory("fishHistory.json");
-			io.sockets.emit('fishIsSelected', fishHistoryJson);
+			io.sockets.emit('fishIsSelected', fishHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 		}
 	});
 
@@ -660,34 +670,40 @@ function parseHistory(jsonFileName){
 // Calculate accumulate nutrients value of same day when food weight changes
 function calculateNutrients(historicalObject, foodType){
 	var newConsumption = historicalObject[Object.keys(historicalObject).length - 1].consumeWeight;
-	var consumptionPer = Math.round(newConsumption/100);
+	var consumptionPer = newConsumption/100;
 	switch(foodType) {
-		case milk:
+		case "milk":
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
 			nutrientsArray[i] += consumptionPer * milkNutrients[i];
+			milkNutrientsArray[i] += consumptionPer * milkNutrients[i];
 		}
 		break;
-		case orange:
+		case "orange":
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
 			nutrientsArray[i] += consumptionPer * orangeNutrients[i];
+			orangeNutrientsArray[i] += consumptionPer * orangeNutrients[i];
 		}
 		break;
-		case meat:
+		case "meat":
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
 			nutrientsArray[i] += consumptionPer * meatNutrients[i];
+			meatNutrientsArray[i] += consumptionPer * meatNutrients[i];
 		}
 		break;
-		case broccoli:
+		case "broccoli":
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
 			nutrientsArray[i] += consumptionPer * broccoliNutrients[i];
+			broccoliNutrientsArray[i] += consumptionPer * broccoliNutrients[i];
 		}
 		break;
-		case fish:
+		case "fish":
 		for( i = 0; i < nutrientsArray.length ; i ++ ){
 			nutrientsArray[i] += consumptionPer * fishNutrients[i];
+			fishNutrientsArray[i] += consumptionPer * fishNutrients[i];
 		}
 		break;
 	}
+	console.log(nutrientsArray);
 }
 
 // Check if the previous one is zero, return true is
