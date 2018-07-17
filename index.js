@@ -495,26 +495,34 @@ io.on('connection', function(socket){
 
 	// Get orange weight by moving the rack manually
 	socket.on('orangeWeightByMovingRack', function (data) {
+		var virtualConsumption = orangeHistory[Object.keys(historicalObject).length-1].weight - data;
 		console.log("orange weight from moving the rack: " + data);
-		io.sockets.emit('manualDataOrange', data);	
+		calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
+		io.sockets.emit('manualDataOrange', data, virtualNutrition);	
 	});
 
 	// Get meat weight by moving the rack manually
 	socket.on('meatWeightByMovingRack', function (data) {
+		var virtualConsumption = meatHistory[Object.keys(historicalObject).length-1].weight - data;
 		console.log("meat weight from moving the rack: " + data);
-		io.sockets.emit('manualDataMeat', data);	
+		calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
+		io.sockets.emit('manualDataMeat', data, virtualNutrition);	
 	});
 
 	// Get broccoli weight by moving the rack manually
 	socket.on('broccoliWeightByMovingRack', function (data) {
+		var virtualConsumption = broccoliHistory[Object.keys(historicalObject).length-1].weight - data;
 		console.log("broccoli weight from moving the rack: " + data);
-		io.sockets.emit('manualDataBroccoli', data);	
+		calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
+		io.sockets.emit('manualDataBroccoli', data, virtualNutrition);	
 	});
 
 	// Get fish weight by moving the rack manually
 	socket.on('fishWeightByMovingRack', function (data) {
+		var virtualConsumption = fishHistory[Object.keys(historicalObject).length-1].weight - data;
 		console.log("fish weight from moving the rack: " + data);
-		io.sockets.emit('manualDataFish', data);	
+		calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
+		io.sockets.emit('manualDataFish', data, virtualNutrition);	
 	});
 
 });

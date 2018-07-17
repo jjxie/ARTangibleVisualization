@@ -671,31 +671,36 @@
     // Show manually changed weight of milk in AR
     socket.on('manualDataMilk', function(virtualMilkWeight, virtualNutritionConsumption){
       var weight = virtualMilkWeight.toString() + " g";
-      sceneEl.querySelector('#milkWeight').setAttribute('value', virtualMilkWeight);
+      sceneEl.querySelector('#milkWeight').setAttribute('value', weight);
+      setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of orange in AR
-    socket.on('manualDataOrange', function(orange){
-      var weight = orange.toString() + " g";
+    socket.on('manualDataOrange', function(virtualOrangeWeight, virtualNutritionConsumption){
+      var weight = virtualOrangeWeight.toString() + " g";
       sceneEl.querySelector('#orangeWeight').setAttribute('value', weight);
+      setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of meat in AR
-    socket.on('manualDataMeat', function(meat){
-      var weight = meat.toString() + " g";
+    socket.on('manualDataMeat', function(virtualMeatWeight, virtualNutritionConsumption){
+      var weight = virtualMeatWeight.toString() + " g";
       sceneEl.querySelector('#meatWeight').setAttribute('value', weight);
+      setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of broccoli in AR
-    socket.on('manualDataBroccoli', function(broccoli){
-      var weight = broccoli.toString() + " g";
+    socket.on('manualDataBroccoli', function(virtualBroccoliWeight, virtualNutritionConsumption){
+      var weight = virtualBroccoliWeight.toString() + " g";
       sceneEl.querySelector('#broccoliWeight').setAttribute('value', weight);
+      setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of fish in AR
-    socket.on('manualDataFish', function(fish){
-      var weight = fish.toString() + " g";
+    socket.on('manualDataFish', function(virtualFishWeight, virtualNutritionConsumption){
+      var weight = virtualFishWeight.toString() + " g";
       sceneEl.querySelector('#fishWeight').setAttribute('value', weight);
+      setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
 
