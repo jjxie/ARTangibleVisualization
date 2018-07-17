@@ -70,9 +70,12 @@ var dailyIntake =[1000, 2000, 70, 46, 75];
 var nutrientsArray = [950,1800,0,40,50];
 var milkNutrientsArray = [200,300,0,0,0];
 var orangeNutrientsArray = [300,400,0,0,30];
-var meatNutrientsArray = [400,100,100,30,0];
+var meatNutrientsArray = [400,100,60,30,0];
 var broccoliNutrientsArray = [100,200,0,0,20];
 var fishNutrientsArray = [50,1000,0,10,0];
+
+var virtualFlag = false;
+var virtualNutrition =[0,0,0,0,0];
 
 var bodyparser = require('body-parser');
 app.use(bodyparser.urlencoded({extended:false}));
@@ -129,6 +132,7 @@ setInterval(function () {
 			meatNutrientsArray = [0,0,0,0,0];
 			broccoliNutrientsArray = [0,0,0,0,0];
 			fishNutrientsArray = [0,0,0,0,0];
+			virtualNutrition =[0,0,0,0,0];
 		});
 	}
 }, 1000);
@@ -482,8 +486,11 @@ io.on('connection', function(socket){
 	// Get new milk weight by moving the rack manually
 	// Emit manual data to move the nutrition servos and AR text of the weight
 	socket.on('milkWeightByMovingRack', function (data) {
-		console.log("milk weight from moving the rack: " + data);
-		io.sockets.emit('manualDataMilk', data);	
+		// Get the virtual food consumption amount
+		var virtualConsumption = milkHistory[Object.keys(historicalObject).length-1].weight - data;
+		console.log("milk weight from moving the rack: " + data + "Virtual consumption: " + virtualConsumption);
+		calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
+		io.sockets.emit('manualDataMilk', data, virtualNutrition);	
 	});
 
 	// Get orange weight by moving the rack manually
@@ -726,5 +733,22 @@ function checkData(historicalObject, weight){
 	}
 	else{
 		return true;
+	}
+}
+
+function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
+	var virtualConsumptionPer = virtualConsumption/100;
+	if(!virtualFlag){
+		virtualFlag = true;	
+		for(i=0; i< virtualNutrition.length; i++){
+			// Get current real nutrients amount, then add or substract virtual nutrients
+			virtualNutrition[i] = nutrientsArray[i];
+			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];			
+		}
+	}
+	else{
+		for(i=0; i< virtualNutrition.length; i++){
+			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];	
+		}
 	}
 }
