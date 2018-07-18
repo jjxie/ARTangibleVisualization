@@ -24,11 +24,11 @@ var broccoliSelected = false;
 var fishSelected = false;
 
 // Historical data
-var milkHistory = [];
-var orangeHistory = [];
-var meatHistory = [];
-var broccoliHistory = [];
-var fishHistory = [];
+var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
+var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
+var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
+var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
+var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
 
 // This is used to show five days history in AR detailed view. The data is parsed from Json file
 var milkHistoryJson =[];
@@ -195,10 +195,6 @@ io.on('connection', function(socket){
 		else{
 			milkSelected = true;
 			milkHistoryJson = parseHistory("milkHistory.json");
-			// for(var i =0; i< Object.keys(milkHistoryJson).length; i++){
-			// 	console.log(milkHistoryJson[i].date);
-			// 	console.log(milkHistoryJson[i].sumConsumeWeight);
-			// }
 			io.sockets.emit('milkIsSelected', milkHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 		}	
 	});
@@ -235,7 +231,7 @@ io.on('connection', function(socket){
 
 	// Broccoli selection status from touch sensor
 	socket.on('broccoli', function (data) {
-		// console.log("Broccoli touch sensor is touched " + data);
+		console.log("Broccoli touch sensor is touched " + data);
 		if(broccoliSelected == true){
 			broccoliSelected = false;
 			io.sockets.emit('broccoliIsDeselected', false);
@@ -244,8 +240,7 @@ io.on('connection', function(socket){
 			broccoliSelected = true;
 			broccoliHistoryJson = parseHistory("broccoliHistory.json");
 			io.sockets.emit('broccoliIsSelected', broccoliHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
-		}
-		
+		}	
 	});
 
 	// Fish selection status from touch sensor
@@ -487,15 +482,14 @@ io.on('connection', function(socket){
 	// Emit manual data to move the nutrition servos and AR text of the weight
 	socket.on('milkWeightByMovingRack', function (data) {
 		// Get the virtual food consumption amount
-		var virtualConsumption = milkHistory[Object.keys(historicalObject).length-1].weight - data;
-		console.log("milk weight from moving the rack: " + data + "Virtual consumption: " + virtualConsumption);
+		var virtualConsumption = milkHistory[Object.keys(milkHistory).length-1].weight - data;
 		calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
 		io.sockets.emit('manualDataMilk', data, virtualNutrition);	
 	});
 
 	// Get orange weight by moving the rack manually
 	socket.on('orangeWeightByMovingRack', function (data) {
-		var virtualConsumption = orangeHistory[Object.keys(historicalObject).length-1].weight - data;
+		var virtualConsumption = orangeHistory[Object.keys(orangeHistory).length-1].weight - data;
 		console.log("orange weight from moving the rack: " + data);
 		calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
 		io.sockets.emit('manualDataOrange', data, virtualNutrition);	
@@ -503,7 +497,7 @@ io.on('connection', function(socket){
 
 	// Get meat weight by moving the rack manually
 	socket.on('meatWeightByMovingRack', function (data) {
-		var virtualConsumption = meatHistory[Object.keys(historicalObject).length-1].weight - data;
+		var virtualConsumption = meatHistory[Object.keys(meatHistory).length-1].weight - data;
 		console.log("meat weight from moving the rack: " + data);
 		calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
 		io.sockets.emit('manualDataMeat', data, virtualNutrition);	
@@ -511,15 +505,15 @@ io.on('connection', function(socket){
 
 	// Get broccoli weight by moving the rack manually
 	socket.on('broccoliWeightByMovingRack', function (data) {
-		var virtualConsumption = broccoliHistory[Object.keys(historicalObject).length-1].weight - data;
-		console.log("broccoli weight from moving the rack: " + data);
+		var virtualConsumption = broccoliHistory[Object.keys(broccoliHistory).length-1].weight - data;
+		console.log("broccoli weight from moving the rack: " + data + "Virtual consumption: " + virtualConsumption);
 		calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
 		io.sockets.emit('manualDataBroccoli', data, virtualNutrition);	
 	});
 
 	// Get fish weight by moving the rack manually
 	socket.on('fishWeightByMovingRack', function (data) {
-		var virtualConsumption = fishHistory[Object.keys(historicalObject).length-1].weight - data;
+		var virtualConsumption = fishHistory[Object.keys(fishHistory).length-1].weight - data;
 		console.log("fish weight from moving the rack: " + data);
 		calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
 		io.sockets.emit('manualDataFish', data, virtualNutrition);	
@@ -745,13 +739,15 @@ function checkData(historicalObject, weight){
 }
 
 function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
+	console.log(nutrientsRate);
 	var virtualConsumptionPer = virtualConsumption/100;
 	if(!virtualFlag){
 		virtualFlag = true;	
-		for(i=0; i< virtualNutrition.length; i++){
+		for(i = 0; i< virtualNutrition.length; i++){
 			// Get current real nutrients amount, then add or substract virtual nutrients
 			virtualNutrition[i] = nutrientsArray[i];
-			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];			
+			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];
+			console.log(virtualNutrition[i]);			
 		}
 	}
 	else{

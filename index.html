@@ -182,7 +182,7 @@
     <!-- marker nutrition Calcium -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/ca.patt'>
       <a-text id="calciumText" position="-0.9 0 -0.7" rotation="-90 0 0" value="Calcium" color="#D05A6E"></a-text>
-      <a-text id="calciumAmount" position="0.1 0 -0.7" rotation="-90 0 0" value="1000 mg" color="#D05A6E"></a-text>
+      <a-text id="calciumAmount" position="0 0 -0.7" rotation="-90 0 0" value="1000 mg" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition0" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition0" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -205,15 +205,15 @@
       <a-box id="intake" position='0.15 3.2 -1' depth="0.1" height="0.01" width="0.4" color="#58e34b"></a-box>
       <a-text id="intakeText" position="-0.35 3.2 -1.5" rotation="-45 0 0" value="1000 mg" color="#4fcc43"></a-text>
 
-      <a-box id="virtualNutritionBarCalcium" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="true"></a-box>
-      <a-text id="virtualNutritionBarCalciumNumber" position="0.2 1.5 -1.5" rotation="-45 0 0" value="1000 mg" color="#D05A6E" visible="true"></a-text>
+      <a-box id="virtualNutritionBarCalcium" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="false"></a-box>
+      <a-text id="virtualNutritionBarCalciumNumber" position="0.2 1.5 -1.5" rotation="-45 0 0" value="1000 mg" color="#D05A6E" visible="false"></a-text>
 
     </a-marker>
 
     <!-- marker nutrition Calories -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/cal.patt'>
       <a-text id="caloriesText" position="-0.8 0 -0.7" rotation="-90 0 0" value="Calories" color="#D05A6E"></a-text>
-      <a-text id="caloriesAmount" position="0.2 0 -0.7" rotation="-90 0 0" value="1000 Cal" color="#D05A6E"></a-text>
+      <a-text id="caloriesAmount" position="0.1 0 -0.7" rotation="-90 0 0" value="1000 Cal" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition1" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition1" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -236,14 +236,14 @@
       <a-box id="intake" position='0.15 3.2 -1' depth="0.1" height="0.01" width="0.4" color="#58e34b"></a-box>
       <a-text id="intakeText" position="-0.35 3.2 -1.5" rotation="-45 0 0" value="2000 Cal" color="#4fcc43"></a-text>
 
-      <a-box id="virtualNutritionBarCalories" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="true"></a-box>
-      <a-text id="virtualNutritionBarCaloriesNumber" position="0.2 1.5 -1.5" rotation="-45 0 0" value="1000 Cal" color="#D05A6E" visible="true"></a-text>
+      <a-box id="virtualNutritionBarCalories" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="false"></a-box>
+      <a-text id="virtualNutritionBarCaloriesNumber" position="0.2 1.5 -1.5" rotation="-45 0 0" value="1000 Cal" color="#D05A6E" visible="false"></a-text>
 
     </a-marker>
 
     <!-- marker nutrition Fat -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/fat.patt'>
-      <a-text id="fatText" position="-0.65 0 -0.7" rotation="-90 0 0" value="Fat" color="#D05A6E"></a-text>
+      <a-text id="fatText" position="-0.55 0 -0.7" rotation="-90 0 0" value="Fat" color="#D05A6E"></a-text>
       <a-text id="fatAmount" position="0.2 0 -0.7" rotation="-90 0 0" value="60 g" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition2" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -267,8 +267,8 @@
       <a-box id="intake" position='0.15 3.2 -1' depth="0.1" height="0.01" width="0.4" color="#58e34b"></a-box>
       <a-text id="intakeText" position="-0.1 3.2 -1.5" rotation="-45 0 0" value="70 g" color="#4fcc43"></a-text>
 
-      <a-box id="virtualNutritionBarFat" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="true"></a-box>
-      <a-text id="virtualNutritionBarFatNumber" position="0.45 1.5 -1.5" rotation="-45 0 0" value="30 g" color="#D05A6E" visible="true"></a-text>
+      <a-box id="virtualNutritionBarFat" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="false"></a-box>
+      <a-text id="virtualNutritionBarFatNumber" position="0.45 1.5 -1.5" rotation="-45 0 0" value="30 g" color="#D05A6E" visible="false"></a-text>
 
     </a-marker>
 
@@ -298,8 +298,8 @@
       <a-box id="intake" position='0.15 3.2 -1' depth="0.1" height="0.01" width="0.4" color="#58e34b"></a-box>
       <a-text id="intakeText" position="-0.1 3.2 -1.5" rotation="-45 0 0" value="46 g" color="#4fcc43"></a-text>
 
-      <a-box id="virtualNutritionBarProtein" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="true"></a-box>
-      <a-text id="virtualNutritionBarProteinNumber" position="0.45 1.5 -1.5" rotation="-45 0 0" value="60 g" color="#D05A6E" visible="true"></a-text>
+      <a-box id="virtualNutritionBarProtein" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="false"></a-box>
+      <a-text id="virtualNutritionBarProteinNumber" position="0.45 1.5 -1.5" rotation="-45 0 0" value="60 g" color="#D05A6E" visible="false"></a-text>
 
     </a-marker>
 
@@ -329,8 +329,8 @@
       <a-box id="intake" position='0.15 3.2 -1' depth="0.1" height="0.01" width="0.4" color="#58e34b"></a-box>
       <a-text id="intakeText" position="-0.15 3.2 -1.5" rotation="-45 0 0" value="75 mg" color="#4fcc43"></a-text>
 
-      <a-box id="virtualNutritionBarVitaminC" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="true"></a-box>
-      <a-text id="virtualNutritionBarVitaminCNumber" position="0.4 1.5 -1.5" rotation="-45 0 0" value="70 mg" color="#D05A6E" visible="true"></a-text>
+      <a-box id="virtualNutritionBarVitaminC" position='0.7 0.5 -1.5' depth="0.2" height="1" width="0.2" color="#4CC3D9" visible="false"></a-box>
+      <a-text id="virtualNutritionBarVitaminCNumber" position="0.4 1.5 -1.5" rotation="-45 0 0" value="70 mg" color="#D05A6E" visible="false"></a-text>
 
     </a-marker>
 
@@ -339,8 +339,8 @@
 
   </a-scene>
   
-  <div>
-    <button id="reset" type="button" onclick="alert('Hello world!')">Click Me!</button>
+  <div class="container">
+    <button type="button" class="btn btn btn-warning"  onclick = "alert('Hello world!')">Back to real world!</button>
   </div>
 
   <script>
@@ -369,7 +369,7 @@
     var virtualBarX = 0.7;
     var virtualZ = -1.5;
     var virtualTextX = [0.2, 0.2, 0.45, 0.45, 0.4];
-    var virtualMaxHeight = 5;
+    var virtualMaxHeight = 4.8;
 
 
 
@@ -420,9 +420,7 @@
     function showAllNutritionView(nutritionData, index){
       for(i = 0; i < nutritionData.length; i++){
         var depth = Math.round(nutritionData[i]/dailyIntakeMax[i] * 100) / 100;
-        console.log("depth : " + depth);
         var z = 0.8- depth/2;
-        console.log("z : " +z);
         var tag = nutritionTag[index] + i;
         var textTag = nutritiontagText[index] + i;
         var NumberTag= nutritiontagNumberText[index] + i;
@@ -440,7 +438,6 @@
           sceneEl.querySelector(tag).setAttribute("visible",true); 
           sceneEl.querySelector(textTag).setAttribute("visible",true); 
           var numberTextZ = z - depth/2 - 0.1; 
-          console.log("numberTextZ : " + numberTextZ);
           sceneEl.querySelector(NumberTag).setAttribute("position",{ x: xPosition[index], y: yPosition, z: numberTextZ});
           sceneEl.querySelector(NumberTag).setAttribute("text", {value: amountString}); 
           sceneEl.querySelector(NumberTag).setAttribute("visible",true);
@@ -531,7 +528,7 @@
           sceneEl.querySelector(tag).setAttribute("height", height); 
           sceneEl.querySelector(tag).setAttribute("position",{ x: virtualBarX, y: y, z: virtualZ }); 
           sceneEl.querySelector(tag).setAttribute("visible",true); 
-          var textY = y + height;
+          var textY = y + height/2 + 0.15;
           sceneEl.querySelector(NumberTag).setAttribute("position",{ x: virtualTextX[i], y: textY, z: virtualZ});
           sceneEl.querySelector(NumberTag).setAttribute("value", amountString); 
           sceneEl.querySelector(NumberTag).setAttribute("visible",true);
@@ -543,11 +540,11 @@
     // Set nutrion amount text
     function setNutritionAmount(nutritionArray){
       for(i = 0; i < nutritionArray.length; i++){
-         var tag = nutrionAmountText[i];
-         var amountString = Math.round(nutritionArray[i]).toString() + nutritionUnit[i];
-         sceneEl.querySelector(tag).setAttribute("value", amountString); 
-      }
-    }
+       var tag = nutrionAmountText[i];
+       var amountString = Math.round(nutritionArray[i]).toString() + nutritionUnit[i];
+       sceneEl.querySelector(tag).setAttribute("value", amountString); 
+     }
+   }
 
 
     // Milk selection show detailed information
