@@ -519,6 +519,23 @@ io.on('connection', function(socket){
 		io.sockets.emit('manualDataFish', data, virtualNutrition);	
 	});
 
+
+	// Reset virtual variables
+	socket.on('resetVirtualVariables', function (data) {
+		virtualFlag = false;
+		virtualNutrition =[0,0,0,0,0];
+		console.log("Virtual falg after resetting " + virtualFlag);
+	});
+
+	// Reset weight rack to its real weight
+	socket.on('resetweightScale', function (data) {
+		io.sockets.emit('scaleDataMilk', milkHistory[Object.keys(milkHistory).length-1].weight);
+		io.sockets.emit('scaleDataOrange', orangeHistory[Object.keys(orangeHistory).length-1].weight);
+		io.sockets.emit('scaleDataMeat', meatHistory[Object.keys(meatHistory).length-1].weight);
+		io.sockets.emit('scaleDataBroccoli', broccoliHistory[Object.keys(broccoliHistory).length-1].weight);
+		io.sockets.emit('scaleDataFish', fishHistory[Object.keys(fishHistory).length-1].weight);
+	});
+
 });
 
 // // Read data from serial port and emit the weight data
@@ -747,12 +764,13 @@ function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
 			// Get current real nutrients amount, then add or substract virtual nutrients
 			virtualNutrition[i] = nutrientsArray[i];
 			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];
-			console.log(virtualNutrition[i]);			
+			console.log("First time virtual" + virtualNutrition[i]);			
 		}
 	}
 	else{
 		for(i=0; i< virtualNutrition.length; i++){
-			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];	
+			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];
+			console.log("Accumulate time virtual" + virtualNutrition[i]);	
 		}
 	}
 }

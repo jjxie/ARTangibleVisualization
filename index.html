@@ -10,6 +10,7 @@
   <script src="https://aframe.io/releases/0.6.0/aframe.min.js"></script>
   <!-- include ar.js for A-Frame -->
   <script src="https://jeromeetienne.github.io/AR.js/aframe/build/aframe-ar.js"></script> 
+  <script src=""https://unpkg.com/aframe-animation-component@^4.1.2/dist/aframe-animation-component.min.js”></script>
   <script src="js/three.js"></script>
   <script src="/socket.io/socket.io.js"></script>
   <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
@@ -18,19 +19,28 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <style>
-  body { margin: 5px; padding: 0; box-sizing: border-box; }
-  body { font: 13px Helvetica, Arial; }
-  form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-  form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-  form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-  #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 28px; pointer-events: auto!important;}
-  .progress-bar-vertical { display: inline-block; width: 150px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg);}
-</style>
+    body { margin: 5px; padding: 0; box-sizing: border-box; }
+    body { font: 13px Helvetica, Arial; }
+    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+    form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+    #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 28px; pointer-events: auto!important;}
+    .progress-bar-vertical { display: inline-block; width: 150px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg);}
+  </style>
+  <script>
+    AFRAME.registerComponent('reset-on-click', {
+      init: function () {
+        this.el.addEventListener('click', function (evt) {
+          console.log("Reset virtual scene");
+          resetVirtualScene();
+        });
+      }
+    });
+  </script>
 </head> 
 <body>
 
-  <a-scene embedded arjs='sourceType: webcam;'>
-
+  <a-scene embedded arjs='sourceType: webcam; debugUIEnabled: false;'>
     <!-- define a camera which will move according to the marker position -->
 
     <!-- marker milk -->
@@ -335,13 +345,14 @@
     </a-marker>
 
     <!-- camera -->
-    <a-entity camera></a-entity>
+    <a-entity camera look-controls > 
+      <a-cursor geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;" material="color: #FFC0CB; shader: flat"></a-cursor>
+      </a-entity>
+    </a-entity>
+    <a-box position="0 0 -5" reset-on-click="" depth="0.1" height="0.1" width="0.1" color="peachpuff"></a-box>
 
   </a-scene>
-  
-  <div class="container">
-    <button type="button" class="btn btn btn-warning"  onclick = "alert('Hello world!')">Back to real world!</button>
-  </div>
+
 
   <script>
     var socket = io.connect('https://192.168.0.100:3000',{secure: true});
@@ -536,6 +547,16 @@
       } 
     }
 
+    // Hide all the virtual bars when reset is clicked
+    function hideVirtualBarAndText(){
+      for(i = 0; i < nutritionMaxDataPoints; i++){
+        var tag = virtualBarTag[i];
+        var NumberTag= virtualBarNumnerTag[i]
+        sceneEl.querySelector(tag).setAttribute("visible",false); 
+        sceneEl.querySelector(NumberTag).setAttribute("visible",false); 
+      }
+    }
+
 
     // Set nutrion amount text
     function setNutritionAmount(nutritionArray){
@@ -602,6 +623,7 @@
       console.log("numberofFoodSelected " + numberofFoodSelected);
       showAllNutrition(milk, orange, meat, broccoli, fish);
       highlightNutrtionView(broccoli, 3);
+      // socket.emit('broccoliWeightByMovingRack', 90);
     });
 
     socket.on('broccoliIsDeselected', function(txt){ 
@@ -609,6 +631,7 @@
       numberofFoodSelected -= 1;
       console.log("numberofFoodSelected " + numberofFoodSelected);
       checkIfFoodIsSelected(3);
+      // socket.emit('broccoliWeightByMovingRack', 80);
     });
 
     // Fish selection show detailed information
@@ -700,6 +723,13 @@
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
+
+    // Reset virtual scene
+    function resetVirtualScene(){
+      socket.emit('resetVirtualVariables', true);
+      socket.emit('resetweightScale', true);
+      hideVirtualBarAndText();
+    }
 
 
     // If content updates, get all the content again
