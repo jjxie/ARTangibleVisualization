@@ -536,6 +536,34 @@ io.on('connection', function(socket){
 		io.sockets.emit('scaleDataFish', fishHistory[Object.keys(fishHistory).length-1].weight);
 	});
 
+	// Sent history Data to screen version
+	socket.on('sceenRequestHistoryData', function (foodType) {
+		switch(foodType) {
+			case "milk":
+			milkHistoryJson = parseHistory("milkHistory.json");
+			io.emit("screenMilkHistory", milkHistoryJson);
+			break;
+			case "orange":
+			orangeHistoryJson = parseHistory("orangeHistory.json");
+			io.emit("screenOrangeHistory", orangeHistoryJson);
+			break;
+			case "meat":
+			meatHistoryJson = parseHistory("meatHistory.json");
+			io.emit("screenMeatHistory", meatHistoryJson);
+			break;
+			case "broccoli":
+			broccoliHistoryJson = parseHistory("broccoliHistory.json");
+			io.emit("screenBroccoliHistory", broccoliHistoryJson);
+			break;
+			case "fish":
+			fishHistoryJson = parseHistory("fishHistory.json");
+			io.emit("screenFishHistory", fishHistoryJson);
+			break;
+		}
+	});
+
+
+
 });
 
 // // Read data from serial port and emit the weight data

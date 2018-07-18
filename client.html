@@ -13,6 +13,13 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootbox.js/4.4.0/bootbox.min.js"></script>
+  <script src="https://cdnjs.com/libraries/Chart.js"></script>
+  <script> 
+    function showHistory(foodType){
+      socket.emit('sceenRequestHistoryData', foodType);
+    }
+  </script>
 
   <style>
   body { margin: 5px; padding: 0; box-sizing: border-box; }
@@ -56,7 +63,7 @@
     </div>
 
     <div class="row text-center" style = "padding-top: 80px;">
-      <div class="col-sm-2" id="title">Milk</div>
+      <div class="col-sm-2" id="title" onclick="showHistory('milk')">Milk</div>
       <div class="col-sm-2" id="title" style="padding-left: 30px;">Orange</div>
       <div class="col-sm-2" id="title" style="padding-left: 55px;">Meat</div>
       <div class="col-sm-2" id="title" style="padding-left: 70px;">Broccoli</div>
@@ -191,6 +198,35 @@
       var percentageFish = fish/1000 * 100;
       $('#scale-data-fish').text(fish);
       $('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
+    });
+
+    socket.on('screenMilkHistory', function(historyData){
+      var message;
+      for(i = 0; i< Object.keys(historyData).length; i++){
+          message += historyData[i].sumConsumeWeight + historyData[i].date + "  ";
+      }
+      // Pop up message box, using bootbox.js
+      bootbox.alert({
+        title: "Milk history consumption Data",
+        message: message,
+        backdrop: true,
+      });
+    });
+
+    socket.on('screenOrangeHistory', function(historyData){
+      
+    });
+
+    socket.on('screenMeatHistory', function(historyData){
+      
+    });
+
+    socket.on('screenBroccoliHistory', function(historyData){
+      
+    });
+
+    socket.on('screenFishHistory', function(historyData){
+      
     });
 
   </script>
