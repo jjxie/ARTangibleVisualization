@@ -541,23 +541,23 @@ io.on('connection', function(socket){
 		switch(foodType) {
 			case "milk":
 			milkHistoryJson = parseHistory("milkHistory.json");
-			io.emit("screenMilkHistory", milkHistoryJson);
+			io.emit("screenMilkHistory", milkHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 			break;
 			case "orange":
 			orangeHistoryJson = parseHistory("orangeHistory.json");
-			io.emit("screenOrangeHistory", orangeHistoryJson);
+			io.emit("screenOrangeHistory", orangeHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 			break;
 			case "meat":
 			meatHistoryJson = parseHistory("meatHistory.json");
-			io.emit("screenMeatHistory", meatHistoryJson);
+			io.emit("screenMeatHistory", meatHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 			break;
 			case "broccoli":
 			broccoliHistoryJson = parseHistory("broccoliHistory.json");
-			io.emit("screenBroccoliHistory", broccoliHistoryJson);
+			io.emit("screenBroccoliHistory", broccoliHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 			break;
 			case "fish":
 			fishHistoryJson = parseHistory("fishHistory.json");
-			io.emit("screenFishHistory", fishHistoryJson);
+			io.emit("screenFishHistory", fishHistoryJson, milkNutrientsArray, orangeNutrientsArray, meatNutrientsArray, broccoliNutrientsArray, fishNutrientsArray);
 			break;
 		}
 	});
