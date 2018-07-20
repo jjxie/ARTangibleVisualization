@@ -20,17 +20,28 @@
 		function showHistory(foodType){
 			socket.emit('sceenRequestHistoryData', foodType);
 		}
+
+		function screenSimulateWeight(foodType, weight){
+			socket.emit('screenSimulateWeight', foodType, weight);
+			console.log(foodType + "   " + weight);
+		}
+
+		function reset(){
+			socket.emit('screenReset', true);
+			hideVirtualBarAndAmount();
+		}
 	</script>
 
 	<style>
 	body { margin: 5px; padding: 0; box-sizing: border-box; }
 	body { font: 13px Helvetica, Arial; }
-	#scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat, #scale-data-unit, #title, #scale-data-calcium, #scale-data-calories, #scale-data-fat, #scale-data-protein,#scale-data-vitaminC { font-size: 22px; pointer-events: auto!important;padding-bottom: 5px;}
+	#scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat, #scale-data-unit, #title, #calciumAmount, #caloriesAmount, #fatAmount, #proteinAmount,#vitaminCAmount { font-size: 22px; pointer-events: auto!important;padding-bottom: 5px;}
 	.progress-bar-vertical { display: inline-block; width: 200px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg); }
 	.progress-bar-weight {background-color: #b2d4b0 !important;}
 	.progress-bar-nutrients {background-color: #d2b0d4 !important;}
 
-	#chartDiv{width: 20%; margin: 35px; auto;}
+	.chartDiv{width: 20%; margin: 50px; auto; display: none;}
+	.virtualBar{width: 20%; margin: 1px; auto;}
 
 	#milkHistory{left: 50px; top:400px; position: absolute;}
 	#orangeHistory{left: 260px; top:400px; position: absolute;}
@@ -43,6 +54,20 @@
 	#fatIntake{left: 470px; top:1020px; position: absolute;}
 	#proteinIntake{left: 680px; top:1020px; position: absolute;}
 	#vitaminCIntake{left: 890px; top:1020px; position: absolute;}
+
+	#virtualCalcium{left: 190px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
+	#virtualCalories{left: 390px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
+	#virtualFat{left: 595px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
+	#virtualProtein{left: 800px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
+	#virtualVitaminC{left: 1000px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
+
+	#virtualCalciumAmount{left: 190px; top:500px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualCaloriesAmount{left: 390px; top:500px; position: absolute; width:100px; font-size: 18px;}
+	#virtualFatAmount{left: 595px; top:500px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualProteinAmount{left: 800px; top:500px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualVitaminCAmount{left: 1000px; top:500px; position: absolute; width: 100px; font-size: 18px;}
+
+	.reset{background-color: #F4ECF5; color:#6a7f69; padding: 10px 26px; text-align: center; font-size: 16px; border: none;text-decoration: none;}
 </style>
 </head> 
 <body>
@@ -54,36 +79,36 @@
 			<div class="col-sm-2">
 				<p id="scale-data-milk">0</p> 
 				<div style="text-align:center; padding-left: 10px">
-					<button type="button" id="virtualMilkWeightPlus">+</button>
-					<button type="button" id="virtualMilkWeightSubtract">-</button>
+					<button type="button" id="virtualMilkWeightPlus" onclick="screenSimulateWeight('milk', 1);">+</button>
+					<button type="button" id="virtualMilkWeightSubtract" onclick="screenSimulateWeight('milk', -1);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
 				<p id="scale-data-orange">0</p>
 				<div style="text-align:center; padding-left: 24px">
-					<button type="button" id="virtualOrangeWeightPlus">+</button>
-					<button type="button" id="virtualOrangeWeightSubtract">-</button>
+					<button type="button" id="virtualOrangeWeightPlus" onclick="screenSimulateWeight('orange', 1);">+</button>
+					<button type="button" id="virtualOrangeWeightSubtract" onclick="screenSimulateWeight('orange', -1);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
 				<p id="scale-data-meat">0</p>
 				<div style="text-align:center; padding-left: 42px">
-					<button type="button" id="virtualMeatWeightPlus" aligh>+</button>
-					<button type="button" id="virtualMeatWeightSubtract">-</button>
+					<button type="button" id="virtualMeatWeightPlus" onclick="screenSimulateWeight('meat', 1);">+</button>
+					<button type="button" id="virtualMeatWeightSubtract" onclick="screenSimulateWeight('meat', -1);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
 				<p id="scale-data-broccoli">0</p>
 				<div style="text-align:center; padding-left: 58px">
-					<button type="button" id="virtualBroccoliWeightPlus">+</button>
-					<button type="button" id="virtualBroccoliWeightSubtract">-</button>
+					<button type="button" id="virtualBroccoliWeightPlus" onclick="screenSimulateWeight('broccoli', 1);">+</button>
+					<button type="button" id="virtualBroccoliWeightSubtract" onclick="screenSimulateWeight('broccoli', -1);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
 				<p id="scale-data-fish">0</p>
 				<div style="text-align:center; padding-left: 74px">
-					<button type="button" id="virtualFishWeightPlus">+</button>
-					<button type="button" id="virtualFishWeightSubtract">-</button>
+					<button type="button" id="virtualFishWeightPlus" onclick="screenSimulateWeight('fish', 1);">+</button>
+					<button type="button" id="virtualFishWeightSubtract" onclick="screenSimulateWeight('fish', -1);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2"><p id="scale-data-unit">g</p></div>
@@ -118,39 +143,38 @@
 
 
 		<!-- bar chart -->
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="milkHistory" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="orangeHistory" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="meatHistory" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="broccoliHistory" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="fishHistory" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-
 	</div>
 
-
+	<!-- Divider -->
 	<div>&nbsp;</div>
 	<div>&nbsp;</div>
 	<div>&nbsp;</div>
 
-
+	<!-- Nutrition interface -->
 	<div class="container" style="background-color: #ABDDC0;">
 		<div><h3 align="center">Nutrients You Got Today</h3></div>
 		<!-- scale data area on the webpage-->
 		<div class="row text-center" style = "padding-top: 5px;">
-			<div class="col-sm-2"><p id="scale-data-calcium">0 mg</p></div>
-			<div class="col-sm-2"><p id="scale-data-calories">0 Cal</p></div>
-			<div class="col-sm-2"><p id="scale-data-fat">0 g</p></div>
-			<div class="col-sm-2"><p id="scale-data-protein">0 g</p></div>
-			<div class="col-sm-2 text-right"><p id="scale-data-vitaminC">0 mg</p></div>
+			<div class="col-sm-2"><p id="calciumAmount">0 mg</p></div>
+			<div class="col-sm-2"><p id="caloriesAmount">0 Cal</p></div>
+			<div class="col-sm-2"><p id="fatAmount">0 g</p></div>
+			<div class="col-sm-2"><p id="proteinAmount">0 g</p></div>
+			<div class="col-sm-2 text-right"><p id="vitaminCAmount">0 mg</p></div>
 		</div>
 
 		<div class="row" style = "padding-top: 90px;">
@@ -167,7 +191,7 @@
 				<div id="nutrientsProtein" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
 			</div>
 			<div class="row progress progress-bar-vertical col center-block">
-				<div id="nutrientsVitaminA" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+				<div id="nutrientsVitaminC" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 120px"></div>
 			</div>
 		</div>
 
@@ -180,23 +204,60 @@
 		</div>
 
 		<!-- bar chart -->
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="calciumIntake" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="caloriesIntake" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="fatIntake" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="proteinIntake" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
-		<div class="container" id = "chartDiv">
+		<div class="container chartDiv">
 			<div><canvas id="vitaminCIntake" style="display: none;" width="100" height="100"></canvas></div>
 		</div>
 
+		<!-- Virtual nutrition bar -->
+		<div class="container virtualBar" style="display: none;">
+			<div id="virtualCalcium" style="height:200px;"></div>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<div id="virtualCalories" style="height:200px;"></div>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<div id="virtualFat" style="height:100px;"></div>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<div id="virtualProtein" style="height:10px;"></div>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<div id="virtualVitaminC" style="height:100px;"></div>
+		</div>
+
+		<!-- Virtual nutrition number Text-->
+		<div class="container virtualBar" style="display: none;">
+			<p id="virtualCalciumAmount">1000 mg</p>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<p id="virtualCaloriesAmount">0 Cal</p>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<p id="virtualFatAmount">0 g</p>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<p id="virtualProteinAmount">0 g</p>
+		</div>
+		<div class="container virtualBar" style="display: none;">
+			<p id="virtualVitaminCAmount">0 mg</p>
+		</div>
+
+		<div><button class="reset" onclick="reset();">Reset</button></div>
+
 	</div>
+
 
 	<script>
 		var socket = io.connect('https://192.168.0.100:3000',{secure: true});
@@ -206,7 +267,7 @@
 		var nutrientsIntakeBar = ["calciumIntake", "caloriesIntake", "fatIntake", "proteinIntake", "vitaminCIntake"];
 		var nutrionLabels = ["Milk", "Orange", "Meat", "Broccoli", "Fish"];
 		var nutritionTitle = ["Daily intake of calcium", "Daily intake of calories", "Daily intake of fat", "Daily intake of protein", "Daily intake of vitamin C"];
-		var nutrientUnit = ["mg","Cal","g","g","mg"];
+		var nutrientUnit = [" mg"," Cal"," g"," g"," mg"];
 		var color = ["#4CC3D9","#FCE300"];
 		var foodIsSelectedArray =[0,0,0,0,0];
 		var milkIsSelected = false;
@@ -216,6 +277,19 @@
 		var fishIsSelected = false;
 		var numberOfFoodIsSelected = 0;
 		var colorArray = ["#4CC3D9", "#4CC3D9", "#4CC3D9", "#4CC3D9", "#4CC3D9"];
+		var nutrientsAmount = ["#calciumAmount", "#caloriesAmount", "#fatAmount" ,"#proteinAmount", "#vitaminCAmount"];
+		var nutrientsBar = ["#nutrientsCalcium", "#nutrientsCalories", "#nutrientsFat", "#nutrientsProtein", "#nutrientsVitaminC"];
+		var dailyIntakeMax =[1500, 3000, 105, 69, 112.5];
+		var foodWeightBar = ["#theprogressbarMilk", "#theprogressbarOrange", "#theprogressbarMeat", "#theprogressbarBroccoli", "#theprogressbarFish"];
+		var foodWeightText = ["#scale-data-milk",  "#scale-data-orange", "#scale-data-meat", "#scale-data-broccoli", "#scale-data-fish"];
+		var virtualNutritionBar = ["#virtualCalcium", "#virtualCalories", "#virtualFat", "#virtualProtein", "#virtualVitaminC"];
+		var virtualNutritionAmount = ["#virtualCalciumAmount", "#virtualCaloriesAmount", "#virtualFatAmount", "#virtualProteinAmount", "#virtualVitaminCAmount"];
+		var maxBarHeight = 200;
+		var maxWeight = 1000;
+		var topLocation = 545;
+		var virtualAmountTop = 500;
+		var heightOffset = 205;
+		var dataMax = 5;
 
 
     // Set milke weight data, max 1kg
@@ -260,45 +334,38 @@
 
 
 
-    // Deal with manually change the weight of milk, more milk consumption or less
-    socket.on('manualDataMilk', function(milk){
-    	console.log("Manual milk weight " + milk);
-    	var percentageMilk = milk/1000 * 100;
-    	$('#scale-data-milk').text(milk);
-    	$('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
+    // Dealing with clicking plus or substract button on the screen
+    socket.on('screenSimulateMilk', function(newWeight, nutritionArray){
+    	setVirtualWeightAndNutrition(0, newWeight, nutritionArray);
     });
 
-    // Deal with manually change the weight of orange
-    socket.on('manualDataOrange', function(orange){
-    	console.log("Manual orange weight " + orange);
-    	var percentageOrange = orange/1000 * 100;
-    	$('#scale-data-milk').text(orange);
-    	$('#theprogressbarMilk').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
+    // Dealing with clicking plus or substract button on the screen
+    socket.on('screenSimulateOrange', function(newWeight, nutritionArray){
+    	setVirtualWeightAndNutrition(1, newWeight, nutritionArray);
     });
 
-    // Set meat weight data, max 5kg
-    socket.on('manualDataMeat', function(meat){
-    	console.log("Manual meat weight" + meat);
-    	var percentageMeat = meat/1000 * 100;
-    	$('#scale-data-meat').text(meat);
-    	$('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
+    // Dealing with clicking plus or substract button on the screen
+    socket.on('screenSimulateMeat', function(newWeight, nutritionArray){
+    	setVirtualWeightAndNutrition(2, newWeight, nutritionArray);
     });
 
-    // Set brocoli weight data, max 1kg
-    socket.on('manualDataBroccoli', function(broccoli){
-    	console.log(" Manual broccoli weight" + broccoli);
-    	var percentageBroccoli = broccoli/1000 * 100;
-    	$('#scale-data-broccoli').text(broccoli);
-    	$('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
+    // Dealing with clicking plus or substract button on the screen
+    socket.on('screenSimulateBroccoli', function(newWeight, nutritionArray){
+    	setVirtualWeightAndNutrition(3, newWeight, nutritionArray);
     });
 
-    // Set fish weight data, max 1kg
-    socket.on('manualDataFish', function(fish){
-    	console.log(" Manual fish weight" + fish);
-    	var percentageFish = fish/1000 * 100;
-    	$('#scale-data-fish').text(fish);
-    	$('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
+    // Dealing with clicking plus or substract button on the screen
+    socket.on('screenSimulateFish', function(newWeight, nutritionArray){
+    	setVirtualWeightAndNutrition(4, newWeight, nutritionArray);
     });
+
+
+    // Set nutrition bar
+    socket.on('nutritionChanges', function(nutrientsArray){
+    	console.log(" Nutrients Array" + nutrientsArray);
+    	setNutrientsBar(nutrientsArray);	
+    });
+
 
     socket.on('screenMilkHistory', function(historyData, milk, orange, meat, broccoli, fish){
     	drawHistoryDigram(historyData,0);
@@ -316,11 +383,10 @@
     			hideAllNutrients();
     		}
     		else{
-    			hideNutrients(0);
+    			hideNutrients(0, milk, orange, meat, broccoli, fish);
     		}
     		hideHistory(0);
-    	}
-    	
+    	}  	
     });
 
     socket.on('screenOrangeHistory', function(historyData, milk, orange, meat, broccoli, fish){
@@ -425,6 +491,7 @@
 
     // Draw food historical consumotion chart
     function drawHistoryDigram(historyData, index){
+    	showChartDiv();
     	for(i = 0; i < historyBar.length; i++){
     		var chart = document.getElementById(historyBar[index]);
     		chart.style.display = "inline-block";
@@ -491,7 +558,7 @@
 
     // Hide all the nutrients chart
     function hideAllNutrients(){
-    	document.getElementById("chartDiv").style.display = "none";
+    	hideChartDiv();
     	for(i = 0; i < nutrientsIntakeBar.length; i++){
     		var chart = document.getElementById(nutrientsIntakeBar[i]);
     		chart.style.display = "none";
@@ -514,10 +581,67 @@
     	chart.style.display = "none";
     }
 
-    function setDivDisplay(){
-    	document.getElementById("chartDiv").style.display = "inline-block";
-    	document.getElementById("chartDiv").style.width = "20%";
-    	document.getElementById("chartDiv").style.margin = "35px";
+	//Show chartDiv
+    function showChartDiv(){
+    	var chartDivList = document.getElementsByClassName("chartDiv");
+    	for (var i=0;i<chartDivList.length;i+=1){
+    		chartDivList[i].style.display = "inline-block";
+    	}
+    }
+	
+	//Hide chartDiv and reset top of virtual bar
+    function hideChartDiv(){
+    	var chartDivList = document.getElementsByClassName("chartDiv");
+    	for (var i=0;i<chartDivList.length;i+=1){
+    		chartDivList[i].style.display = "none";
+    	}
+    }
+
+    // Set nutrtion bars when actual weight changes
+    function setNutrientsBar(nutrientsArray){
+    	for(i = 0 ; i < nutrientsArray.length; i++){
+    		var percentage = nutrientsArray[i] / dailyIntakeMax[i] * 100;
+    		var amountString = Math.round(nutrientsArray[i]).toString() + nutrientUnit[i];
+    		$(nutrientsAmount[i]).text(amountString);
+    		$(nutrientsBar[i]).attr('aria-valuenow', percentage).css('width', percentage + '%');
+    	}
+    }
+
+	//After simulating weight changes, set simulated weight and nutrition
+    function setVirtualWeightAndNutrition(index, newWeight, nutritionArray){
+    	showVirtualBarAndAmount();
+    	var percentage = newWeight/maxWeight * 100;
+    	console.log("percentage" + percentage);
+    	$(foodWeightText[index]).text(newWeight);
+    	$(foodWeightBar[index]).attr('aria-valuenow', percentage).css('width', percentage + '%');
+    	for(i = 0; i < nutritionArray.length; i++ ){
+    		var barHeight = (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight).toString() + "px";
+    		var top = topLocation + maxBarHeight - (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight);
+    		if(document.getElementsByClassName("chartDiv")[0].style.display == "inline-block"){
+    			top += 205;
+    			$(virtualNutritionAmount[i]).css('top', virtualAmountTop + 205);
+    		}
+    		var amountString = Math.round(nutritionArray[i]).toString() + nutrientUnit[i];
+    		$(virtualNutritionBar[i]).css('height', barHeight);
+    		$(virtualNutritionBar[i]).css('top', top);
+    		$(virtualNutritionAmount[i]).text(amountString);
+    	} 	
+    }
+
+    //
+    function hideVirtualBarAndAmount(){
+    	var virtualDivList = document.getElementsByClassName("virtualBar");
+    	for (var i=0;i<virtualDivList.length;i+=1){
+    		virtualDivList[i].style.display = "none";
+    	}
+    }
+
+    //
+    function showVirtualBarAndAmount(){
+    	var virtualDivList = document.getElementsByClassName("virtualBar");
+    	for (var i=0;i<virtualDivList.length;i+=1){
+    		virtualDivList[i].style.display = "inline-block";
+    	}
     }
 
 </script>

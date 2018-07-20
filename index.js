@@ -24,11 +24,11 @@ var broccoliSelected = false;
 var fishSelected = false;
 
 // Historical data
-var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
-var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
-var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
-var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
-var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":0,"consumeWeight":0}];
+var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":100,"consumeWeight":0}];
+var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":1000,"consumeWeight":0}];
+var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":20,"consumeWeight":0}];
+var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":30,"consumeWeight":0}];
+var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":10,"consumeWeight":0}];
 
 // This is used to show five days history in AR detailed view. The data is parsed from Json file
 var milkHistoryJson =[];
@@ -76,6 +76,11 @@ var fishNutrientsArray = [50,1000,0,10,0];
 
 var virtualFlag = false;
 var virtualNutrition =[0,0,0,0,0];
+
+var screenFlag = false;
+var screenSimulateNutrition = [0,0,0,0,0];
+var plusClicked = [0,0,0,0,0];
+var substractClicked = [0,0,0,0,0];
 
 var bodyparser = require('body-parser');
 app.use(bodyparser.urlencoded({extended:false}));
@@ -132,7 +137,12 @@ setInterval(function () {
 			meatNutrientsArray = [0,0,0,0,0];
 			broccoliNutrientsArray = [0,0,0,0,0];
 			fishNutrientsArray = [0,0,0,0,0];
+			virtualFlag
 			virtualNutrition =[0,0,0,0,0];
+			screenFlag = false;
+			screenSimulateNutrition = [0,0,0,0,0];
+			plusClicked = [0,0,0,0,0];
+			substractClicked = [0,0,0,0,0];
 		});
 	}
 }, 1000);
@@ -563,6 +573,45 @@ io.on('connection', function(socket){
 	});
 
 
+	// Screen simulate food weight changes. Weight could be 1 when clicking on plus button, or -1 when clicking on substract button
+	socket.on('screenSimulateWeight', function (foodType, weight) {
+		switch(foodType) {
+			case "milk":
+			var virtualWeight = calculateHistoryNumber(0, weight, milkHistory);
+			calculateNewScreenNutrition(weight, milkNutrients);	
+			io.sockets.emit('screenSimulateMilk', virtualWeight, screenSimulateNutrition);	
+			break;
+			case "orange":
+			var virtualWeight = calculateHistoryNumber(1, weight, orangeHistory);
+			calculateNewScreenNutrition(weight, orangeNutrients);	
+			io.sockets.emit('screenSimulateOrange', virtualWeight, screenSimulateNutrition);	
+			break;
+			case "meat":
+			var virtualWeight = calculateHistoryNumber(2, weight, meatHistory);
+			calculateNewScreenNutrition(weight, meatNutrients);	
+			io.sockets.emit('screenSimulateMeat', virtualWeight, screenSimulateNutrition);
+			break;
+			case "broccoli":
+			var virtualWeight = calculateHistoryNumber(3, weight, broccoliHistory);
+			calculateNewScreenNutrition(weight, broccoliNutrients);	
+			io.sockets.emit('screenSimulateBroccoli', virtualWeight, screenSimulateNutrition);
+			break;
+			case "fish":
+			var virtualWeight = calculateHistoryNumber(4, weight, fishHistory);
+			calculateNewScreenNutrition(weight, fishNutrients);	
+			io.sockets.emit('screenSimulateFish', virtualWeight, screenSimulateNutrition);
+			break;
+		}
+		
+	});
+
+	// Reset screen variables
+	socket.on('screenReset', function (data) {
+		screenFlag = false;
+		screenSimulateNutrition = [0,0,0,0,0];
+		plusClicked = [0,0,0,0,0];
+		substractClicked = [0,0,0,0,0];
+	});
 
 });
 
@@ -783,6 +832,7 @@ function checkData(historicalObject, weight){
 	}
 }
 
+// Calculate virtual AR version nutrtion when moving food racks 
 function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
 	console.log(nutrientsRate);
 	var virtualConsumptionPer = virtualConsumption/100;
@@ -799,6 +849,39 @@ function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
 		for(i=0; i< virtualNutrition.length; i++){
 			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];
 			console.log("Accumulate time virtual" + virtualNutrition[i]);	
+		}
+	}
+}
+
+// Calculate history clicking number
+function calculateHistoryNumber(index, weight, historyObject){
+	var virtualWeight;
+	var number = plusClicked[index] - substractClicked[index];
+	if(weight == "1"){
+		virtualWeight = historyObject[Object.keys(historyObject).length-1].weight + weight + number;
+		plusClicked[index] += 1;
+	}
+	else{
+		virtualWeight = historyObject[Object.keys(historyObject).length-1].weight + weight + number ;
+		substractClicked[index] += 1;
+	}
+	return virtualWeight;
+}
+
+// Calculate screen version nutrtion when clicking on plus or substract buttons
+function calculateNewScreenNutrition(virtualConsumption, nutrientsRate){
+	var virtualConsumptionPer = virtualConsumption/100;
+	if(!screenFlag){
+		screenFlag = true;	
+		for(i = 0; i< screenSimulateNutrition.length; i++){
+			// Get current real nutrients amount, then add or substract virtual nutrients
+			screenSimulateNutrition[i] = nutrientsArray[i];
+			screenSimulateNutrition[i] += virtualConsumptionPer * nutrientsRate[i];		
+		}
+	}
+	else{
+		for(i=0; i< screenSimulateNutrition.length; i++){
+			screenSimulateNutrition[i] += virtualConsumptionPer * nutrientsRate[i];	
 		}
 	}
 }
