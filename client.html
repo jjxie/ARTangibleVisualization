@@ -61,13 +61,13 @@
 	#virtualProtein{left: 800px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
 	#virtualVitaminC{left: 1000px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
 
-	#virtualCalciumAmount{left: 190px; top:500px; position: absolute; width: 100px; font-size: 18px;}
-	#virtualCaloriesAmount{left: 390px; top:500px; position: absolute; width:100px; font-size: 18px;}
-	#virtualFatAmount{left: 595px; top:500px; position: absolute; width: 100px; font-size: 18px;}
-	#virtualProteinAmount{left: 800px; top:500px; position: absolute; width: 100px; font-size: 18px;}
-	#virtualVitaminCAmount{left: 1000px; top:500px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualCalciumAmount{left: 190px; top:520px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualCaloriesAmount{left: 390px; top:520px; position: absolute; width:100px; font-size: 18px;}
+	#virtualFatAmount{left: 595px; top:520px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualProteinAmount{left: 800px; top:520px; position: absolute; width: 100px; font-size: 18px;}
+	#virtualVitaminCAmount{left: 1000px; top:520px; position: absolute; width: 100px; font-size: 18px;}
 
-	.reset{background-color: #F4ECF5; color:#6a7f69; padding: 10px 26px; text-align: center; font-size: 16px; border: none;text-decoration: none;}
+	.reset{background-color: #F4ECF5; color:#6a7f69; padding: 10px 26px; text-align: center; font-size: 14px; border: none;text-decoration: none;border-radius: 4px;}
 </style>
 </head> 
 <body>
@@ -167,31 +167,41 @@
 
 	<!-- Nutrition interface -->
 	<div class="container" style="background-color: #ABDDC0;">
-		<div><h3 align="center">Nutrients You Got Today</h3></div>
+		<div><h3 align="center">The Amount of Nutrients You Got Today</h3></div>
 		<!-- scale data area on the webpage-->
 		<div class="row text-center" style = "padding-top: 5px;">
-			<div class="col-sm-2"><p id="calciumAmount">0 mg</p></div>
-			<div class="col-sm-2"><p id="caloriesAmount">0 Cal</p></div>
-			<div class="col-sm-2"><p id="fatAmount">0 g</p></div>
-			<div class="col-sm-2"><p id="proteinAmount">0 g</p></div>
-			<div class="col-sm-2 text-right"><p id="vitaminCAmount">0 mg</p></div>
+			<div class="col-sm-2"><p id="calciumAmount">1000 mg</p></div>
+			<div class="col-sm-2"><p id="caloriesAmount">1800 Cal</p></div>
+			<div class="col-sm-2"><p id="fatAmount" style = "padding-right: -15px;">70 g</p></div>
+			<div class="col-sm-2"><p id="proteinAmount">40 g</p></div>
+			<div class="col-sm-2"><p id="vitaminCAmount">65 mg</p></div>
 		</div>
 
 		<div class="row" style = "padding-top: 90px;">
 			<div class="row progress progress-bar-vertical col center-block">
-				<div id="nutrientsCalcium" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 100px"></div>
+				<div id="nutrientsCalcium" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 150px"></div>
+				<p style="position: absolute; right: 67px">|</p>
+				<p style="position: absolute; right: 67px; top:26px;">|</p>
 			</div>
 			<div class="row progress progress-bar-vertical col center-block">
-				<div id="nutrientsCalories" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 120px"></div>
+				<div id="nutrientsCalories" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 133px"></div>
+				<p style="position: absolute; right: 67px">|</p>
+				<p style="position: absolute; right: 67px; top:26px;">|</p>
 			</div>
 			<div class="row progress progress-bar-vertical col center-block">
 				<div id="nutrientsFat" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+				<p style="position: absolute; right: 67px">|</p>
+				<p style="position: absolute; right: 67px; top:26px;">|</p>
 			</div>
 			<div class="row progress progress-bar-vertical col center-block">
 				<div id="nutrientsProtein" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+				<p style="position: absolute; right: 67px">|</p>
+				<p style="position: absolute; right: 67px; top:26px;">|</p>
 			</div>
 			<div class="row progress progress-bar-vertical col center-block">
 				<div id="nutrientsVitaminC" class="progress-bar progress-bar-nutrients" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100" style="width: 120px"></div>
+				<p style="position: absolute; right: 67px">|</p>
+				<p style="position: absolute; right: 67px; top:26px;">|</p>
 			</div>
 		</div>
 
@@ -221,19 +231,19 @@
 		</div>
 
 		<!-- Virtual nutrition bar -->
-		<div class="container virtualBar" style="display: none;">
+		<div class="virtualBar" style="display: none;">
 			<div id="virtualCalcium" style="height:200px;"></div>
 		</div>
-		<div class="container virtualBar" style="display: none;">
+		<div class="virtualBar" style="display: none;">
 			<div id="virtualCalories" style="height:200px;"></div>
 		</div>
-		<div class="container virtualBar" style="display: none;">
+		<div class="virtualBar" style="display: none;">
 			<div id="virtualFat" style="height:100px;"></div>
 		</div>
-		<div class="container virtualBar" style="display: none;">
+		<div class="virtualBar" style="display: none;">
 			<div id="virtualProtein" style="height:10px;"></div>
 		</div>
-		<div class="container virtualBar" style="display: none;">
+		<div class="virtualBar" style="display: none;">
 			<div id="virtualVitaminC" style="height:100px;"></div>
 		</div>
 
@@ -242,19 +252,19 @@
 			<p id="virtualCalciumAmount">1000 mg</p>
 		</div>
 		<div class="container virtualBar" style="display: none;">
-			<p id="virtualCaloriesAmount">0 Cal</p>
+			<p id="virtualCaloriesAmount">1869 Cal</p>
 		</div>
 		<div class="container virtualBar" style="display: none;">
-			<p id="virtualFatAmount">0 g</p>
+			<p id="virtualFatAmount">70 g</p>
 		</div>
 		<div class="container virtualBar" style="display: none;">
-			<p id="virtualProteinAmount">0 g</p>
+			<p id="virtualProteinAmount">40 g</p>
 		</div>
 		<div class="container virtualBar" style="display: none;">
-			<p id="virtualVitaminCAmount">0 mg</p>
+			<p id="virtualVitaminCAmount">60 mg</p>
 		</div>
 
-		<div><button class="reset" onclick="reset();">Reset</button></div>
+		<div><button class="reset" onclick="reset();">Hide simulation view</button><span style="position: relative; left: 500px;">"— —" on the bar represntens the daily nutrients intake amount of each nutrient.</span></div>
 
 	</div>
 
@@ -287,9 +297,10 @@
 		var maxBarHeight = 200;
 		var maxWeight = 1000;
 		var topLocation = 545;
-		var virtualAmountTop = 500;
+		var virtualAmountTop = 520;
 		var heightOffset = 205;
 		var dataMax = 5;
+		var tempTopArray = [0,0,0,0,0];
 
 
     // Set milke weight data, max 1kg
@@ -563,6 +574,15 @@
     		var chart = document.getElementById(nutrientsIntakeBar[i]);
     		chart.style.display = "none";
     	}
+
+    	// Reset virtual nutrition bar Top attribute when they are showed
+    	var virtualDivList = document.getElementsByClassName("virtualBar");
+    	if( virtualDivList[0].style.display == "inline-block"){
+    		for(i = 0; i < tempTopArray.length; i++){
+    			$(virtualNutritionAmount[i]).css('top', virtualAmountTop);
+    			$(virtualNutritionBar[i]).css('top', tempTopArray[i]);
+    		}	
+    	}
     }
 
     //Hide specific nutrients chart
@@ -582,20 +602,29 @@
     }
 
 	//Show chartDiv
-    function showChartDiv(){
-    	var chartDivList = document.getElementsByClassName("chartDiv");
-    	for (var i=0;i<chartDivList.length;i+=1){
-    		chartDivList[i].style.display = "inline-block";
+	function showChartDiv(){
+		var chartDivList = document.getElementsByClassName("chartDiv");
+		for (var i=0;i<chartDivList.length;i+=1){
+			chartDivList[i].style.display = "inline-block";
+		}
+
+		// Reset virtual nutrition bar Top attribute when they are showed
+    	var virtualDivList = document.getElementsByClassName("virtualBar");
+    	if( virtualDivList[0].style.display == "inline-block"){
+    		for(i = 0; i < tempTopArray.length; i++){
+    			$(virtualNutritionAmount[i]).css('top', virtualAmountTop + 205);
+    			$(virtualNutritionBar[i]).css('top', tempTopArray[i] + 205);
+    		}	
     	}
-    }
+	}
 	
 	//Hide chartDiv and reset top of virtual bar
-    function hideChartDiv(){
-    	var chartDivList = document.getElementsByClassName("chartDiv");
-    	for (var i=0;i<chartDivList.length;i+=1){
-    		chartDivList[i].style.display = "none";
-    	}
-    }
+	function hideChartDiv(){
+		var chartDivList = document.getElementsByClassName("chartDiv");
+		for (var i=0;i<chartDivList.length;i+=1){
+			chartDivList[i].style.display = "none";
+		}
+	}
 
     // Set nutrtion bars when actual weight changes
     function setNutrientsBar(nutrientsArray){
@@ -608,27 +637,31 @@
     }
 
 	//After simulating weight changes, set simulated weight and nutrition
-    function setVirtualWeightAndNutrition(index, newWeight, nutritionArray){
-    	showVirtualBarAndAmount();
-    	var percentage = newWeight/maxWeight * 100;
-    	console.log("percentage" + percentage);
-    	$(foodWeightText[index]).text(newWeight);
-    	$(foodWeightBar[index]).attr('aria-valuenow', percentage).css('width', percentage + '%');
-    	for(i = 0; i < nutritionArray.length; i++ ){
-    		var barHeight = (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight).toString() + "px";
-    		var top = topLocation + maxBarHeight - (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight);
-    		if(document.getElementsByClassName("chartDiv")[0].style.display == "inline-block"){
-    			top += 205;
-    			$(virtualNutritionAmount[i]).css('top', virtualAmountTop + 205);
-    		}
-    		var amountString = Math.round(nutritionArray[i]).toString() + nutrientUnit[i];
-    		$(virtualNutritionBar[i]).css('height', barHeight);
-    		$(virtualNutritionBar[i]).css('top', top);
-    		$(virtualNutritionAmount[i]).text(amountString);
-    	} 	
-    }
+	function setVirtualWeightAndNutrition(index, newWeight, nutritionArray){
+		showVirtualBarAndAmount();
+		var percentage = newWeight/maxWeight * 100;
+		console.log("percentage" + percentage);
+		$(foodWeightText[index]).text(newWeight);
+		$(foodWeightBar[index]).attr('aria-valuenow', percentage).css('width', percentage + '%');
+		for(i = 0; i < nutritionArray.length; i++ ){
+			var barHeight = (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight).toString() + "px";
+			var amountString = Math.round(nutritionArray[i]).toString() + nutrientUnit[i];
+			var top = topLocation + maxBarHeight - (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight);
+			tempTopArray[i] = top;
+			$(virtualNutritionBar[i]).css('height', barHeight); 		
+			$(virtualNutritionAmount[i]).text(amountString);
+			if(document.getElementsByClassName("chartDiv")[0].style.display == "inline-block"){
+				$(virtualNutritionAmount[i]).css('top', virtualAmountTop + 205);
+				$(virtualNutritionBar[i]).css('top', top+205);
+			}
+			else{		
+				$(virtualNutritionAmount[i]).css('top', virtualAmountTop);
+				$(virtualNutritionBar[i]).css('top', top);
+			}			
+		} 	
+	}
 
-    //
+    // Hide virtual bar and amount
     function hideVirtualBarAndAmount(){
     	var virtualDivList = document.getElementsByClassName("virtualBar");
     	for (var i=0;i<virtualDivList.length;i+=1){
@@ -636,7 +669,7 @@
     	}
     }
 
-    //
+    // Show virtual bar and amount
     function showVirtualBarAndAmount(){
     	var virtualDivList = document.getElementsByClassName("virtualBar");
     	for (var i=0;i<virtualDivList.length;i+=1){
