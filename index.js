@@ -67,7 +67,7 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // VitaminC, adults female 75mg, male 90mg
 var dailyIntake =[1000, 2000, 70, 46, 75];
 
-var nutrientsArray = [950,1800,0,40,50];
+var nutrientsArray = [1500, 3000, 105, 69, 112.5];
 var milkNutrientsArray = [200,300,0,0,0];
 var orangeNutrientsArray = [300,400,0,0,30];
 var meatNutrientsArray = [400,100,60,30,0];
@@ -143,6 +143,12 @@ setInterval(function () {
 			screenSimulateNutrition = [0,0,0,0,0];
 			plusClicked = [0,0,0,0,0];
 			substractClicked = [0,0,0,0,0];
+			io.sockets.emit('nutritionChanges', nutrientsArray);	
+			io.sockets.emit('calciumChanges', nutrientsArray[0]);
+			io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+			io.sockets.emit('fatChanges', nutrientsArray[2]);
+			io.sockets.emit('proteinChanges', nutrientsArray[3]);
+			io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 		});
 	}
 }, 1000);
@@ -165,6 +171,12 @@ io.on('connection', function(socket){
 
 	// Online event
 	io.emit('online', socket.id);
+
+	io.sockets.emit('calciumChanges', nutrientsArray[0]);
+	io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+	io.sockets.emit('fatChanges', nutrientsArray[2]);
+	io.sockets.emit('proteinChanges', nutrientsArray[3]);
+	io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 
 	// Read initial file data when connected for the first time
 	fs.readFile('test.json', function(err, data) {
@@ -284,7 +296,12 @@ io.on('connection', function(socket){
 			addToHistoryandToJson(milkHistory, data, "milkHistory.json");
 			milkIni = false;
 			calculateNutrients(milkHistory, "milk");
-			io.sockets.emit('nutritionChanges', nutrientsArray);	
+			io.sockets.emit('nutritionChanges', nutrientsArray);
+			io.sockets.emit('calciumChanges', nutrientsArray[0]);
+			io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+			io.sockets.emit('fatChanges', nutrientsArray[2]);
+			io.sockets.emit('proteinChanges', nutrientsArray[3]);
+			io.sockets.emit('vitaminCChanges', nutrientsArray[4]);		
 		}
 		// Check data and historical data
 		else{
@@ -296,7 +313,12 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(milkHistory, data, "milkHistory.json");	
 					console.log("Emit milk data:  " + data);
 					calculateNutrients(milkHistory, "milk");
-					io.sockets.emit('nutritionChanges', nutrientsArray);	
+					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);	
 				}
 			}	
 			else{
@@ -307,6 +329,11 @@ io.on('connection', function(socket){
 					console.log("Emit milk data: " + data);
 					calculateNutrients(milkHistory, "milk");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}	
 			}
 		} 
@@ -330,6 +357,11 @@ io.on('connection', function(socket){
 			orangeIni = false;
 			calculateNutrients(orangeHistory, "orange");
 			io.sockets.emit('nutritionChanges', nutrientsArray);
+			io.sockets.emit('calciumChanges', nutrientsArray[0]);
+			io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+			io.sockets.emit('fatChanges', nutrientsArray[2]);
+			io.sockets.emit('proteinChanges', nutrientsArray[3]);
+			io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 		}
 		// Check data and historical data
 		else{
@@ -342,6 +374,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
 					calculateNutrients(orangeHistory, "orange");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}
 			}	
 			else{
@@ -351,6 +388,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(orangeHistory, data, "orangeHistory.json");
 					calculateNutrients(orangeHistory, "orange");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}	
 			}
 		}		
@@ -374,6 +416,11 @@ io.on('connection', function(socket){
 			meatIni = false;
 			calculateNutrients(meatHistory, "meat");
 			io.sockets.emit('nutritionChanges', nutrientsArray);
+			io.sockets.emit('calciumChanges', nutrientsArray[0]);
+			io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+			io.sockets.emit('fatChanges', nutrientsArray[2]);
+			io.sockets.emit('proteinChanges', nutrientsArray[3]);
+			io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 		}
 		// Check data and historical data
 		else{
@@ -386,6 +433,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(meatHistory, data, "meatHistory.json");
 					calculateNutrients(meatHistory, "meat");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}
 			}	
 			else{
@@ -395,6 +447,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(meatHistory, data, "meatHistory.json");
 					calculateNutrients(meatHistory, "meat");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}	
 			}
 		}
@@ -418,6 +475,11 @@ io.on('connection', function(socket){
 			broccoliIni = false;
 			calculateNutrients(broccoliHistory, "broccoli");
 			io.sockets.emit('nutritionChanges', nutrientsArray);
+			io.sockets.emit('calciumChanges', nutrientsArray[0]);
+			io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+			io.sockets.emit('fatChanges', nutrientsArray[2]);
+			io.sockets.emit('proteinChanges', nutrientsArray[3]);
+			io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 		}
 		// Check data and historical data
 		else{
@@ -430,6 +492,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
 					calculateNutrients(broccoliHistory, "broccoli");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}
 			}	
 			else{
@@ -439,6 +506,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(broccoliHistory, data, "broccoliHistory.json");
 					calculateNutrients(broccoliHistory, "broccoli");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}	
 			}
 		}	
@@ -462,6 +534,11 @@ io.on('connection', function(socket){
 			fishIni = false;
 			calculateNutrients(fishHistory, "fish");
 			io.sockets.emit('nutritionChanges', nutrientsArray);
+			io.sockets.emit('calciumChanges', nutrientsArray[0]);
+			io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+			io.sockets.emit('fatChanges', nutrientsArray[2]);
+			io.sockets.emit('proteinChanges', nutrientsArray[3]);
+			io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 		}
 		// Check data and historical data
 		else{
@@ -474,6 +551,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(fishHistory, data, "fishHistory.json");
 					calculateNutrients(fishHistory, "fish");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}
 			}	
 			else{
@@ -483,6 +565,11 @@ io.on('connection', function(socket){
 					addToHistoryandToJson(fishHistory, data, "fishHistory.json");
 					calculateNutrients(fishHistory, "fish");
 					io.sockets.emit('nutritionChanges', nutrientsArray);
+					io.sockets.emit('calciumChanges', nutrientsArray[0]);
+					io.sockets.emit('caloriesChanges', nutrientsArray[1]);
+					io.sockets.emit('fatChanges', nutrientsArray[2]);
+					io.sockets.emit('proteinChanges', nutrientsArray[3]);
+					io.sockets.emit('vitaminCChanges', nutrientsArray[4]);
 				}	
 			}
 		}	
