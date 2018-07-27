@@ -43,9 +43,9 @@ SF1eFilter filter3;
 #define NEWVL6180X_ADDRESS2 0x32
 #define NEWVL6180X_ADDRESS3 0x34
 
-int enable1 = 23;  //AO-A4 Arduino, ESP32 23, SDA: 21 SCL: 22
+int enable1 = 15;  //AO-A4 Arduino, ESP32 23, SDA: 21 SCL: 22
 int enable2 = 17;
-int enable3 = 15;
+int enable3 = 23;
 
 
 VL6180xIdentification identification;
@@ -63,9 +63,9 @@ Servo servoBroccoli;
 Servo servoFish;
 
 // Define servo pins
-int meatServoPin = 12;
-int broccoliServoPin = 13;
-int fishServoPin= 35;
+int meatServoPin = 14;
+int broccoliServoPin = 25;
+int fishServoPin= 32;
 
 int servoStartDegree = 0;
 float maxWeight = 1000;
@@ -97,9 +97,9 @@ float fishDegree = 0.00;
 
 
 // Define touch sensor pins
-int meatTouchPin = 33;
-int broccoliTouchPin = 25;
-int fishTouchPin= 26;
+int meatTouchPin = 26;
+int broccoliTouchPin = 33;
+int fishTouchPin= 35;
 
 // Selection status
 boolean meatSelected = false;

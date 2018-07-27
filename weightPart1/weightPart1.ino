@@ -41,8 +41,8 @@ SF1eFilter filter2;
 #define NEWVL6180X_ADDRESS1 0x30
 #define NEWVL6180X_ADDRESS2 0x32
 
-int enable1 = 23;  //AO-A4 Arduino, ESP32 23, SDA: 21 SCL: 22
-int enable2 = 17;
+int enable1 = 17;  //AO-A4 Arduino, ESP32 23, SDA: 21 SCL: 22
+int enable2 = 23;
 
 VL6180xIdentification identification;
 VL6180x sensor1(VL6180X_ADDRESS);
@@ -59,7 +59,7 @@ Servo servoOrange;
 
 // Define servo pins
 int milkServoPin = 12;
-int orangeServoPin = 13;
+int orangeServoPin = 32;
 
 int servoStartDegree = 0;
 float maxWeight = 1000;
@@ -88,8 +88,8 @@ float orangeDegree = 0.00;
 
 
 // Define touch sensor pins
-int milkTouchPin = 33;
-int orangeTouchPin = 25;
+int milkTouchPin = 13;
+int orangeTouchPin = 33;
 
 
 // Selection status

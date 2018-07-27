@@ -67,7 +67,7 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // VitaminC, adults female 75mg, male 90mg
 var dailyIntake =[1000, 2000, 70, 46, 75];
 
-var nutrientsArray = [1500, 3000, 105, 69, 112.5];
+var nutrientsArray = [950,1800,0,40,50];
 var milkNutrientsArray = [200,300,0,0,0];
 var orangeNutrientsArray = [300,400,0,0,30];
 var meatNutrientsArray = [400,100,60,30,0];

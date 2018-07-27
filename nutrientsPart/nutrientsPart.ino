@@ -13,11 +13,11 @@
 const char* ssid = "TP-LINK_8F96";
 const char* password = "49005875";
 
-int servoPin1 = 13;
-int servoPin2 = 12;
+int servoPin1 = 32;
+int servoPin2 = 33;
 int servoPin3 = 25;
-int servoPin4 = 33;
-int servoPin5 = 32;
+int servoPin4 = 12;
+int servoPin5 = 13;
 
 // socket.io connection
 SocketIoClient socket;
