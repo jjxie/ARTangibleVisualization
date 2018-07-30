@@ -87,12 +87,13 @@ app.use(bodyparser.urlencoded({extended:false}));
 app.use(bodyparser.json());
 
 
-// // Node serialport
-// var Serialport = require('serialport');
-// var myPort = new Serialport("/dev/tty.wchusbserial1410",{
-// 	baudrate: 74880,
-// 	parser: Serialport.parsers.readline("\n")
-// });
+// Node serialport
+var Serialport = require('serialport');
+var myPort = new Serialport("/dev/tty.wchusbserial1420",{
+	baudrate: 115200,
+	parser: Serialport.parsers.readline("\n")
+});
+
 app.get('/index', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
@@ -575,48 +576,6 @@ io.on('connection', function(socket){
 		}	
 	});
 
-	// Get new milk weight by moving the rack manually
-	// Emit manual data to move the nutrition servos and AR text of the weight
-	socket.on('milkWeightByMovingRack', function (data) {
-		// Get the virtual food consumption amount
-		var virtualConsumption = milkHistory[Object.keys(milkHistory).length-1].weight - data;
-		calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
-		io.sockets.emit('manualDataMilk', data, virtualNutrition);	
-	});
-
-	// Get orange weight by moving the rack manually
-	socket.on('orangeWeightByMovingRack', function (data) {
-		var virtualConsumption = orangeHistory[Object.keys(orangeHistory).length-1].weight - data;
-		console.log("orange weight from moving the rack: " + data);
-		calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
-		io.sockets.emit('manualDataOrange', data, virtualNutrition);	
-	});
-
-	// Get meat weight by moving the rack manually
-	socket.on('meatWeightByMovingRack', function (data) {
-		var virtualConsumption = meatHistory[Object.keys(meatHistory).length-1].weight - data;
-		console.log("meat weight from moving the rack: " + data);
-		calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
-		io.sockets.emit('manualDataMeat', data, virtualNutrition);	
-	});
-
-	// Get broccoli weight by moving the rack manually
-	socket.on('broccoliWeightByMovingRack', function (data) {
-		var virtualConsumption = broccoliHistory[Object.keys(broccoliHistory).length-1].weight - data;
-		console.log("broccoli weight from moving the rack: " + data + "Virtual consumption: " + virtualConsumption);
-		calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
-		io.sockets.emit('manualDataBroccoli', data, virtualNutrition);	
-	});
-
-	// Get fish weight by moving the rack manually
-	socket.on('fishWeightByMovingRack', function (data) {
-		var virtualConsumption = fishHistory[Object.keys(fishHistory).length-1].weight - data;
-		console.log("fish weight from moving the rack: " + data);
-		calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
-		io.sockets.emit('manualDataFish', data, virtualNutrition);	
-	});
-
-
 	// Reset virtual variables
 	socket.on('resetVirtualVariables', function (data) {
 		virtualFlag = false;
@@ -702,43 +661,59 @@ io.on('connection', function(socket){
 
 });
 
-// // Read data from serial port and emit the weight data
-// myPort.on('data', function (data){
-// 	console.log("Data received from Wemos: " + data);
-// 	// Get the first character which indicates which food's weight
-// 	var foodType = data.substring(0,1);
-//   	// Remove the first letter, the remaining is the weight data
-//   	var weight = data.substring(1);
-//   	switch(foodType) {
-//     	// Type A represents milk
-//     	case "A":
-//     	io.emit("scaleDataMilk", weight);
-//     	break;
-//     	// Type B represents orange
-//     	case "B":
-//     	io.emit("scaleDataOrange", weight);
-//     	break;
-//     	// Type C represents meat
-//     	case "C":
-//     	io.emit("scaleDataMeat", weight);
-//     	break;
-//     	// Type D represents broccoli
-//     	case "D":
-//     	io.emit("scaleDataBroccoli", weight);
-//     	break;
-//     	// Type E represents fish
-//     	case "E":
-//     	io.emit("scaleDataFish", weight);
-//     	break;
-//     	default:
-//     	console.log("unknownMessage", data);
-//     }
-// });
+// Read data from serial port and emit the weight data
+myPort.on('data', function (data){
+	console.log("Virtual consumotion Data received from Arduino: " + data);
+	// Get the first character which indicates which food's weight
+	var foodType = data.substring(0,1);
+  	// Remove the first letter, the remaining is the weight data
+  	var weight = data.substring(1);
+  	switch(foodType) {
+    	// Type A represents milk
+    	case "A":
+    	// Get the virtual food consumption amount
+		var virtualConsumption = milkHistory[Object.keys(milkHistory).length-1].weight - weight;
+		console.log("milk weight from moving the rack: " + weight);
+		calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
+		io.sockets.emit('manualDataMilk', weight, virtualNutrition);	
+    	break;
+    	// Type B represents orange
+    	case "B":
+    	var virtualConsumption = orangeHistory[Object.keys(orangeHistory).length-1].weight - weight;
+		console.log("orange weight from moving the rack: " + weight);
+		calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
+		io.sockets.emit('manualDataOrange', weight, virtualNutrition);
+    	break;
+    	// Type C represents meat
+    	case "C":
+    	var virtualConsumption = meatHistory[Object.keys(meatHistory).length-1].weight - weight;
+		console.log("meat weight from moving the rack: " + weight);
+		calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
+		io.sockets.emit('manualDataMeat', weight, virtualNutrition);
+    	break;
+    	// Type D represents broccoli
+    	case "D":
+    	var virtualConsumption = broccoliHistory[Object.keys(broccoliHistory).length-1].weight - weight;
+		console.log("broccoli weight from moving the rack: " + weight + "Virtual consumption: " + virtualConsumption);
+		calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
+		io.sockets.emit('manualDataBroccoli', weight, virtualNutrition);	
+    	break;
+    	// Type E represents fish
+    	case "E":
+    	var virtualConsumption = fishHistory[Object.keys(fishHistory).length-1].weight - weight;
+		console.log("fish weight from moving the rack: " + weight);
+		calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
+		io.sockets.emit('manualDataFish', weight, virtualNutrition);	
+    	break;
+    	default:
+    	console.log("unknownMessage", data);
+    }
+});
 
-// // Print error message on console when has problem connecting to the port
-// myPort.on('error', function(err) {
-// 	console.log('Error: ', err.message);
-// });
+// Print error message on console when has problem connecting to the port
+myPort.on('error', function(err) {
+	console.log('Error: ', err.message);
+});
 
 // Real time check file content changes
 fs.watch('test.json', 
