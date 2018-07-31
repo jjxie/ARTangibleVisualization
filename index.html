@@ -355,7 +355,7 @@
 
 
   <script>
-    var socket = io.connect('https://192.168.0.100:3000',{secure: true});
+    var socket = io.connect('https://192.168.0.101:3000',{secure: true});
     //Get AR scene
     var sceneEl = document.querySelector('a-scene');
     var maxDepth = 1; 
@@ -682,7 +682,7 @@
     });
 
 
-    // When nutrition chages, set nutrition value
+    // When nutrition changes, set nutrition value
     socket.on('nutritionChanges',function(nutritionArray){
       setNutritionAmount(nutritionArray);
     });

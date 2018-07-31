@@ -24,11 +24,11 @@ var broccoliSelected = false;
 var fishSelected = false;
 
 // Historical data
-var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":100,"consumeWeight":0}];
+var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":1000,"consumeWeight":0}];
 var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":1000,"consumeWeight":0}];
-var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":20,"consumeWeight":0}];
-var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":30,"consumeWeight":0}];
-var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":10,"consumeWeight":0}];
+var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":1000,"consumeWeight":0}];
+var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":1000,"consumeWeight":0}];
+var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":1000,"consumeWeight":0}];
 
 // This is used to show five days history in AR detailed view. The data is parsed from Json file
 var milkHistoryJson =[];
@@ -67,12 +67,12 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // VitaminC, adults female 75mg, male 90mg
 var dailyIntake =[1000, 2000, 70, 46, 75];
 
-var nutrientsArray = [950,1800,0,40,50];
-var milkNutrientsArray = [200,300,0,0,0];
+var nutrientsArray = [600,1500,20,40,50];
+var milkNutrientsArray = [100,300,0,0,0];
 var orangeNutrientsArray = [300,400,0,0,30];
-var meatNutrientsArray = [400,100,60,30,0];
-var broccoliNutrientsArray = [100,200,0,0,20];
-var fishNutrientsArray = [50,1000,0,10,0];
+var meatNutrientsArray = [200,100,10,30,0];
+var broccoliNutrientsArray = [50,200,0,0,20];
+var fishNutrientsArray = [50,500,0,10,0];
 
 var virtualFlag = false;
 var virtualNutrition =[0,0,0,0,0];
@@ -161,18 +161,12 @@ io.on('connection', function(socket){
 	connectedIDArray.push(socket.id);
 	// console.log("Connected array length: " + connectedIDArray.length); 
 
-	// // Send message
-	// socket.on('chat message', function(msg){
-	// 	// console.log('message: ' + msg);
-	// 	// send to all
-	// 	io.emit('chat message', socket.id + " : " + msg);
-	// 	// send to others except the sender
-	// 	// socket.broadcast.emit('chat message', msg);
-	// });
-
 	// Online event
 	io.emit('online', socket.id);
 
+	// Intial nutrients physical and on screen bar with test data 
+	// Because this data is emitted through connection, so every time a new client is connected, the data will be emitted
+	io.sockets.emit('nutritionChanges', nutrientsArray);
 	io.sockets.emit('calciumChanges', nutrientsArray[0]);
 	io.sockets.emit('caloriesChanges', nutrientsArray[1]);
 	io.sockets.emit('fatChanges', nutrientsArray[2]);
@@ -288,11 +282,9 @@ io.on('connection', function(socket){
 			if(data < 3.00){
 				data = 0.00;
 				io.sockets.emit('scaleDataMilk', data);		
-				console.log("Emit milk data:  " + data);
 			}
 			else{
 				io.sockets.emit('scaleDataMilk', data);	
-				console.log("Emit milk data: " + data);
 			}
 			addToHistoryandToJson(milkHistory, data, "milkHistory.json");
 			milkIni = false;
@@ -342,7 +334,7 @@ io.on('connection', function(socket){
 
 	// Orange weight from scale
 	socket.on('orangeWeight', function (data) {
-		console.log("orange weight: " + data);
+		// console.log("orange weight: " + data);
 		// First time, check and emit data, and save to history
 		if(orangeIni === true){
 			if(data < 3.00){
@@ -580,7 +572,7 @@ io.on('connection', function(socket){
 	socket.on('resetVirtualVariables', function (data) {
 		virtualFlag = false;
 		virtualNutrition =[0,0,0,0,0];
-		console.log("Virtual falg after resetting " + virtualFlag);
+		// console.log("Virtual falg after resetting " + virtualFlag);
 	});
 
 	// Reset weight rack to its real weight
@@ -727,7 +719,7 @@ fs.watch('test.json',
 	});
 
 
-server.listen(3000,'192.168.0.100', function(){
+server.listen(3000,'192.168.0.101', function(){
 	console.log('listening on *:3000');
 });
 
@@ -832,7 +824,7 @@ function parseHistory(jsonFileName){
 	return fiveDaysJsonData;
 }
 
-// Calculate accumulate nutrients value of same day when food weight changes
+// Calculate accumulate nutrients value of the same day when food weight changes
 function calculateNutrients(historicalObject, foodType){
 	var newConsumption = historicalObject[Object.keys(historicalObject).length - 1].consumeWeight;
 	var consumptionPer = newConsumption/100;

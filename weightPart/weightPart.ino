@@ -46,7 +46,7 @@ Servo servoFish;
 // Define servo pins
 int milkServoPin = 23;
 int orangeServoPin = 18;
-int meatServoPin = 34;
+int meatServoPin = 27;
 int broccoliServoPin = 32;
 int fishServoPin= 12;
 
@@ -126,8 +126,8 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   // Begin a secure socket, find your computer WiFi TCP/IP Address
-  // Mac Network--> WiFi--> Advanced--> TCP/IP 192.168.0.100
-  socket.beginSSL("192.168.0.100", 3000);
+  // Mac Network--> WiFi--> Advanced--> TCP/IP 192.168.0.101
+  socket.beginSSL("192.168.0.101", 3000);
   delay(100);
 
   socket.on("connect", socketConnected);

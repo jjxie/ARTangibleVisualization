@@ -62,7 +62,7 @@ void setup() {
 
   // Begin a secure socket, find your computer WiFi TCP/IP Address
   // Mac Network--> WiFi--> Advanced--> TCP/IP 192.168.0.100
-  socket.beginSSL("192.168.0.100", 3000);
+  socket.beginSSL("192.168.0.101", 3000);
   delay(100);
 
   socket.on("connect", socketConnected);

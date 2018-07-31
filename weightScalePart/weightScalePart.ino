@@ -22,38 +22,39 @@ SF1eFilter filter1;
 SF1eFilter filter2;
 SF1eFilter filter3;
 SF1eFilter filter4;
-//SF1eFilter filter5;
+SF1eFilter filter5;
 
 #include <HX711.h>
 HX711 scale1;
 HX711 scale2;
 HX711 scale3;
 HX711 scale4;
-//HX711 scale5;
+HX711 scale5;
 
 //Larger the weight data, smaller the calibration_factor when calibrating the readings
 float calibration_factor1 = 2180; //1,2190    2,430    3,415    4,2295
 float calibration_factor2 = 428;
 float calibration_factor3 = 413;
 float calibration_factor4 = 2285;
-//float calibration_factor5 = 2010;
+float calibration_factor5 = 2010;
 
 float preUnits1 = 0.00;
 float preUnits2 = 0.00;
 float preUnits3 = 0.00;
 float preUnits4 = 0.00;
-//float preUnits5 = 0.00;
+float preUnits5 = 0.00;
 
 float units1;
 float units2;
 float units3;
 float units4;
-//float units5;
+float units5;
 
 static char unitString1[15];
 static char unitString2[15];
 static char unitString3[15];
 static char unitString4[15];
+static char unitString5[15];
 
 
 // One filter code
@@ -181,8 +182,8 @@ void setup() {
   Serial.println(WiFi.localIP());
 
   // Begin a secure socket, find your computer WiFi TCP/IP Address
-  // Mac Network--> WiFi--> Advanced--> TCP/IP 192.168.0.100
-  socket.beginSSL("192.168.0.100", 3000);
+  // Mac Network--> WiFi--> Advanced--> TCP/IP 192.168.0.101
+  socket.beginSSL("192.168.0.101", 3000);
   delay(100);
 
   socket.on("connect", socketConnected);
@@ -191,6 +192,7 @@ void setup() {
   scale2.begin(14, 27); //D3,D4  0,2
   scale3.begin(26, 25); // D5,D6  14,12
   scale4.begin(33, 32); // D7,D8  13,15
+  scale5.begin(16, 17); // D7,D8  13,15
 
   scale1.set_scale(calibration_factor1);
   scale1.tare();
@@ -218,6 +220,12 @@ void setup() {
   dtostrf(preUnits4, 4, 2, unitString4);
   socket.emit("broccoliWeight", unitString4);
 
+  scale5.set_scale(calibration_factor5);
+  scale5.tare();
+  delay(100);
+  dtostrf(preUnits5, 4, 2, unitString5);
+  socket.emit("fishWeight", unitString5);
+
   // The presettings of each fliter
   srand((unsigned int)time(NULL));
   filter1.config.frequency = 120;
@@ -244,12 +252,11 @@ void setup() {
   filter4.config.minCutoffFrequency = 1;
   SF1eFilterInit(&filter4);
 
-  //  filter5.config.frequency = 120;
-  //  filter5.config.cutoffSlope = 1;
-  //  filter5.config.derivativeCutoffFrequency = 1;
-  //  filter5.config.minCutoffFrequency = 1;
-  //  SF1eFilterInit(&filter5);
-  //
+  filter5.config.frequency = 120;
+  filter5.config.cutoffSlope = 1;
+  filter5.config.derivativeCutoffFrequency = 1;
+  filter5.config.minCutoffFrequency = 1;
+  SF1eFilterInit(&filter5);
 }
 
 void loop() {
@@ -263,17 +270,17 @@ void loop() {
   units1 = scale1.get_units(), 1;
   units1 = initializeScaleData(units1);
   units1 = initializeScaleData(SF1eFiltered1(units1));
-//  Serial.print("units1：");
-//  Serial.print("  ");
-//  Serial.print(units1);
-//  Serial.print("    ");
-//  Serial.print("preUnits1：");
-//  Serial.print("  ");
-//  Serial.println(preUnits1);
+  //  Serial.print("units1：");
+  //  Serial.print("  ");
+  //  Serial.print(units1);
+  //  Serial.print("    ");
+  //  Serial.print("preUnits1：");
+  //  Serial.print("  ");
+  //  Serial.println(preUnits1);
   if (weightChange(preUnits1, units1)) {
-//    Serial.println("More than 3.00  ");
-//    Serial.print("preUnits1:  ");
-//    Serial.println(preUnits1);
+    //    Serial.println("More than 3.00  ");
+    //    Serial.print("preUnits1:  ");
+    //    Serial.println(preUnits1);
     delay(300);
     int i;
     float readNumber[20];
@@ -283,29 +290,29 @@ void loop() {
       temp1 = initializeScaleData(SF1eFiltered1(initializeScaleData(temp1)));
       temp2 = scale1.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered1(initializeScaleData(temp2)));
-//      Serial.print("temp1: ");
-//      Serial.print(temp1);
-//      Serial.print("    ");
-//      Serial.print("temp2: ");
-//      Serial.print(temp2);
+      //      Serial.print("temp1: ");
+      //      Serial.print(temp1);
+      //      Serial.print("    ");
+      //      Serial.print("temp2: ");
+      //      Serial.print(temp2);
       float difference = abs(temp2 - temp1);
-//      Serial.print("    ");
-//      Serial.println(difference);
+      //      Serial.print("    ");
+      //      Serial.println(difference);
       if (abs(temp2 - temp1) < 1.00) {
         Serial.println("Enter < 1 ");
-//        Serial.print("A");
-//        Serial.println(temp2);
+        //        Serial.print("A");
+        //        Serial.println(temp2);
         // Convert to char and emit this data
         dtostrf(temp2, 4, 2, unitString1);
         socket.emit("milkWeight", unitString1);
         delay(10);
         preUnits1 = temp2;
-//        Serial.print("Emit  ");
-//        Serial.print("  ");
-//        Serial.print(unitString1);
-//        Serial.print("    ");
-//        Serial.print("preUnits1:  ");
-//        Serial.println(preUnits1);
+        //        Serial.print("Emit  ");
+        //        Serial.print("  ");
+        //        Serial.print(unitString1);
+        //        Serial.print("    ");
+        //        Serial.print("preUnits1:  ");
+        //        Serial.println(preUnits1);
         break;
       }
     }
@@ -329,8 +336,8 @@ void loop() {
       temp2 = scale2.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered2(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-//        Serial.print("B");
-//        Serial.println(temp2);
+        //        Serial.print("B");
+        //        Serial.println(temp2);
         dtostrf(temp2, 4, 2, unitString2);
         socket.emit("orangeWeight", unitString2);
         delay(10);
@@ -341,12 +348,12 @@ void loop() {
   }
 
   delay(100);
-  
+
   // Data from scale number 3
   units3 = scale3.get_units(), 1;
   units3 = initializeScaleData(units3);
   units3 = initializeScaleData(SF1eFiltered3(units3));
-//  Serial.println(units3);
+  //  Serial.println(units3);
   if (weightChange(preUnits3, units3)) {
     delay(300);
     int i;
@@ -358,8 +365,8 @@ void loop() {
       temp2 = scale3.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered3(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-//        Serial.print("C");
-//        Serial.println(temp2);
+        //        Serial.print("C");
+        //        Serial.println(temp2);
         dtostrf(temp2, 4, 2, unitString3);
         socket.emit("meatWeight", unitString3);
         delay(10);
@@ -370,7 +377,7 @@ void loop() {
   }
 
   delay(100);
-  
+
   // Data from scale number 4
   units4 = scale4.get_units(), 1;
   units4 = initializeScaleData(units4);
@@ -386,8 +393,8 @@ void loop() {
       temp2 = scale4.get_units(), 1;
       temp2 = initializeScaleData(SF1eFiltered4(initializeScaleData(temp2)));
       if (abs(temp2 - temp1) < 1) {
-//        Serial.print("D");
-//        Serial.println(temp2);
+        //        Serial.print("D");
+        //        Serial.println(temp2);
         dtostrf(temp2, 4, 2, unitString4);
         socket.emit("broccoliWeight", unitString4);
         delay(10);
@@ -396,8 +403,34 @@ void loop() {
       }
     }
   }
-  
+
   delay(100);
+
+  // Data from scale number 5
+  units5 = scale5.get_units(), 1;
+  units5 = initializeScaleData(units5);
+  units5 = initializeScaleData(SF1eFiltered5(units5));
+  if (weightChange(preUnits5, units5)) {
+    delay(300);
+    int i;
+    float readNumber[20];
+    float temp1, temp2;
+    for (i = 0; i < 20; i++) {
+      temp1 = scale5.get_units(), 1;
+      temp1 = initializeScaleData(SF1eFiltered5(initializeScaleData(temp1)));
+      temp2 = scale5.get_units(), 1;
+      temp2 = initializeScaleData(SF1eFiltered5(initializeScaleData(temp2)));
+      if (abs(temp2 - temp1) < 1) {
+        //        Serial.print("E");
+        //        Serial.println(temp2);
+        dtostrf(temp2, 4, 2, unitString5);
+        socket.emit("fishWeight", unitString5);
+        delay(10);
+        preUnits5 = temp2;
+        break;
+      }
+    }
+  }
 }
 
 // Check if the reading weight data < 0, then set units to 0.00
@@ -482,20 +515,20 @@ float SF1eFiltered4(float readData)
   return filtered;
 }
 
-//float SF1eFiltered5(float readData)
-//{
-//  float signal = readData;
-//  float randnum = (float)rand() * 1.f / RAND_MAX;
-//  float noisy = signal + (randnum - 0.5f) / 5.f;
-//  float filtered = SF1eFilterDo(&filter5, noisy);
-////  Serial.print(signal);
-////  Serial.print(" ");
-////  Serial.print(noisy);
-////  Serial.print(" ");
-////  Serial.print(filtered);
-////  Serial.println();
-//  return filtered;
-//}
+float SF1eFiltered5(float readData)
+{
+  float signal = readData;
+  float randnum = (float)rand() * 1.f / RAND_MAX;
+  float noisy = signal + (randnum - 0.5f) / 5.f;
+  float filtered = SF1eFilterDo(&filter5, noisy);
+  //  Serial.print(signal);
+  //  Serial.print(" ");
+  //  Serial.print(noisy);
+  //  Serial.print(" ");
+  //  Serial.print(filtered);
+  //  Serial.println();
+  return filtered;
+}
 
 
 // Socket IO functions
