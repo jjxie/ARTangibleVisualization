@@ -67,7 +67,7 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // VitaminC, adults female 75mg, male 90mg
 var dailyIntake =[1000, 2000, 70, 46, 75];
 
-var nutrientsArray = [600,1500,20,40,50];
+var nutrientsArray = [700,1500,10,40,50];
 var milkNutrientsArray = [100,300,0,0,0];
 var orangeNutrientsArray = [300,400,0,0,30];
 var meatNutrientsArray = [200,100,10,30,0];
@@ -89,7 +89,7 @@ app.use(bodyparser.json());
 
 // Node serialport
 var Serialport = require('serialport');
-var myPort = new Serialport("/dev/tty.wchusbserial1420",{
+var myPort = new Serialport("/dev/tty.wchusbserial1410",{
 	baudrate: 115200,
 	parser: Serialport.parsers.readline("\n")
 });
@@ -581,7 +581,8 @@ io.on('connection', function(socket){
 		io.sockets.emit('scaleDataOrange', orangeHistory[Object.keys(orangeHistory).length-1].weight);
 		io.sockets.emit('scaleDataMeat', meatHistory[Object.keys(meatHistory).length-1].weight);
 		io.sockets.emit('scaleDataBroccoli', broccoliHistory[Object.keys(broccoliHistory).length-1].weight);
-		io.sockets.emit('scaleDataFish', fishHistory[Object.keys(fishHistory).length-1].weight);
+		// io.sockets.emit('scaleDataFish', fishHistory[Object.keys(fishHistory).length-1].weight);
+		io.sockets.emit('waitServoFinishReset', fishHistory[Object.keys(fishHistory).length-1].weight);
 	});
 
 	// Sent history Data to screen version
@@ -664,38 +665,38 @@ myPort.on('data', function (data){
     	// Type A represents milk
     	case "A":
     	// Get the virtual food consumption amount
-		var virtualConsumption = milkHistory[Object.keys(milkHistory).length-1].weight - weight;
-		console.log("milk weight from moving the rack: " + weight);
-		calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
-		io.sockets.emit('manualDataMilk', weight, virtualNutrition);	
+    	var virtualConsumption = milkHistory[Object.keys(milkHistory).length-1].weight - weight;
+    	console.log("milk weight from moving the rack: " + weight);
+    	calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
+    	io.sockets.emit('manualDataMilk', weight, virtualNutrition);	
     	break;
     	// Type B represents orange
     	case "B":
     	var virtualConsumption = orangeHistory[Object.keys(orangeHistory).length-1].weight - weight;
-		console.log("orange weight from moving the rack: " + weight);
-		calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
-		io.sockets.emit('manualDataOrange', weight, virtualNutrition);
+    	console.log("orange weight from moving the rack: " + weight);
+    	calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
+    	io.sockets.emit('manualDataOrange', weight, virtualNutrition);
     	break;
     	// Type C represents meat
     	case "C":
     	var virtualConsumption = meatHistory[Object.keys(meatHistory).length-1].weight - weight;
-		console.log("meat weight from moving the rack: " + weight);
-		calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
-		io.sockets.emit('manualDataMeat', weight, virtualNutrition);
+    	console.log("meat weight from moving the rack: " + weight);
+    	calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
+    	io.sockets.emit('manualDataMeat', weight, virtualNutrition);
     	break;
     	// Type D represents broccoli
     	case "D":
     	var virtualConsumption = broccoliHistory[Object.keys(broccoliHistory).length-1].weight - weight;
-		console.log("broccoli weight from moving the rack: " + weight + "Virtual consumption: " + virtualConsumption);
-		calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
-		io.sockets.emit('manualDataBroccoli', weight, virtualNutrition);	
+    	console.log("broccoli weight from moving the rack: " + weight + "Virtual consumption: " + virtualConsumption);
+    	calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
+    	io.sockets.emit('manualDataBroccoli', weight, virtualNutrition);	
     	break;
     	// Type E represents fish
     	case "E":
     	var virtualConsumption = fishHistory[Object.keys(fishHistory).length-1].weight - weight;
-		console.log("fish weight from moving the rack: " + weight);
-		calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
-		io.sockets.emit('manualDataFish', weight, virtualNutrition);	
+    	console.log("fish weight from moving the rack: " + weight);
+    	calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
+    	io.sockets.emit('manualDataFish', weight, virtualNutrition);	
     	break;
     	default:
     	console.log("unknownMessage", data);
@@ -896,13 +897,13 @@ function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
 			// Get current real nutrients amount, then add or substract virtual nutrients
 			virtualNutrition[i] = nutrientsArray[i];
 			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];
-			console.log("First time virtual" + virtualNutrition[i]);			
+			// console.log("First time virtual" + virtualNutrition[i]);			
 		}
 	}
 	else{
 		for(i=0; i< virtualNutrition.length; i++){
 			virtualNutrition[i] += virtualConsumptionPer * nutrientsRate[i];
-			console.log("Accumulate time virtual" + virtualNutrition[i]);	
+			// console.log("Accumulate time virtual" + virtualNutrition[i]);	
 		}
 	}
 }

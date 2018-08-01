@@ -172,6 +172,8 @@ void loop()
   // Receive fish weight data, rotate servo
   socket.on("scaleDataFish", setFishServo);
 
+  socket.on("waitServoFinishReset", setFishServoAndReset);
+
   // Read milk touch sensor pins, emit 1 when touch the sensor
   boolean milkTouch = digitalRead(milkTouchPin);
   if (milkTouch != milkSelected) {
@@ -235,7 +237,7 @@ void setMilkServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoMilk.write(transformedValue); 
-  delay(2000);
+  delay(3000);
   servoMilk.detach();
 }
 
@@ -255,7 +257,7 @@ void setOrangeServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoOrange.write(transformedValue);
-  delay(2000);
+  delay(3000);
   servoOrange.detach();
 }
 
@@ -275,7 +277,7 @@ void setMeatServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoMeat.write(transformedValue);
-  delay(2000);
+  delay(3000);
   servoMeat.detach();
 }
 
@@ -294,7 +296,7 @@ void setBroccoliServo(const char *weight, size_t length) {
   Serial.print("  ");
   Serial.println(transformedValue);
   servoBroccoli.write(transformedValue);
-  delay(2000);
+  delay(3000);
   servoBroccoli.detach();
 }
 
@@ -311,6 +313,24 @@ void setFishServo(const char *weight, size_t length) {
   float transformedValue = calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree);
   Serial.println(transformedValue);
   servoFish.write(transformedValue);
-  delay(2000);
+  delay(3000);
   servoFish.detach();
+}
+
+void setFishServoAndReset(const char *weight, size_t length) {
+  servoFish.attach(fishServoPin, minUs, maxUs);
+  // get value from message
+  String data;
+  for (int i = 0; i < length; i++) {
+    data += (char)weight[i];
+  }
+  int value = data.toInt();
+
+  // calculate value for servo and send it
+  float transformedValue = calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree);
+  Serial.println(transformedValue);
+  servoFish.write(transformedValue);
+  delay(3000);
+  servoFish.detach();
+  socket.emit("resetVirutalSceneAgain", "\"1\"");
 }

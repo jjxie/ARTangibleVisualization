@@ -19,24 +19,24 @@
   <!-- Include all compiled plugins (below), or include individual files as needed -->
   <script src="https://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
   <style>
-    body { margin: 5px; padding: 0; box-sizing: border-box; }
-    body { font: 13px Helvetica, Arial; }
-    form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
-    form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
-    form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
-    #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 28px; pointer-events: auto!important;}
-    .progress-bar-vertical { display: inline-block; width: 150px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg);}
-  </style>
-  <script>
-    AFRAME.registerComponent('reset-on-click', {
-      init: function () {
-        this.el.addEventListener('click', function (evt) {
-          console.log("Reset virtual scene");
-          resetVirtualScene();
-        });
-      }
-    });
-  </script>
+  body { margin: 5px; padding: 0; box-sizing: border-box; }
+  body { font: 13px Helvetica, Arial; }
+  form { background: #000; padding: 3px; position: fixed; bottom: 0; width: 100%; }
+  form input { border: 0; padding: 10px; width: 90%; margin-right: .5%; }
+  form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+  #scale-data-milk, #scale-data-broccoli, #scale-data-fish, #scale-data-orange, #scale-data-meat { font-size: 28px; pointer-events: auto!important;}
+  .progress-bar-vertical { display: inline-block; width: 150px; height: 40px; -webkit-transform: rotate(-90deg); /* Chrome, Safari, Opera */ transform: rotate(-90deg);}
+</style>
+<script>
+  AFRAME.registerComponent('reset-on-click', {
+    init: function () {
+      this.el.addEventListener('click', function (evt) {
+        console.log("Reset virtual scene");
+        resetVirtualScene();
+      });
+    }
+  });
+</script>
 </head> 
 <body>
 
@@ -347,15 +347,15 @@
     <!-- camera -->
     <a-entity camera look-controls > 
       <a-cursor geometry="primitive: ring; radiusInner: 0.01; radiusOuter: 0.015;" material="color: #FFC0CB; shader: flat"></a-cursor>
-      </a-entity>
     </a-entity>
-    <a-box position="0 0 -5" reset-on-click="" depth="0.1" height="0.1" width="0.1" color="peachpuff"></a-box>
+  </a-entity>
+  <a-box position="0 0 -5" reset-on-click="" depth="0.1" height="0.1" width="0.1" color="peachpuff"></a-box>
 
-  </a-scene>
+</a-scene>
 
 
-  <script>
-    var socket = io.connect('https://192.168.0.101:3000',{secure: true});
+<script>
+  var socket = io.connect('https://192.168.0.101:3000',{secure: true});
     //Get AR scene
     var sceneEl = document.querySelector('a-scene');
     var maxDepth = 1; 
@@ -429,6 +429,7 @@
 
     // Show all the food nutrition each specific nutrients contribution
     function showAllNutritionView(nutritionData, index){
+      console.log(nutritionData);
       for(i = 0; i < nutritionData.length; i++){
         var depth = Math.round(nutritionData[i]/dailyIntakeMax[i] * 100) / 100;
         var z = 0.8- depth/2;
@@ -436,6 +437,7 @@
         var textTag = nutritiontagText[index] + i;
         var NumberTag= nutritiontagNumberText[index] + i;
         var amountString = Math.round(nutritionData[i]).toString() + nutritionUnit[i];
+        console.log(amountString);
         if(depth == 0){
           sceneEl.querySelector(tag).setAttribute("visible",false); 
           sceneEl.querySelector(textTag).setAttribute("visible",true);
@@ -574,6 +576,8 @@
       numberofFoodSelected += 1;
       console.log("numberofFoodSelected " + numberofFoodSelected);
       showAllNutrition(milk, orange, meat, broccoli, fish);
+      console.log(milk);
+      console.log(orange);
       highlightNutrtionView(milk, 0);
     });
 
@@ -723,6 +727,10 @@
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
+    // Hide the virtual scene again, because the distance secne will always on to measure 
+    socket.on('resetVirutalSceneAgain', function(data){
+      hideVirtualBarAndText();
+    });
 
     // Reset virtual scene
     function resetVirtualScene(){

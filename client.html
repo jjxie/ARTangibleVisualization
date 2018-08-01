@@ -49,11 +49,11 @@
 	#broccoliHistory{left: 680px; top:400px; position: absolute;}
 	#fishHistory{left: 890px; top:400px; position: absolute;}
 
-	#calciumIntake{left: 50px; top:1020px; position: absolute;}
-	#caloriesIntake{left: 260px; top:1020px; position: absolute;}
-	#fatIntake{left: 470px; top:1020px; position: absolute;}
-	#proteinIntake{left: 680px; top:1020px; position: absolute;}
-	#vitaminCIntake{left: 890px; top:1020px; position: absolute;}
+	#calciumIntake{left: 55px; top:1020px; position: absolute;}
+	#caloriesIntake{left: 265px; top:1020px; position: absolute;}
+	#fatIntake{left: 475px; top:1020px; position: absolute;}
+	#proteinIntake{left: 685px; top:1020px; position: absolute;}
+	#vitaminCIntake{left: 895px; top:1020px; position: absolute;}
 
 	#virtualCalcium{left: 190px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
 	#virtualCalories{left: 390px; top:545px; position: absolute; width: 36px; background-color: #4CC3D9;}
@@ -513,7 +513,7 @@
     				{
     					label: "g",
     					backgroundColor: [color[0], color[0],color[0],color[0],color[0]],
-    					data: [historyData[0].sumConsumeWeight, historyData[1].sumConsumeWeight, historyData[2].sumConsumeWeight, historyData[3].sumConsumeWeight, historyData[4].sumConsumeWeight]
+    					data: [Math.round(historyData[0].sumConsumeWeight), Math.round(historyData[1].sumConsumeWeight), Math.round(historyData[2].sumConsumeWeight), Math.round(historyData[3].sumConsumeWeight), Math.round(historyData[4].sumConsumeWeight)]
     				}
     				]
     			},
@@ -530,17 +530,13 @@
 
     // Draw all the nutrients chart with selected food is highlighted
     function drawAllNutrients(milk, orange, meat, broccoli, fish){
-    	drawNutrientsDigram(milk, 0, colorArray);
-    	drawNutrientsDigram(orange, 1, colorArray);
-    	drawNutrientsDigram(meat, 2, colorArray);
-    	drawNutrientsDigram(broccoli, 3, colorArray);
-    	drawNutrientsDigram(fish, 4, colorArray);
+    	composeNurtientsArrayAndDraw(milk, orange, meat, broccoli, fish);
     }
 
     // Draw each food each nutreints contribution char
     function drawNutrientsDigram(nutrionData, index, colorArray){
-    	console.log(nutrionData);
-    	for(i = 0; i < nutrionData.length; i++){
+    	// console.log(nutrionData);
+    	for(i = 0; i < Object.keys(nutrionData).length; i++){
     		var chart = document.getElementById(nutrientsIntakeBar[index]);
     		chart.style.display = "inline-block";
     		var myChart = new Chart(chart, {
@@ -551,7 +547,7 @@
     				{
     					label: nutrientUnit[index],
     					backgroundColor: [colorArray[0], colorArray[1],colorArray[2],colorArray[3],colorArray[4]],
-    					data: [nutrionData[0], nutrionData[1], nutrionData[2], nutrionData[3], nutrionData[4]]
+    					data: [Math.round(nutrionData.calcium), Math.round(nutrionData.calories), Math.round(nutrionData.fat), Math.round(nutrionData.protein), Math.round(nutrionData.vitaminC)]
     				}
     				]
     			},
@@ -587,11 +583,27 @@
     //Hide specific nutrients chart
     function hideNutrients(index, milk, orange, meat, broccoli, fish){
     	colorArray[index] = "#4CC3D9";
-    	drawNutrientsDigram(milk, 0, colorArray);
-    	drawNutrientsDigram(orange, 1, colorArray);
-    	drawNutrientsDigram(meat, 2, colorArray);
-    	drawNutrientsDigram(broccoli, 3, colorArray);
-    	drawNutrientsDigram(fish, 4, colorArray);
+    	composeNurtientsArrayAndDraw(milk, orange, meat, broccoli, fish);    	
+    }
+
+	// Compose nutrients array and draw
+    function composeNurtientsArrayAndDraw(milk, orange, meat, broccoli, fish){
+    	var calciumData, caloriesData, fatData, proteinData, vitaminCData;
+    	var dataTransfer = [];
+    	for(i = 0 ; i < dataMax ; i++){
+    		dataTransfer.push({
+    			calcium: milk[i],
+    			calories: orange[i],
+    			fat: meat[i],
+    			protein: broccoli[i],
+    			vitaminC: fish[i]
+    		});
+    	}
+    	drawNutrientsDigram(dataTransfer[0], 0, colorArray);
+    	drawNutrientsDigram(dataTransfer[1], 1, colorArray);
+    	drawNutrientsDigram(dataTransfer[2], 2, colorArray);
+    	drawNutrientsDigram(dataTransfer[3], 3, colorArray);
+    	drawNutrientsDigram(dataTransfer[4], 4, colorArray);
     }
 
     //Hide history chart
