@@ -43,7 +43,7 @@ int enable1 = A0;
 int enable2 = A1;
 int enable3 = A2;
 int enable4 = A3;
-int enable5 = A4;
+int enable5 = 8;
 
 VL6180xIdentification identification1;
 VL6180xIdentification identification2;
@@ -83,14 +83,14 @@ float milkPreviousRackDistance = 13.80;
 float orangePreviousRackDistance = 11.50;
 float meatPreviousRackDistance = 8.50;
 float broccoliPreviousRackDistance = 6.20;
-float fishPreviousRackDistance = 255.00;
+float fishPreviousRackDistance = 12.5;
 
 // Set relative distance, distance of broccoli as baseline.Same height will have same weight 
 float milkRackInitialDistance = 13.80;
 float orangeRackInitialDistance = 11.50;
 float meatRackInitialDistance = 8.50;
 float broccoliRackInitialDistance = 6.20;
-float fishRackInitialDistance = 255.00;
+float fishRackInitialDistance = 12.5;
 
 float maxWeight = 1000;
 
