@@ -72,23 +72,24 @@ float broccoliRackDistance = 0.00;
 float fishRackDistance = 0.00;
 
 // When the servo rotates full degree, the rack distance from the distance sensor
-float milkFullDegreeRackDistance = 13.5;
-float orangeFullDegreeRackDistance = 13.5;
-float meatFullDegreeRackDistance = 13.5;
-float broccoliFullDegreeRackDistance = 13.5;
-float fishFullDegreeRackDistance = 13.5;
+float milkFullDegreeRackDistance = 16.2;
+float orangeFullDegreeRackDistance = 16.2;
+float meatFullDegreeRackDistance = 16.6;
+float broccoliFullDegreeRackDistance = 16.2;
+float fishFullDegreeRackDistance = 16.2;
 
 
-float milkPreviousRackDistance = 9.00;
-float orangePreviousRackDistance = 13.00;
-float meatPreviousRackDistance = 15.00;
-float broccoliPreviousRackDistance = 3.00;
+float milkPreviousRackDistance = 13.80;
+float orangePreviousRackDistance = 11.50;
+float meatPreviousRackDistance = 8.50;
+float broccoliPreviousRackDistance = 6.20;
 float fishPreviousRackDistance = 255.00;
 
-float milkRackInitialDistance = 9.00;
-float orangeRackInitialDistance = 14.00;
-float meatRackInitialDistance = 16.00;
-float broccoliRackInitialDistance = 8.00;
+// Set relative distance, distance of broccoli as baseline.Same height will have same weight 
+float milkRackInitialDistance = 13.80;
+float orangeRackInitialDistance = 11.50;
+float meatRackInitialDistance = 8.50;
+float broccoliRackInitialDistance = 6.20;
 float fishRackInitialDistance = 255.00;
 
 float maxWeight = 1000;
@@ -211,7 +212,7 @@ void setup() {
   digitalWrite(enable4, LOW);
   digitalWrite(enable5, LOW);
   sensor1.getIdentification(&identification1); // Retrieve manufacture info from device memory
-  printIdentification(&identification1); // Helper function to print all the Module information
+//  printIdentification(&identification1); // Helper function to print all the Module information
   if (sensor1.VL6180xInit() != 0) {
     Serial.println("SENSOR 1 FAILED TO INITALIZE"); //Initialize device and check for errors
   };
@@ -222,7 +223,7 @@ void setup() {
   // Enable sensor 2 pin, disable other pins
   digitalWrite(enable2, HIGH);
   sensor2.getIdentification(&identification2);
-  printIdentification(&identification2);
+//  printIdentification(&identification2);
   if (sensor2.VL6180xInit() != 0) {
     Serial.println("SENSOR 2 FAILED TO INITALIZE"); //Initialize device and check for errors
   };
@@ -233,7 +234,7 @@ void setup() {
   // Enable sensor 3 pin, disable other pins
   digitalWrite(enable3, HIGH);
   sensor3.getIdentification(&identification3);
-  printIdentification(&identification3);
+//  printIdentification(&identification3);
   if (sensor3.VL6180xInit() != 0) {
     Serial.println("SENSOR 3 FAILED TO INITALIZE"); //Initialize device and check for errors
   };
@@ -244,7 +245,7 @@ void setup() {
   // Enable sensor 4 pin, disable other pins
   digitalWrite(enable4, HIGH);
   sensor4.getIdentification(&identification4);
-  printIdentification(&identification4);
+//  printIdentification(&identification4);
   if (sensor4.VL6180xInit() != 0) {
     Serial.println("SENSOR 4 FAILED TO INITALIZE"); //Initialize device and check for errors
   };
@@ -255,7 +256,7 @@ void setup() {
   // Enable sensor 5 pin, disable other pins
   digitalWrite(enable5, HIGH);
   sensor5.getIdentification(&identification5);
-  printIdentification(&identification5);
+//  printIdentification(&identification5);
   if (sensor5.VL6180xInit() != 0) {
     Serial.println("SENSOR 5 FAILED TO INITALIZE"); //Initialize device and check for errors
   };
@@ -306,9 +307,11 @@ void loop() {
   // Read distance data
   // Get Sensor Distance and filtered by One Euro filter
   milkRackDistance = SF1eFiltered1(sensor1.getDistance());
-  // If distance changes more than 1CM
+//  Serial.println("1  ");
+//  Serial.println(milkRackDistance);
+  // If distance changes more than 1.5CM
   if (checkDistance(milkPreviousRackDistance, milkRackDistance)) {
-    delay(100);
+    delay(500);
     int i;
     float readNumber[20];
     float temp1, temp2;
@@ -333,9 +336,11 @@ void loop() {
 
   // Orange
   orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
-  // If distance changes more than 1CM
+//  Serial.println("2  ");
+//  Serial.println(orangeRackDistance);
+  // If distance changes more than 1.5CM
   if (checkDistance(orangePreviousRackDistance, orangeRackDistance)) {
-    delay(100);
+    delay(500);
     int i;
     float readNumber[20];
     float temp1, temp2;
@@ -360,9 +365,11 @@ void loop() {
 
   // Meat
   meatRackDistance = SF1eFiltered3(sensor3.getDistance());
-  // If distance changes more than 1CM
+//  Serial.println("3  ");
+//  Serial.println(meatRackDistance);
+  // If distance changes more than 1.5CM
   if (checkDistance(meatPreviousRackDistance, meatRackDistance)) {
-    delay(100);
+    delay(500);
     int i;
     float readNumber[20];
     float temp1, temp2;
@@ -387,9 +394,11 @@ void loop() {
 
   // Broccoli
   broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
-  // If distance changes more than 1CM
+//  Serial.println("4  ");
+//  Serial.println(broccoliRackDistance);
+  // If distance changes more than 1.5CM
   if (checkDistance(broccoliPreviousRackDistance, broccoliRackDistance)) {
-    delay(100);
+    delay(500);
     int i;
     float readNumber[20];
     float temp1, temp2;
@@ -414,9 +423,11 @@ void loop() {
 
   // Fish
   fishRackDistance = SF1eFiltered5(sensor5.getDistance());
-  // If distance changes more than 2CM
+//  Serial.println("5  ");
+//  Serial.println(fishRackDistance);
+  // If distance changes more than 1.5CM
   if (checkDistance(fishPreviousRackDistance, fishRackDistance)) {
-    delay(100);
+    delay(500);
     int i;
     float readNumber[20];
     float temp1, temp2;
@@ -530,9 +541,9 @@ float calWeight(float readingdistance, float fullLength, float intialDistance) {
   return weight;
 }
 
-// Check if the reading distance is more than 1CM than the previous distance data
+// Check if the reading distance is more than 1.5CM than the previous distance data
 boolean checkDistance(float previousDistance, float readingDistance) {
-  if (abs(readingDistance - previousDistance) > 10.00) {
+  if (abs(readingDistance - previousDistance) > 15.00) {
     return true;
   }
   else {

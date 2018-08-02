@@ -192,7 +192,7 @@ void setup() {
   scale2.begin(14, 27); //D3,D4  0,2
   scale3.begin(26, 25); // D5,D6  14,12
   scale4.begin(33, 32); // D7,D8  13,15
-  scale5.begin(16, 17); // D7,D8  13,15
+  scale5.begin(23, 17); // D7,D8  13,15
 
   scale1.set_scale(calibration_factor1);
   scale1.tare();
@@ -410,6 +410,7 @@ void loop() {
   units5 = scale5.get_units(), 1;
   units5 = initializeScaleData(units5);
   units5 = initializeScaleData(SF1eFiltered5(units5));
+//  Serial.println(units5);
   if (weightChange(preUnits5, units5)) {
     delay(300);
     int i;
