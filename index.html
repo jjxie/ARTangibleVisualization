@@ -201,8 +201,8 @@
 
     <!-- marker nutrition Calcium -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/ca.patt'>
-      <a-text id="calciumText" position="-0.9 0 -0.7" rotation="-90 0 0" value="Calcium" color="#D05A6E"></a-text>
-      <a-text id="calciumAmount" position="0 0 -0.7" rotation="-90 0 0" value="1000 mg" color="#D05A6E"></a-text>
+      <a-text id="calciumText" position="-0.7 0 -0.7" rotation="-90 0 0" value="Ca" color="#D05A6E"></a-text>
+      <a-text id="calciumAmount" position="-0.15 0 -0.7" rotation="-90 0 0" value="1000 mg" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition0" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition0" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -232,8 +232,8 @@
 
     <!-- marker nutrition Calories -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/cal.patt'>
-      <a-text id="caloriesText" position="-0.8 0 -0.7" rotation="-90 0 0" value="Calories" color="#D05A6E"></a-text>
-      <a-text id="caloriesAmount" position="0.1 0 -0.7" rotation="-90 0 0" value="1000 Cal" color="#D05A6E"></a-text>
+      <a-text id="caloriesText" position="-0.7 0 -0.7" rotation="-90 0 0" value="Cals" color="#D05A6E"></a-text>
+      <a-text id="caloriesAmount" position="-0.1 0 -0.7" rotation="-90 0 0" value="1000 Cal" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition1" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition1" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -264,7 +264,7 @@
     <!-- marker nutrition Fat -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/fat.patt'>
       <a-text id="fatText" position="-0.55 0 -0.7" rotation="-90 0 0" value="Fat" color="#D05A6E"></a-text>
-      <a-text id="fatAmount" position="0.2 0 -0.7" rotation="-90 0 0" value="60 g" color="#D05A6E"></a-text>
+      <a-text id="fatAmount" position="0 0 -0.7" rotation="-90 0 0" value="60 g" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition2" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition2" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -295,7 +295,7 @@
     <!-- marker nutrition Protein -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/protein.patt'>
       <a-text id="proteinText" position="-0.8 0 -0.7" rotation="-90 0 0" value="Protein" color="#D05A6E"></a-text>
-      <a-text id="proteinAmount" position="0.2 0 -0.7" rotation="-90 0 0" value="30 g" color="#D05A6E"></a-text>
+      <a-text id="proteinAmount" position="0.1 0 -0.7" rotation="-90 0 0" value="30 g" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition3" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition3" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -325,8 +325,8 @@
 
     <!-- marker nutrition vitaminC -->
     <a-marker preset='custom' type='pattern' url='https://raw.githubusercontent.com/jjxie/SocketSensorTest/master/ARmarkers/vitaminC.patt'>
-      <a-text id="vitaminCText" position="-0.8 0 -0.7" rotation="-90 0 0" value="Vitamin C" color="#D05A6E"></a-text>
-      <a-text id="vitaminCAmount" position="0.2 0 -0.7" rotation="-90 0 0" value="30 mg" color="#D05A6E"></a-text>
+      <a-text id="vitaminCText" position="-0.55 0 -0.7" rotation="-90 0 0" value="VC" color="#D05A6E"></a-text>
+      <a-text id="vitaminCAmount" position="0 0 -0.7" rotation="-90 0 0" value="30 mg" color="#D05A6E"></a-text>
 
       <a-box id="milkNutrition4" position='-0.55 1 0.7' depth="0.2" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
       <a-box id="orangeNutrition4" position='-0.3 1 0.3' depth="1" height="0.1" width="0.1" color="#4CC3D9" visible="false"></a-box>
@@ -447,7 +447,7 @@
         var tag = nutritionTag[index] + i;
         var textTag = nutritiontagText[index] + i;
         var NumberTag= nutritiontagNumberText[index] + i;
-        var amountString = Math.round(nutritionData[i]).toString() + nutritionUnit[i];
+        var amountString = (nutritionData[i].toFixed(2)).toString() + nutritionUnit[i];
         console.log(amountString);
         if(depth == 0){
           sceneEl.querySelector(tag).setAttribute("visible",false); 
@@ -541,7 +541,7 @@
         var y = height/2;
         var tag = virtualBarTag[i];
         var NumberTag= virtualBarNumnerTag[i]
-        var amountString = Math.round(virtualNutritionConsumption[i]).toString() + nutritionUnit[i];
+        var amountString = (virtualNutritionConsumption[i].toFixed(2)).toString() + nutritionUnit[i];
         if(height == 0){
           sceneEl.querySelector(tag).setAttribute("visible",false); 
           sceneEl.querySelector(NumberTag).setAttribute("position",{ x: virtualBarX, y: 0.2, z: virtualZ });
@@ -575,7 +575,7 @@
     function setNutritionAmount(nutritionArray){
       for(i = 0; i < nutritionArray.length; i++){
        var tag = nutrionAmountText[i];
-       var amountString = Math.round(nutritionArray[i]).toString() + nutritionUnit[i];
+       var amountString = (nutritionArray[i].toFixed(2)).toString() + nutritionUnit[i];
        sceneEl.querySelector(tag).setAttribute("value", amountString); 
      }
    }

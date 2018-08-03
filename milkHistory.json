@@ -1,12 +1,1 @@
-[
-	{"date":"Mon Jul 04 2018 14:17:17 GMT+0200 (CEST)","time":1531138637.603,"weight":0,"consumeWeight":0},
-	{"date":"Mon Jul 05 2018 15:09:49 GMT+0200 (CEST)","time":1531141789.961,"weight":390.82,"consumeWeight":0},
-	{"date":"Mon Jul 05 2018 15:09:58 GMT+0200 (CEST)","time":1531141798.374,"weight":380,"consumeWeight":900.82},
-	{"date":"Mon Jul 07 2018 15:10:05 GMT+0200 (CEST)","time":1531141805.015,"weight":370,"consumeWeight":10},
-	{"date":"Mon Jul 09 2018 15:10:08 GMT+0200 (CEST)","time":1531141808.297,"weight":350,"consumeWeight":20},
-	{"date":"Mon Jul 09 2018 15:11:35 GMT+0200 (CEST)","time":1531141895.433,"weight":300,"consumeWeight":50},
-	{"date":"Mon Jul 10 2018 15:12:35 GMT+0200 (CEST)","time":1531141955.344,"weight":0,"consumeWeight":0},
-	{"date":"Mon Jul 10 2018 15:15:16 GMT+0200 (CEST)","time":1531142116.006,"weight":290,"consumeWeight":10},
-	{"date":"Mon Jul 12 2018 15:15:32 GMT+0200 (CEST)","time":1531142132.592,"weight":200,"consumeWeight":90},
-	{"date":"Mon Jul 12 2018 15:17:21 GMT+0200 (CEST)","time":1531142241.212,"weight":0,"consumeWeight":0}
-]
+[{"date":"Wed Aug 01 2018 14:50:19 GMT+0200 (CEST)","time":1533300619.182,"weight":1000,"consumeWeight":0},{"date":"Wed Aug 01 2018 14:50:33 GMT+0200 (CEST)","time":1533300633.297,"weight":900,"consumeWeight":100},{"date":"Wed Aug 01 2018 15:06:15 GMT+0200 (CEST)","time":1533301575.985,"weight":800,"consumeWeight":100},{"date":"Thu Aug 02 2018 15:06:18 GMT+0200 (CEST)","time":1533301578.288,"weight":500,"consumeWeight":300},{"date":"Thu Aug 02 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":450,"consumeWeight":50},{"date":"Thu Aug 02 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":0,"consumeWeight":450},{"date":"Fri Aug 03 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":1000,"consumeWeight":0},{"date":"Fri Aug 03 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":1000,"consumeWeight":100},{"date":"Fri Aug 03 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.135,"weight":0,"consumeWeight":0},{"date":"Fri Aug 03 2018 17:44:54 GMT+0200 (CEST)","time":1533311094.373,"weight":395.64,"consumeWeight":504.36}]

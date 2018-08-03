@@ -597,7 +597,7 @@
     				{
     					label: nutrientUnit[index],
     					backgroundColor: [colorArray[0], colorArray[1],colorArray[2],colorArray[3],colorArray[4]],
-    					data: [Math.round(nutrionData.calcium), Math.round(nutrionData.calories), Math.round(nutrionData.fat), Math.round(nutrionData.protein), Math.round(nutrionData.vitaminC)]
+    					data: [nutrionData.calcium.toFixed(2), nutrionData.calories.toFixed(2), nutrionData.fat.toFixed(2), nutrionData.protein.toFixed(2), nutrionData.vitaminC.toFixed(2)]
     				}
     				]
     			},
@@ -691,7 +691,7 @@
     function setNutrientsBar(nutrientsArray){
     	for(i = 0 ; i < nutrientsArray.length; i++){
     		var percentage = nutrientsArray[i] / dailyIntakeMax[i] * 100;
-    		var amountString = Math.round(nutrientsArray[i]).toString() + nutrientUnit[i];
+    		var amountString = (nutrientsArray[i].toFixed(2)).toString() + nutrientUnit[i];
     		$(nutrientsAmount[i]).text(amountString);
     		$(nutrientsBar[i]).attr('aria-valuenow', percentage).css('width', percentage + '%');
     	}
@@ -707,7 +707,7 @@
 		$(foodWeightBar[index]).attr('aria-valuenow', percentage).css('width', percentage + '%');
 		for(i = 0; i < nutritionArray.length; i++ ){
 			var barHeight = (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight).toString() + "px";
-			var amountString = Math.round(nutritionArray[i]).toString() + nutrientUnit[i];
+			var amountString = (nutritionArray[i].toFixed(2)).toString() + nutrientUnit[i];
 			var top = topLocation + maxBarHeight - (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight);
 			tempTopArray[i] = top;
 			$(virtualNutritionBar[i]).css('height', barHeight); 		
