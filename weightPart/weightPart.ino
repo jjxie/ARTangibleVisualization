@@ -172,8 +172,6 @@ void loop()
   // Receive fish weight data, rotate servo
   socket.on("scaleDataFish", setFishServo);
 
-  socket.on("waitServoFinishReset", setFishServoAndReset);
-
   // Read milk touch sensor pins, emit 1 when touch the sensor
   boolean milkTouch = digitalRead(milkTouchPin);
   if (milkTouch != milkSelected) {
@@ -310,27 +308,9 @@ void setFishServo(const char *weight, size_t length) {
   int value = data.toInt();
 
   // calculate value for servo and send it
-  float transformedValue = calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree);
+  float transformedValue = calDegree(value, servoFishFullLength, servoFishLengthPerDegree);
   Serial.println(transformedValue);
   servoFish.write(transformedValue);
   delay(3000);
   servoFish.detach();
-}
-
-void setFishServoAndReset(const char *weight, size_t length) {
-  servoFish.attach(fishServoPin, minUs, maxUs);
-  // get value from message
-  String data;
-  for (int i = 0; i < length; i++) {
-    data += (char)weight[i];
-  }
-  int value = data.toInt();
-
-  // calculate value for servo and send it
-  float transformedValue = calDegree(fishWeight, servoFishFullLength, servoFishLengthPerDegree);
-  Serial.println(transformedValue);
-  servoFish.write(transformedValue);
-  delay(3000);
-  servoFish.detach();
-  socket.emit("resetVirutalSceneAgain", "\"1\"");
 }

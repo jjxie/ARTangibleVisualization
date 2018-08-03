@@ -317,7 +317,6 @@ void loop() {
     float temp1, temp2;
     for (i = 0; i < 20; i++) {
       temp1 = SF1eFiltered1(sensor1.getDistance());
-      delay(20);
       temp2 = SF1eFiltered1(sensor1.getDistance());
       if (abs(temp2 - temp1) < 5.00) {
         float milkWeight = calWeight (temp2, milkFullDegreeRackDistance, milkRackInitialDistance);
@@ -346,7 +345,6 @@ void loop() {
     float temp1, temp2;
     for (i = 0; i < 20; i++) {
       temp1 = SF1eFiltered2(sensor2.getDistance());
-      delay(20);
       temp2 = SF1eFiltered2(sensor2.getDistance());
       if (abs(temp2 - temp1) < 5.00) {
         float orangeWeight = calWeight (orangeRackDistance, orangeFullDegreeRackDistance, orangeRackInitialDistance);
@@ -375,7 +373,6 @@ void loop() {
     float temp1, temp2;
     for (i = 0; i < 20; i++) {
       temp1 = SF1eFiltered3(sensor3.getDistance());
-      delay(20);
       temp2 = SF1eFiltered3(sensor3.getDistance());
       if (abs(temp2 - temp1) < 5.00) {
         float meatWeight = calWeight (meatRackDistance, meatFullDegreeRackDistance, meatRackInitialDistance);
@@ -404,7 +401,6 @@ void loop() {
     float temp1, temp2;
     for (i = 0; i < 20; i++) {
       temp1 = SF1eFiltered4(sensor4.getDistance());
-      delay(20);
       temp2 = SF1eFiltered4(sensor4.getDistance());
       if (abs(temp2 - temp1) < 5.00) {
         float broccoliWeight = calWeight (broccoliRackDistance, broccoliFullDegreeRackDistance, broccoliRackInitialDistance);
@@ -423,7 +419,7 @@ void loop() {
 
   // Fish
   fishRackDistance = SF1eFiltered5(sensor5.getDistance());
-//  Serial.println("5  ");
+//  Serial.print("5  ");
 //  Serial.println(fishRackDistance);
   // If distance changes more than 1.5CM
   if (checkDistance(fishPreviousRackDistance, fishRackDistance)) {
@@ -433,7 +429,6 @@ void loop() {
     float temp1, temp2;
     for (i = 0; i < 20; i++) {
       temp1 = SF1eFiltered5(sensor5.getDistance());
-      delay(20);
       temp2 = SF1eFiltered5(sensor5.getDistance());
       if (abs(temp2 - temp1) < 5.00) {
         float fishWeight = calWeight (fishRackDistance, fishFullDegreeRackDistance, fishRackInitialDistance);

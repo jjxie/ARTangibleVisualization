@@ -581,8 +581,7 @@ io.on('connection', function(socket){
 		io.sockets.emit('scaleDataOrange', orangeHistory[Object.keys(orangeHistory).length-1].weight);
 		io.sockets.emit('scaleDataMeat', meatHistory[Object.keys(meatHistory).length-1].weight);
 		io.sockets.emit('scaleDataBroccoli', broccoliHistory[Object.keys(broccoliHistory).length-1].weight);
-		// io.sockets.emit('scaleDataFish', fishHistory[Object.keys(fishHistory).length-1].weight);
-		io.sockets.emit('waitServoFinishReset', fishHistory[Object.keys(fishHistory).length-1].weight);
+		io.sockets.emit('scaleDataFish', fishHistory[Object.keys(fishHistory).length-1].weight);
 	});
 
 	// Sent history Data to screen version
@@ -650,6 +649,15 @@ io.on('connection', function(socket){
 		screenSimulateNutrition = [0,0,0,0,0];
 		plusClicked = [0,0,0,0,0];
 		substractClicked = [0,0,0,0,0];
+	});
+
+	// Reset screen verson weight
+	socket.on('requestRealWeightAfterReset', function (data) {
+		io.sockets.emit('screenDataMilkReset', milkHistory[Object.keys(milkHistory).length-1].weight);
+		io.sockets.emit('screenDataOrangeReset', orangeHistory[Object.keys(orangeHistory).length-1].weight);
+		io.sockets.emit('screenDataMeatReset', meatHistory[Object.keys(meatHistory).length-1].weight);
+		io.sockets.emit('screenDataBroccoliReset', broccoliHistory[Object.keys(broccoliHistory).length-1].weight);
+		io.sockets.emit('screenDataFishReset', fishHistory[Object.keys(fishHistory).length-1].weight);
 	});
 
 });
@@ -911,8 +919,8 @@ function calculateNewVirtualNutrition(virtualConsumption, nutrientsRate){
 // Calculate history clicking number
 function calculateHistoryNumber(index, weight, historyObject){
 	var virtualWeight;
-	var number = plusClicked[index] - substractClicked[index];
-	if(weight == "1"){
+	var number = (plusClicked[index] - substractClicked[index]) * 10;
+	if(weight == "10"){
 		virtualWeight = historyObject[Object.keys(historyObject).length-1].weight + weight + number;
 		plusClicked[index] += 1;
 	}

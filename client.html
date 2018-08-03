@@ -28,6 +28,7 @@
 
 		function reset(){
 			socket.emit('screenReset', true);
+			socket.emit('requestRealWeightAfterReset', true);
 			hideVirtualBarAndAmount();
 		}
 	</script>
@@ -79,36 +80,36 @@
 			<div class="col-sm-2">
 				<p id="scale-data-milk">0</p> 
 				<div style="text-align:center; padding-left: 10px">
-					<button type="button" id="virtualMilkWeightPlus" onclick="screenSimulateWeight('milk', 1);">+</button>
-					<button type="button" id="virtualMilkWeightSubtract" onclick="screenSimulateWeight('milk', -1);">-</button>
+					<button type="button" id="virtualMilkWeightPlus" onclick="screenSimulateWeight('milk', 10);">+</button>
+					<button type="button" id="virtualMilkWeightSubtract" onclick="screenSimulateWeight('milk', -10);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
-				<p id="scale-data-orange">0</p>
+				<p id="scale-data-orange" style="padding-left: 10px">0</p>
 				<div style="text-align:center; padding-left: 24px">
-					<button type="button" id="virtualOrangeWeightPlus" onclick="screenSimulateWeight('orange', 1);">+</button>
-					<button type="button" id="virtualOrangeWeightSubtract" onclick="screenSimulateWeight('orange', -1);">-</button>
+					<button type="button" id="virtualOrangeWeightPlus" onclick="screenSimulateWeight('orange', 10);">+</button>
+					<button type="button" id="virtualOrangeWeightSubtract" onclick="screenSimulateWeight('orange', -10);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
-				<p id="scale-data-meat">0</p>
+				<p id="scale-data-meat" style="padding-left: 30px">0</p>
 				<div style="text-align:center; padding-left: 42px">
-					<button type="button" id="virtualMeatWeightPlus" onclick="screenSimulateWeight('meat', 1);">+</button>
-					<button type="button" id="virtualMeatWeightSubtract" onclick="screenSimulateWeight('meat', -1);">-</button>
+					<button type="button" id="virtualMeatWeightPlus" onclick="screenSimulateWeight('meat', 10);">+</button>
+					<button type="button" id="virtualMeatWeightSubtract" onclick="screenSimulateWeight('meat', -10);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
-				<p id="scale-data-broccoli">0</p>
-				<div style="text-align:center; padding-left: 58px">
-					<button type="button" id="virtualBroccoliWeightPlus" onclick="screenSimulateWeight('broccoli', 1);">+</button>
-					<button type="button" id="virtualBroccoliWeightSubtract" onclick="screenSimulateWeight('broccoli', -1);">-</button>
+				<p id="scale-data-broccoli" style="padding-left: 50px">0</p>
+				<div style="text-align:center; padding-left: 60px">
+					<button type="button" id="virtualBroccoliWeightPlus" onclick="screenSimulateWeight('broccoli', 10);">+</button>
+					<button type="button" id="virtualBroccoliWeightSubtract" onclick="screenSimulateWeight('broccoli', -10);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2">
-				<p id="scale-data-fish">0</p>
-				<div style="text-align:center; padding-left: 74px">
-					<button type="button" id="virtualFishWeightPlus" onclick="screenSimulateWeight('fish', 1);">+</button>
-					<button type="button" id="virtualFishWeightSubtract" onclick="screenSimulateWeight('fish', -1);">-</button>
+				<p id="scale-data-fish" style="padding-left: 60px">0</p>
+				<div style="text-align:center; padding-left: 76px">
+					<button type="button" id="virtualFishWeightPlus" onclick="screenSimulateWeight('fish', 10);">+</button>
+					<button type="button" id="virtualFishWeightSubtract" onclick="screenSimulateWeight('fish', -10);">-</button>
 				</div>
 			</div>
 			<div class="col-sm-2"><p id="scale-data-unit">g</p></div>
@@ -306,6 +307,7 @@
     // Set milke weight data, max 1kg
     socket.on('scaleDataMilk', function(milk){
     	console.log("Milk " + milk);
+    	milk = Math.round(milk);
     	var percentageMilk = milk/maxWeight * 100;
     	$('#scale-data-milk').text(milk);
     	$('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
@@ -314,6 +316,7 @@
     // Set orange weight data, max 1kg
     socket.on('scaleDataOrange', function(orange){
     	console.log("Orange " + orange);
+    	orange = Math.round(orange);
     	var percentageOrange = orange/maxWeight * 100;
     	$('#scale-data-orange').text(orange);
     	$('#theprogressbarOrange').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
@@ -322,6 +325,7 @@
     // Set meat weight data, max 1kg
     socket.on('scaleDataMeat', function(meat){
     	console.log("Meat " + meat);
+    	meat = Math.round(meat); 
     	var percentageMeat = meat/maxWeight * 100;
     	$('#scale-data-meat').text(meat);
     	$('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
@@ -330,6 +334,7 @@
     // Set brocoli weight data, max 1kg
     socket.on('scaleDataBroccoli', function(broccoli){
     	console.log("Broccoli " + broccoli);
+    	broccoli = Math.round(broccoli);
     	var percentageBroccoli = broccoli/maxWeight * 100;
     	$('#scale-data-broccoli').text(broccoli);
     	$('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
@@ -338,11 +343,56 @@
     // Set fish weight data, max 1kg 
     socket.on('scaleDataFish', function(fish){
     	console.log("Fish " + fish);
+    	fish = Math.round(fish);
     	var percentageFish = fish/maxWeight * 100;
     	$('#scale-data-fish').text(fish);
     	$('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
     });
 
+    // Reset milke weight data, max 1kg
+    socket.on('screenDataMilkReset', function(milk){
+    	console.log("Milk " + milk);
+    	milk = Math.round(milk);
+    	var percentageMilk = milk/maxWeight * 100;
+    	$('#scale-data-milk').text(milk);
+    	$('#theprogressbarMilk').attr('aria-valuenow', percentageMilk).css('width', percentageMilk + '%');
+    });
+
+    // Reset orange weight data, max 1kg
+    socket.on('screenDataOrangeReset', function(orange){
+    	console.log("Orange " + orange);
+    	orange = Math.round(orange);
+    	var percentageOrange = orange/maxWeight * 100;
+    	$('#scale-data-orange').text(orange);
+    	$('#theprogressbarOrange').attr('aria-valuenow', percentageOrange).css('width', percentageOrange + '%');
+    }); 
+
+    // Reset meat weight data, max 1kg
+    socket.on('screenDataMeatReset', function(meat){
+    	console.log("Meat " + meat);
+    	meat = Math.round(meat); 
+    	var percentageMeat = meat/maxWeight * 100;
+    	$('#scale-data-meat').text(meat);
+    	$('#theprogressbarMeat').attr('aria-valuenow', percentageMeat).css('width', percentageMeat + '%');
+    });
+
+    // Reset brocoli weight data, max 1kg
+    socket.on('screenDataBroccoliReset', function(broccoli){
+    	console.log("Broccoli " + broccoli);
+    	broccoli = Math.round(broccoli);
+    	var percentageBroccoli = broccoli/maxWeight * 100;
+    	$('#scale-data-broccoli').text(broccoli);
+    	$('#theprogressbarBroccoli').attr('aria-valuenow', percentageBroccoli).css('width', percentageBroccoli + '%');
+    });
+
+    // Set fish weight data, max 1kg 
+    socket.on('screenDataFishReset', function(fish){
+    	console.log("Fish " + fish);
+    	fish = Math.round(fish);
+    	var percentageFish = fish/maxWeight * 100;
+    	$('#scale-data-fish').text(fish);
+    	$('#theprogressbarFish').attr('aria-valuenow', percentageFish).css('width', percentageFish + '%');
+    });
 
 
     // Dealing with clicking plus or substract button on the screen
@@ -652,6 +702,7 @@
 		showVirtualBarAndAmount();
 		var percentage = newWeight/maxWeight * 100;
 		console.log("percentage" + percentage);
+		newWeight = Math.round(newWeight);
 		$(foodWeightText[index]).text(newWeight);
 		$(foodWeightBar[index]).attr('aria-valuenow', percentage).css('width', percentage + '%');
 		for(i = 0; i < nutritionArray.length; i++ ){
