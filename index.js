@@ -24,11 +24,11 @@ var broccoliSelected = false;
 var fishSelected = false;
 
 // Historical data
-var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":900,"consumeWeight":100}];
-var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":400,"consumeWeight":200}];
-var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":500,"consumeWeight":350}];
-var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":700,"consumeWeight":100}];
-var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":250,"consumeWeight":100}];
+var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":510,"consumeWeight":200}];
+var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":400,"consumeWeight":100}];
+var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":650,"consumeWeight":300}];
+var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":300,"consumeWeight":100}];
+var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":90,"consumeWeight":10}];
 
 // This is used to show five days history in AR detailed view. The data is parsed from Json file
 var milkHistoryJson =[];
@@ -55,7 +55,7 @@ var nutritionJson = "nutritionHistory.json";
 // Calcium mg, calories, fat g, protein g, vitaminC mg,  per 100g
 var milkNutrients = [125, 42, 1, 3.4, 0];
 var orangeNutrients = [40, 47.01, 0.11, 0.92, 53.2];
-var meatNutrients = [6, 143, 3.5, 26, 0];
+var meatNutrients = [6, 143, 3.5, 11, 0];
 var broccoliNutrients = [47, 34, 0.4, 2.8, 37];
 var fishNutrients = [15, 206, 12, 22, 3.7];
 
@@ -67,11 +67,11 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // VitaminC, adults female 75mg, male 90mg
 var dailyIntake =[1000, 2000, 70, 56, 90];
 
-//100g milk, 100g orange, 300g meat, 100g broccoli, 10g fish
-var nutrientsArray = [231.5, 572.61, 13.21, 87.32, 90.57];
-var milkNutrientsArray = [125, 42, 1, 3.4, 0];
+//200g milk, 100g orange, 300g meat, 100g broccoli, 10g fish
+var nutrientsArray = [356.5, 614.61, 16.61, 45.72, 90.57];
+var milkNutrientsArray = [250, 84, 2, 6.8, 0];
 var orangeNutrientsArray = [40, 47.01, 0.11, 0.92, 53.2];
-var meatNutrientsArray = [18, 429, 10.5, 78, 0];
+var meatNutrientsArray = [18, 429, 10.5, 33, 0];
 var broccoliNutrientsArray = [47, 34, 0.4, 2.8, 37];
 var fishNutrientsArray = [1.5, 20.6, 1.2, 2.2, 0.37];
 
