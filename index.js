@@ -65,13 +65,13 @@ var fishNutrients = [15, 206, 12, 22, 3.7];
 // Fat, 70 g 
 // Protein, 0.8 * KG or 0.36 * Pound
 // VitaminC, adults female 75mg, male 90mg
-var dailyIntake =[1000, 2000, 70, 46, 75];
+var dailyIntake =[1000, 2000, 70, 56, 90];
 
-//100g milk, 200g orange, 350g meat, 100g broccoli, 10g fish
-var nutrientsArray = [274.5, 691.12, 15.07, 101.24, 143.77];
+//100g milk, 100g orange, 300g meat, 100g broccoli, 10g fish
+var nutrientsArray = [231.5, 572.61, 13.21, 87.32, 90.57];
 var milkNutrientsArray = [125, 42, 1, 3.4, 0];
-var orangeNutrientsArray = [80, 94.02, 0.22, 1.84, 106.4];
-var meatNutrientsArray = [21, 500.5, 12.25, 91, 0];
+var orangeNutrientsArray = [40, 47.01, 0.11, 0.92, 53.2];
+var meatNutrientsArray = [18, 429, 10.5, 78, 0];
 var broccoliNutrientsArray = [47, 34, 0.4, 2.8, 37];
 var fishNutrientsArray = [1.5, 20.6, 1.2, 2.2, 0.37];
 
@@ -99,8 +99,8 @@ app.get('/index', function(req, res){
 	res.sendFile(__dirname + '/index.html');
 });
 
-app.get('/client', function(req, res){
-	res.sendFile(__dirname+ '/client.html');
+app.get('/screen', function(req, res){
+	res.sendFile(__dirname+ '/screen.html');
 });
 
 // Check if it is midnight now.
@@ -940,12 +940,12 @@ function calculateNewScreenNutrition(virtualConsumption, nutrientsRate){
 		for(i = 0; i< screenSimulateNutrition.length; i++){
 			// Get current real nutrients amount, then add or substract virtual nutrients
 			screenSimulateNutrition[i] = nutrientsArray[i];
-			screenSimulateNutrition[i] += virtualConsumptionPer * nutrientsRate[i];		
+			screenSimulateNutrition[i] -= virtualConsumptionPer * nutrientsRate[i];		
 		}
 	}
 	else{
 		for(i=0; i< screenSimulateNutrition.length; i++){
-			screenSimulateNutrition[i] += virtualConsumptionPer * nutrientsRate[i];	
+			screenSimulateNutrition[i] -= virtualConsumptionPer * nutrientsRate[i];	
 		}
 	}
 }
