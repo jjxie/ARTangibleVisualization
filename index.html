@@ -448,12 +448,19 @@
         var textTag = nutritiontagText[index] + i;
         var NumberTag= nutritiontagNumberText[index] + i;
         var amountString = (nutritionData[i].toFixed(2)).toString() + nutritionUnit[i];
+        console.log(depth);
         console.log(amountString);
         if(depth == 0){
           sceneEl.querySelector(tag).setAttribute("visible",false); 
           sceneEl.querySelector(textTag).setAttribute("visible",true);
           sceneEl.querySelector(NumberTag).setAttribute("position",{ x: xPosition[index], y: yPosition, z: weightTextZeroPostion });
-          sceneEl.querySelector(NumberTag).setAttribute("text", {value: "0" + nutritionUnit[i]}); 
+          if(nutritionData[i] == 0){
+             sceneEl.querySelector(NumberTag).setAttribute("text", {value: "0" + nutritionUnit[i]}); 
+          }
+          else{
+            sceneEl.querySelector(NumberTag).setAttribute("text", {value: amountString}); 
+          }
+         
           sceneEl.querySelector(NumberTag).setAttribute("visible",true);
         }
         else{
