@@ -27,7 +27,7 @@ var fishSelected = false;
 var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":510,"consumeWeight":200}];
 var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":345,"consumeWeight":100}];
 var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":668,"consumeWeight":300}];
-var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":170,"consumeWeight":100}];
+var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":170,"consumeWeight":105}];
 var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":220,"consumeWeight":10}];
 
 // This is used to show five days history in AR detailed view. The data is parsed from Json file
