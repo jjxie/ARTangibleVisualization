@@ -6,5 +6,6 @@
 	{"date":"Sat Aug 04 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":200,"consumeWeight":250},
 	{"date":"Sun Aug 05 2018 15:24:09 GMT+0200 (CEST)","time":1533302649.948,"weight":0,"consumeWeight":200},
 	{"date":"Mon Aug 06 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":400,"consumeWeight":0},
-	{"date":"Mon Aug 06 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":300,"consumeWeight":100}
+	{"date":"Mon Aug 06 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":0,"consumeWeight":400},
+	{"date":"Mon Aug 06 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":480,"consumeWeight":100}
 ]

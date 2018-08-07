@@ -5,5 +5,7 @@
 	{"date":"Sat Aug 04 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":100,"consumeWeight":0},
 	{"date":"Sat Aug 04 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.14,"weight":0,"consumeWeight":100},
 	{"date":"Mon Aug 05 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.14,"weight":0,"consumeWeight":200},
-	{"date":"Mon Aug 06 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.14,"weight":650,"consumeWeight":300}
+	{"date":"Mon Aug 06 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.14,"weight":248,"consumeWeight":0},
+	{"date":"Mon Aug 06 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.14,"weight":0,"consumeWeight":248},
+	{"date":"Tue Aug 07 2018 17:33:22 GMT+0200 (CEST)","time":1533310402.14,"weight":650,"consumeWeight":300}
 ]
