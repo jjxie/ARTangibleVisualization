@@ -79,18 +79,18 @@ float broccoliFullDegreeRackDistance = 16.2;
 float fishFullDegreeRackDistance = 16.2;
 
 
-float milkPreviousRackDistance = 13.80;
-float orangePreviousRackDistance = 11.50;
-float meatPreviousRackDistance = 8.50;
-float broccoliPreviousRackDistance = 6.20;
-float fishPreviousRackDistance = 12.5;
+float milkPreviousRackDistance = 11.50;
+float orangePreviousRackDistance = 9.50;
+float meatPreviousRackDistance = 9.50;
+float broccoliPreviousRackDistance = 7.50;
+float fishPreviousRackDistance = 13.00;
 
 // Set relative distance, distance of broccoli as baseline.Same height will have same weight 
-float milkRackInitialDistance = 13.80;
-float orangeRackInitialDistance = 11.50;
-float meatRackInitialDistance = 8.50;
-float broccoliRackInitialDistance = 6.20;
-float fishRackInitialDistance = 12.5;
+float milkRackInitialDistance = 11.50;
+float orangeRackInitialDistance = 9.50;
+float meatRackInitialDistance = 9.50;
+float broccoliRackInitialDistance = 7.50;
+float fishRackInitialDistance = 13.00;
 
 float maxWeight = 1000;
 
@@ -307,7 +307,7 @@ void loop() {
   // Read distance data
   // Get Sensor Distance and filtered by One Euro filter
   milkRackDistance = SF1eFiltered1(sensor1.getDistance());
-//  Serial.println("1  ");
+//  Serial.print("1  ");
 //  Serial.println(milkRackDistance);
   // If distance changes more than 1.5CM
   if (checkDistance(milkPreviousRackDistance, milkRackDistance)) {
@@ -335,7 +335,7 @@ void loop() {
 
   // Orange
   orangeRackDistance = SF1eFiltered2(sensor2.getDistance());
-//  Serial.println("2  ");
+//  Serial.print("2  ");
 //  Serial.println(orangeRackDistance);
   // If distance changes more than 1.5CM
   if (checkDistance(orangePreviousRackDistance, orangeRackDistance)) {
@@ -363,7 +363,7 @@ void loop() {
 
   // Meat
   meatRackDistance = SF1eFiltered3(sensor3.getDistance());
-//  Serial.println("3  ");
+//  Serial.print("3  ");
 //  Serial.println(meatRackDistance);
   // If distance changes more than 1.5CM
   if (checkDistance(meatPreviousRackDistance, meatRackDistance)) {
@@ -391,7 +391,7 @@ void loop() {
 
   // Broccoli
   broccoliRackDistance = SF1eFiltered4(sensor4.getDistance());
-//  Serial.println("4  ");
+//  Serial.print("4  ");
 //  Serial.println(broccoliRackDistance);
   // If distance changes more than 1.5CM
   if (checkDistance(broccoliPreviousRackDistance, broccoliRackDistance)) {

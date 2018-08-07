@@ -25,10 +25,10 @@ var fishSelected = false;
 
 // Historical data
 var milkHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":510,"consumeWeight":200}];
-var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":300,"consumeWeight":100}];
-var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":650,"consumeWeight":300}];
-var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":480,"consumeWeight":100}];
-var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":190,"consumeWeight":10}];
+var orangeHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":345,"consumeWeight":100}];
+var meatHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":668,"consumeWeight":300}];
+var broccoliHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":170,"consumeWeight":100}];
+var fishHistory = [{"date":"Wed Jul 18 2018 11:33:43 GMT+0200 (Central European Summer Time)","time":1531906423768,"weight":220,"consumeWeight":10}];
 
 // This is used to show five days history in AR detailed view. The data is parsed from Json file
 var milkHistoryJson =[];
