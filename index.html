@@ -711,37 +711,42 @@
 
 
     // Show manually changed weight of milk in AR
-    socket.on('manualDataMilk', function(virtualMilkWeight, virtualNutritionConsumption){
-      var weight = Math.round(virtualMilkWeight.toString()) + " g";
-      sceneEl.querySelector('#simulateMilkWeight').setAttribute('value', weight);
+    socket.on('manualDataMilk', function(virtualMilkWeight, virtualNutritionConsumption, string){
+      // var weight = Math.round(virtualMilkWeight.toString()) + " g";
+      // sceneEl.querySelector('#simulateMilkWeight').setAttribute('value', weight);
+      sceneEl.querySelector('#simulateMilkWeight').setAttribute('value', string);
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of orange in AR
-    socket.on('manualDataOrange', function(virtualOrangeWeight, virtualNutritionConsumption){
-      var weight = Math.round(virtualOrangeWeight.toString()) + " g";
-      sceneEl.querySelector('#simulateOrangeWeight').setAttribute('value', weight);
+    socket.on('manualDataOrange', function(virtualOrangeWeight, virtualNutritionConsumption, string){
+      // var weight = Math.round(virtualOrangeWeight.toString()) + " g";
+      // sceneEl.querySelector('#simulateOrangeWeight').setAttribute('value', weight);
+      sceneEl.querySelector('#simulateOrangeWeight').setAttribute('value', string);
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of meat in AR
-    socket.on('manualDataMeat', function(virtualMeatWeight, virtualNutritionConsumption){
-      var weight = Math.round(virtualMeatWeight.toString()) + " g";
-      sceneEl.querySelector('#simulateMeatWeight').setAttribute('value', weight);
+    socket.on('manualDataMeat', function(virtualMeatWeight, virtualNutritionConsumption, string){
+      // var weight = Math.round(virtualMeatWeight.toString()) + " g";
+      // sceneEl.querySelector('#simulateMeatWeight').setAttribute('value', weight);
+      sceneEl.querySelector('#simulateMeatWeight').setAttribute('value', string);
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of broccoli in AR
-    socket.on('manualDataBroccoli', function(virtualBroccoliWeight, virtualNutritionConsumption){
-      var weight = Math.round(virtualBroccoliWeight.toString()) + " g";
-      sceneEl.querySelector('#simulateBroccoliWeight').setAttribute('value', weight);
+    socket.on('manualDataBroccoli', function(virtualBroccoliWeight, virtualNutritionConsumption, string){
+      // var weight = Math.round(virtualBroccoliWeight.toString()) + " g";
+      // sceneEl.querySelector('#simulateBroccoliWeight').setAttribute('value', weight);
+      sceneEl.querySelector('#simulateBroccoliWeight').setAttribute('value', string);
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 
     // Show manually changed weight of fish in AR
-    socket.on('manualDataFish', function(virtualFishWeight, virtualNutritionConsumption){
-      var weight = Math.round(virtualFishWeight.toString()) + " g";
-      sceneEl.querySelector('#simulateFishWeight').setAttribute('value', weight);
+    socket.on('manualDataFish', function(virtualFishWeight, virtualNutritionConsumption, string){
+      // var weight = Math.round(virtualFishWeight.toString()) + " g";
+      // sceneEl.querySelector('#simulateFishWeight').setAttribute('value', weight);
+      sceneEl.querySelector('#simulateFishWeight').setAttribute('value', string);
       setVirtualNutrionBarAndText(virtualNutritionConsumption);
     });
 

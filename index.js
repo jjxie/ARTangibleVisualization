@@ -617,28 +617,34 @@ io.on('connection', function(socket){
 		switch(foodType) {
 			case "milk":
 			var virtualWeight = calculateHistoryNumber(0, weight, milkHistory);
+			console.log("virtualWeight " + virtualWeight);
 			calculateNewScreenNutrition(weight, milkNutrients);	
-			io.sockets.emit('screenSimulateMilk', virtualWeight, screenSimulateNutrition);	
+			var weightChanges = calculateWeightChanges(virtualWeight, milkHistory);
+			io.sockets.emit('screenSimulateMilk', virtualWeight, screenSimulateNutrition, weightChanges);	
 			break;
 			case "orange":
 			var virtualWeight = calculateHistoryNumber(1, weight, orangeHistory);
 			calculateNewScreenNutrition(weight, orangeNutrients);	
-			io.sockets.emit('screenSimulateOrange', virtualWeight, screenSimulateNutrition);	
+			var weightChanges = calculateWeightChanges(virtualWeight, orangeHistory);
+			io.sockets.emit('screenSimulateOrange', virtualWeight, screenSimulateNutrition, weightChanges);	
 			break;
 			case "meat":
 			var virtualWeight = calculateHistoryNumber(2, weight, meatHistory);
 			calculateNewScreenNutrition(weight, meatNutrients);	
-			io.sockets.emit('screenSimulateMeat', virtualWeight, screenSimulateNutrition);
+			var weightChanges = calculateWeightChanges(virtualWeight, meatHistory);
+			io.sockets.emit('screenSimulateMeat', virtualWeight, screenSimulateNutrition, weightChanges);
 			break;
 			case "broccoli":
 			var virtualWeight = calculateHistoryNumber(3, weight, broccoliHistory);
 			calculateNewScreenNutrition(weight, broccoliNutrients);	
-			io.sockets.emit('screenSimulateBroccoli', virtualWeight, screenSimulateNutrition);
+			var weightChanges = calculateWeightChanges(virtualWeight, broccoliHistory);
+			io.sockets.emit('screenSimulateBroccoli', virtualWeight, screenSimulateNutrition, weightChanges);
 			break;
 			case "fish":
 			var virtualWeight = calculateHistoryNumber(4, weight, fishHistory);
 			calculateNewScreenNutrition(weight, fishNutrients);	
-			io.sockets.emit('screenSimulateFish', virtualWeight, screenSimulateNutrition);
+			var weightChanges = calculateWeightChanges(virtualWeight, fishHistory);
+			io.sockets.emit('screenSimulateFish', virtualWeight, screenSimulateNutrition, weightChanges);
 			break;
 		}
 		
@@ -676,36 +682,41 @@ myPort.on('data', function (data){
     	// Get the virtual food consumption amount
     	var virtualConsumption = milkHistory[Object.keys(milkHistory).length-1].weight - weight;
     	console.log("milk weight from moving the rack: " + weight);
+    	var string = transferString(virtualConsumption);
     	calculateNewVirtualNutrition(virtualConsumption, milkNutrients);	
-    	io.sockets.emit('manualDataMilk', weight, virtualNutrition);	
+    	io.sockets.emit('manualDataMilk', weight, virtualNutrition, string);	
     	break;
     	// Type B represents orange
     	case "B":
     	var virtualConsumption = orangeHistory[Object.keys(orangeHistory).length-1].weight - weight;
     	console.log("orange weight from moving the rack: " + weight);
+    	var string = transferString(virtualConsumption);
     	calculateNewVirtualNutrition(virtualConsumption, orangeNutrients);
-    	io.sockets.emit('manualDataOrange', weight, virtualNutrition);
+    	io.sockets.emit('manualDataOrange', weight, virtualNutrition,string);
     	break;
     	// Type C represents meat
     	case "C":
     	var virtualConsumption = meatHistory[Object.keys(meatHistory).length-1].weight - weight;
     	console.log("meat weight from moving the rack: " + weight);
+    	var string = transferString(virtualConsumption);
     	calculateNewVirtualNutrition(virtualConsumption, meatNutrients);
-    	io.sockets.emit('manualDataMeat', weight, virtualNutrition);
+    	io.sockets.emit('manualDataMeat', weight, virtualNutrition, string);
     	break;
     	// Type D represents broccoli
     	case "D":
     	var virtualConsumption = broccoliHistory[Object.keys(broccoliHistory).length-1].weight - weight;
     	console.log("broccoli weight from moving the rack: " + weight + "Virtual consumption: " + virtualConsumption);
+    	var string = transferString(virtualConsumption);
     	calculateNewVirtualNutrition(virtualConsumption, broccoliNutrients);
-    	io.sockets.emit('manualDataBroccoli', weight, virtualNutrition);	
+    	io.sockets.emit('manualDataBroccoli', weight, virtualNutrition, string);	
     	break;
     	// Type E represents fish
     	case "E":
     	var virtualConsumption = fishHistory[Object.keys(fishHistory).length-1].weight - weight;
     	console.log("fish weight from moving the rack: " + weight);
+    	var string = transferString(virtualConsumption);
     	calculateNewVirtualNutrition(virtualConsumption,fishNutrients);
-    	io.sockets.emit('manualDataFish', weight, virtualNutrition);	
+    	io.sockets.emit('manualDataFish', weight, virtualNutrition, string);	
     	break;
     	default:
     	console.log("unknownMessage", data);
@@ -948,4 +959,33 @@ function calculateNewScreenNutrition(virtualConsumption, nutrientsRate){
 			screenSimulateNutrition[i] -= virtualConsumptionPer * nutrientsRate[i];	
 		}
 	}
+}
+
+function calculateWeightChanges(virtualWeight, historyObject){
+	var weightChangesString;
+	var weightChanges = virtualWeight - historyObject[Object.keys(historyObject).length-1].weight;
+	if(weightChanges < 0){
+		weightChangesString = weightChanges.toString();
+	}
+	else if(weightChanges > 0){
+		weightChangesString = "+ " + weightChanges.toString();
+	}
+	else{
+		weightChangesString = "";
+	}
+	return weightChangesString;
+}
+
+function transferString(weight){
+	var weightString;
+	if(weight < 0){
+		weightString = "+ " + (Math.abs(Math.round(weight))).toString() + " g";
+	}
+	else if(weight > 0){
+		weightString = "- " + (Math.abs(Math.round(weight))).toString() + " g";
+	}
+	else{
+		weightString = "";
+	}
+	return weightString;
 }

@@ -420,28 +420,28 @@
 
 
     // Dealing with clicking plus or substract button on the screen
-    socket.on('screenSimulateMilk', function(newWeight, nutritionArray){
-    	setVirtualWeightAndNutrition(0, newWeight, nutritionArray);
+    socket.on('screenSimulateMilk', function(newWeight, nutritionArray, weightChanges){
+    	setVirtualWeightAndNutrition(0, newWeight, nutritionArray, weightChanges);
     });
 
     // Dealing with clicking plus or substract button on the screen
-    socket.on('screenSimulateOrange', function(newWeight, nutritionArray){
-    	setVirtualWeightAndNutrition(1, newWeight, nutritionArray);
+    socket.on('screenSimulateOrange', function(newWeight, nutritionArray, weightChanges){
+    	setVirtualWeightAndNutrition(1, newWeight, nutritionArray, weightChanges);
     });
 
     // Dealing with clicking plus or substract button on the screen
-    socket.on('screenSimulateMeat', function(newWeight, nutritionArray){
-    	setVirtualWeightAndNutrition(2, newWeight, nutritionArray);
+    socket.on('screenSimulateMeat', function(newWeight, nutritionArray, weightChanges){
+    	setVirtualWeightAndNutrition(2, newWeight, nutritionArray, weightChanges);
     });
 
     // Dealing with clicking plus or substract button on the screen
-    socket.on('screenSimulateBroccoli', function(newWeight, nutritionArray){
-    	setVirtualWeightAndNutrition(3, newWeight, nutritionArray);
+    socket.on('screenSimulateBroccoli', function(newWeight, nutritionArray, weightChanges){
+    	setVirtualWeightAndNutrition(3, newWeight, nutritionArray, weightChanges);
     });
 
     // Dealing with clicking plus or substract button on the screen
-    socket.on('screenSimulateFish', function(newWeight, nutritionArray){
-    	setVirtualWeightAndNutrition(4, newWeight, nutritionArray);
+    socket.on('screenSimulateFish', function(newWeight, nutritionArray, weightChanges){
+    	setVirtualWeightAndNutrition(4, newWeight, nutritionArray, weightChanges);
     });
 
 
@@ -722,12 +722,12 @@
     }
 
 	//After simulating weight changes, set simulated weight and nutrition
-	function setVirtualWeightAndNutrition(index, newWeight, nutritionArray){
+	function setVirtualWeightAndNutrition(index, newWeight, nutritionArray, weightChnages){
 		showVirtualBarAndAmount();
 		var percentage = newWeight/maxWeight * 100;
 		console.log("percentage" + percentage);
 		newWeight = Math.round(newWeight);
-		$(virtualWeightText[index]).text(newWeight);
+		$(virtualWeightText[index]).text(weightChnages);
 		$(foodWeightBar[index]).attr('aria-valuenow', percentage).css('width', percentage + '%');
 		for(i = 0; i < nutritionArray.length; i++ ){
 			var barHeight = (nutritionArray[i]/ dailyIntakeMax[i] * maxBarHeight).toString() + "px";
