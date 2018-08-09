@@ -965,10 +965,10 @@ function calculateWeightChanges(virtualWeight, historyObject){
 	var weightChangesString;
 	var weightChanges = virtualWeight - historyObject[Object.keys(historyObject).length-1].weight;
 	if(weightChanges < 0){
-		weightChangesString = weightChanges.toString();
+		weightChangesString = (Math.round(weightChanges)).toString();
 	}
 	else if(weightChanges > 0){
-		weightChangesString = "+ " + weightChanges.toString();
+		weightChangesString = "+ " + (Math.round(weightChanges)).toString();
 	}
 	else{
 		weightChangesString = "";
