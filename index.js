@@ -90,7 +90,7 @@ app.use(bodyparser.json());
 
 // Node serialport
 var Serialport = require('serialport');
-var myPort = new Serialport("/dev/tty.wchusbserial1410",{
+var myPort = new Serialport("/dev/tty.wchusbserial1420",{
 	baudrate: 115200,
 	parser: Serialport.parsers.readline("\n")
 });
