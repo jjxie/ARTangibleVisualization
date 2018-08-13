@@ -1,12 +1,12 @@
 [
-	{"date":"Mon Aug 06 2018 14:50:19 GMT+0200 (CEST)","time":1533300619.182,"weight":1000,"consumeWeight":0},
-	{"date":"Mon Aug 06 2018 14:50:33 GMT+0200 (CEST)","time":1533300633.297,"weight":898,"consumeWeight":102},
-	{"date":"Tue Aug 07 2018 15:06:15 GMT+0200 (CEST)","time":1533301575.985,"weight":800,"consumeWeight":100},
-	{"date":"Tue Aug 07 2018 15:06:18 GMT+0200 (CEST)","time":1533301578.288,"weight":500,"consumeWeight":300},
-	{"date":"Wed Aug 08 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":450,"consumeWeight":50},
-	{"date":"Wed Aug 08 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":0,"consumeWeight":450},
-	{"date":"Thu Aug 09 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":150,"consumeWeight":0},
-	{"date":"Thu Aug 09 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":0,"consumeWeight":150},
-	{"date":"Fri Aug 10 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":710,"consumeWeight":0},
-	{"date":"Fri Aug 10 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":510,"consumeWeight":200}
+	{"date":"Thu Aug 09 2018 14:50:19 GMT+0200 (CEST)","time":1533300619.182,"weight":1000,"consumeWeight":0},
+	{"date":"Thu Aug 09 2018 14:50:33 GMT+0200 (CEST)","time":1533300633.297,"weight":898,"consumeWeight":102},
+	{"date":"Fri Aug 10 2018 15:06:15 GMT+0200 (CEST)","time":1533301575.985,"weight":800,"consumeWeight":100},
+	{"date":"Fri Aug 10 2018 15:06:18 GMT+0200 (CEST)","time":1533301578.288,"weight":500,"consumeWeight":300},
+	{"date":"Sat Aug 11 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":450,"consumeWeight":50},
+	{"date":"Sat Aug 11 2018 15:22:39 GMT+0200 (CEST)","time":1533302559.507,"weight":0,"consumeWeight":450},
+	{"date":"Sun Aug 12 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":150,"consumeWeight":0},
+	{"date":"Sun Aug 12 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":0,"consumeWeight":150},
+	{"date":"Mon Aug 13 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":710,"consumeWeight":0},
+	{"date":"Mon Aug 13 2018 15:41:38 GMT+0200 (CEST)","time":1533303698.859,"weight":510,"consumeWeight":200}
 ]
