@@ -1,7 +1,8 @@
 # Augmented physical visualization of home food consumption and nutrition
-Exploring a new tangible interface and interactions in the context of helping people gain knowledge of their food consumption and nutrients intake. 
-Check here for detailed information: https://jjxie8.wixsite.com/thinkbig/master-thesis-project.
 
+# Introduction
+In this project, I take the context of tracking the amount of personal food consumption and nutrient intakes as the scenario for exploring a new interface and interactions with the help of connected sensors, actuators, and augmented reality (AR). The novel tangible interface consists of two physical data representations with overlay AR information, respectively present the amount of food weight and nutrients intake. To compare how well the tangible interface performs in helping people in the context of gaining insight from the amount of food consumption and nutrients intake, a comparable screen interface is designed and developed. The screen interface is a webpage on the desktop with the same functionalities as the tangible interface, but with different interactions.
+Check here for detailed information: https://jjxie8.wixsite.com/thinkbig/master-thesis-project.
 
 # The settings of the project
 This Project runs Socket IO client sides on two ESP32 boards and server side on the index.js.
@@ -15,6 +16,6 @@ The 3D model files from https://github.com/tscha70/3DPrinterSTLFiles/tree/master
 5. Five distance sensors (VL6180) which enable users to interact with the food weight data and see the simulated food consumption and nutrition intakes 
 
 
---
+# Video prototype
 A video of the tangible interface prototype on Youtube: https://www.youtube.com/watch?v=QyQpSfhoo6U
 A video of comparing screen interface prototype on Youtube:https://www.youtube.com/watch?v=5_SD-PaekHA
