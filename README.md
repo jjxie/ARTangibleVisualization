@@ -5,7 +5,8 @@ In this project, I take the context of tracking the amount of personal food cons
 Check here for detailed information: https://jjxie8.wixsite.com/thinkbig/master-thesis-project.
 
 # The settings of the project
-This Project runs Socket IO client sides on two ESP32 boards and server side on the index.js.
+This Project runs Socket IO client sides on two ESP32 boards and server side on the index.js. 
+keywords: Socket.io, Arduino IDE, Webcam, A-Frame, AR.js Marker Trainning, Javascript, Bootstrap, Chart.js, Sketch 3D printing / Laser cutting, Card boards
 
 The sensors and materials used:
 - Three ESP32 boards. 
