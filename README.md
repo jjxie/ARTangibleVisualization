@@ -10,7 +10,7 @@ This Project runs Socket IO client sides on two ESP32 boards and server side on 
 The sensors and materials used:
 - Three ESP32 boards. 
 - Five load cells and five HX711 amplifiers to measure food weight.
-- Ten linear servos (SG90) + ten 3D models. Five sets represent food weight. Another five sets represent the amount of nutrients. The height of a rack of a 3D model represent a food weight data or the amount of a nutreint. 
+- Ten linear servos (SG90) + ten 3D models. Five sets represent food weight. Another five sets represent the amount of daily nutrients intake. The height of a rack of a 3D model represent a food weight data or the amount of a nutreint intake. 
 The 3D model files from https://github.com/tscha70/3DPrinterSTLFiles/tree/master/win-D/STL-Parts with minor modifications.
 - Five touch sensors are used to do selection of food to show detailed AR information. (using AR.js) 
 - Five distance sensors (VL6180) which enable users to interact with the food weight data and see the simulated food consumption and nutrition intakes 
