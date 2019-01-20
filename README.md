@@ -1,8 +1,9 @@
 # Augmented physical visualization of home food consumption and nutrition
-Exploring a new tangible interface and interactions in the context of helping people gain knowledge of their food consumption and nutrients intake. Check here for detailed information: https://jjxie8.wixsite.com/thinkbig/master-thesis-project.
+Exploring a new tangible interface and interactions in the context of helping people gain knowledge of their food consumption and nutrients intake. 
+Check here for detailed information: https://jjxie8.wixsite.com/thinkbig/master-thesis-project.
 
 
-##The settings of the project
+# The settings of the project
 This Project runs Socket IO client sides on two ESP32 boards and server side on the index.js.
 
 The sensors and materials used:
@@ -14,5 +15,6 @@ The 3D model files from https://github.com/tscha70/3DPrinterSTLFiles/tree/master
 5. Five distance sensors (VL6180) which enable users to interact with the food weight data and see the simulated food consumption and nutrition intakes 
 
 
+--
 A video of the tangible interface prototype on Youtube: https://www.youtube.com/watch?v=QyQpSfhoo6U
 A video of comparing screen interface prototype on Youtube:https://www.youtube.com/watch?v=5_SD-PaekHA
